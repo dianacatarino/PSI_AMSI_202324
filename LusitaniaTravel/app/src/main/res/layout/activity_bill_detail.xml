@@ -55,4 +55,5 @@
         android:ems="10"
         android:hint="Valor total"
         android:inputType="numberDecimal" />
+
 </LinearLayout>
