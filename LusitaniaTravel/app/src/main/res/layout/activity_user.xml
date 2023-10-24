@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".UserActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:padding="16dp">
+
+        <!-- Imagem de Perfil com Margens -->
+        <ImageView
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:src="@drawable/ic_conta"
+            android:contentDescription="Imagem de Perfil"
+            android:layout_marginTop="32dp"
+            app:tint="@color/blue" />
+
+        <!-- Nome de Utilizador -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Nome de Utilizador"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            android:paddingTop="16dp"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Botão Favoritos -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_marginBottom="16dp">
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_favoritos"
+                app:tint="@color/blue"/>
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Favoritos"
+                android:textColor="@color/black"
+                android:padding="8dp"
+                android:backgroundTint="@color/white"/>
+        </LinearLayout>
+
+        <!-- Botão Comentários -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_marginBottom="16dp">
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_comentarios"
+                app:tint="@color/blue"/>
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Os Meus Comentários"
+                android:textColor="@color/black"
+                android:padding="8dp"
+                android:backgroundTint="@color/white" />
+        </LinearLayout>
+
+        <!-- Botão Configurações -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_marginBottom="16dp">
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_definicoes"
+                app:tint="@color/blue"/>
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Definições"
+                android:textColor="@color/black"
+                android:padding="8dp"
+                android:backgroundTint="@color/white" />
+        </LinearLayout>
+
+        <!-- Botão Faturas -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_marginBottom="32dp">
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_faturas"
+                app:tint="@color/blue"/>
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="As Minhas Faturas"
+                android:textColor="@color/black"
+                android:padding="8dp"
+                android:backgroundTint="@color/white"/>
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_alignParentBottom="true"
+        android:background="@android:color/white"
+        android:elevation="8dp"
+        android:gravity="center">
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="60dp"
+            android:layout_weight="1"
+            android:src="@drawable/ic_pesquisa"
+            android:padding="8dp"
+            android:contentDescription="Pesquisa"
+            android:backgroundTint="@color/white"/>
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="60dp"
+            android:layout_weight="1"
+            android:src="@drawable/ic_favoritos"
+            android:padding="8dp"
+            android:contentDescription="Favoritos"
+            android:backgroundTint="@color/white"/>
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="60dp"
+            android:layout_weight="1"
+            android:src="@drawable/ic_reservas"
+            android:padding="10dp"
+            android:contentDescription="Reservas"
+            android:backgroundTint="@color/white"/>
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="60dp"
+            android:layout_weight="1"
+            android:src="@drawable/ic_conta"
+            android:padding="10dp"
+            android:contentDescription="Conta"
+            android:backgroundTint="@color/white"/>
+    </LinearLayout>
+</RelativeLayout>
