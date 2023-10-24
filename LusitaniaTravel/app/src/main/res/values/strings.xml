@@ -1,17 +1,9 @@
 <resources>
     <string name="app_name">Lusitania Travel</string>
-    <string name="txt_email">Introduza o email</string>
-    <string name="txt_password">Introduza a password</string>
-    <string name="btn_login">Login</string>
-    <string name="txt_username">Username</string>
-    <string name="txt_passwordSignUp">Password</string>
-    <string name="txt_repeatPassword">Repita a password</string>
-    <string name="txt_nome">Nome</string>
-    <string name="txt_emailSignUp">Email</string>
-    <string name="txt_telemovel">Telemóvel</string>
-    <string name="txt_rua">Rua</string>
-    <string name="txt_localidade">Localidade</string>
-    <string name="txt_codPostal">Código-postal</string>
-    <string name="btnSignUp">Sign Up</string>
-    <string name="txt_detalhes">Detalhes</string>
+    <string name="txt_main_localizacao">Localização Atual</string>
+    <string name="txt_main_checkin">Check-In</string>
+    <string name="txt_main_checkout">Check-Out</string>
+    <string name="txt_main_quartos">Quartos</string>
+    <string name="txt_main_pessoas">Pessoas</string>
+    <string name="txt_main_pesquisar">Pesquisar</string>
 </resources>
