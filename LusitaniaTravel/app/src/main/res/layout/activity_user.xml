@@ -19,8 +19,7 @@
             android:layout_height="100dp"
             android:src="@drawable/ic_conta"
             android:contentDescription="Imagem de Perfil"
-            android:layout_marginTop="32dp"
-            app:tint="@color/blue" />
+            android:layout_marginTop="32dp" />
 
         <!-- Nome de Utilizador -->
         <TextView
@@ -42,8 +41,7 @@
             <ImageView
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:src="@drawable/ic_favoritos"
-                app:tint="@color/blue"/>
+                android:src="@drawable/ic_favoritos" />
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -63,8 +61,7 @@
             <ImageView
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:src="@drawable/ic_comentarios"
-                app:tint="@color/blue"/>
+                android:src="@drawable/ic_comentarios" />
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -84,8 +81,7 @@
             <ImageView
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:src="@drawable/ic_definicoes"
-                app:tint="@color/blue"/>
+                android:src="@drawable/ic_definicoes" />
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -105,8 +101,7 @@
             <ImageView
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:src="@drawable/ic_faturas"
-                app:tint="@color/blue"/>
+                android:src="@drawable/ic_faturas" />
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -164,4 +159,5 @@
             android:contentDescription="Conta"
             android:backgroundTint="@color/white"/>
     </LinearLayout>
+
 </RelativeLayout>
