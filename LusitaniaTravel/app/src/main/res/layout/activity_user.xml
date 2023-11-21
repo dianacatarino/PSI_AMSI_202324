@@ -19,7 +19,8 @@
             android:layout_height="100dp"
             android:src="@drawable/ic_conta"
             android:contentDescription="Imagem de Perfil"
-            android:layout_marginTop="32dp" />
+            android:layout_marginTop="32dp"
+            app:tint="@color/blue"/>
 
         <!-- Nome de Utilizador -->
         <TextView
@@ -41,7 +42,8 @@
             <ImageView
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:src="@drawable/ic_favoritos" />
+                android:src="@drawable/ic_favoritos"
+                app:tint="@color/blue"/>
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -61,7 +63,8 @@
             <ImageView
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:src="@drawable/ic_comentarios" />
+                android:src="@drawable/ic_comentarios"
+                app:tint="@color/blue"/>
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -81,7 +84,8 @@
             <ImageView
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:src="@drawable/ic_definicoes" />
+                android:src="@drawable/ic_definicoes"
+                app:tint="@color/blue"/>
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -101,7 +105,8 @@
             <ImageView
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:src="@drawable/ic_faturas" />
+                android:src="@drawable/ic_faturas"
+                app:tint="@color/blue"/>
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -114,50 +119,12 @@
     </LinearLayout>
 
 
-    <LinearLayout
+    <com.google.android.material.bottomnavigation.BottomNavigationView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
         android:layout_alignParentBottom="true"
-        android:background="@android:color/white"
-        android:elevation="8dp"
-        android:gravity="center">
-
-        <ImageButton
-            android:layout_width="wrap_content"
-            android:layout_height="60dp"
-            android:layout_weight="1"
-            android:src="@drawable/ic_pesquisa"
-            android:padding="8dp"
-            android:contentDescription="Pesquisa"
-            android:backgroundTint="@color/white"/>
-
-        <ImageButton
-            android:layout_width="wrap_content"
-            android:layout_height="60dp"
-            android:layout_weight="1"
-            android:src="@drawable/ic_favoritos"
-            android:padding="8dp"
-            android:contentDescription="Favoritos"
-            android:backgroundTint="@color/white"/>
-
-        <ImageButton
-            android:layout_width="wrap_content"
-            android:layout_height="60dp"
-            android:layout_weight="1"
-            android:src="@drawable/ic_reservas"
-            android:padding="10dp"
-            android:contentDescription="Reservas"
-            android:backgroundTint="@color/white"/>
-
-        <ImageButton
-            android:layout_width="wrap_content"
-            android:layout_height="60dp"
-            android:layout_weight="1"
-            android:src="@drawable/ic_conta"
-            android:padding="10dp"
-            android:contentDescription="Conta"
-            android:backgroundTint="@color/white"/>
-    </LinearLayout>
+        android:layout_centerHorizontal="true"
+        app:backgroundTint="@color/white"
+        app:menu="@menu/menu_main" />
 
 </RelativeLayout>
