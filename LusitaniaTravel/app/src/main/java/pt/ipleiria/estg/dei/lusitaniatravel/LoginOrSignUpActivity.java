@@ -12,21 +12,20 @@ public class LoginOrSignUpActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
+        setContentView(R.layout.activity_login_or_sign_up);
 
     }
 
-    // Método chamado quando o botão de login é clicado
     public void onClickSignIn(View view) {
         // Adicione a lógica para lidar com o clique no botão de login
-        Intent intent = new Intent(LoginOrSignUpActivity.this, LoginActivity.class);
+        Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
     }
 
     // Método chamado quando o botão de registro é clicado
     public void onClickSignUp(View view) {
         // Adicione a lógica para lidar com o clique no botão de registro
-        Intent intent = new Intent(LoginOrSignUpActivity.this, SignUpActivity.class);
+        Intent intent = new Intent(this, SignUpActivity.class);
         startActivity(intent);
     }
 }
