@@ -1,0 +1,208 @@
+package pt.ipleiria.estg.dei.lusitaniatravel.modelos;
+
+import android.content.ContentValues;
+import android.content.Context;
+import android.database.Cursor;
+import android.database.SQLException;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
+
+import androidx.annotation.Nullable;
+
+import java.util.ArrayList;
+
+public class LusitaniaTravelBDHelper extends SQLiteOpenHelper {
+    private static final int DB_VERSION = 1;
+    private static final String DB_NAME = "LusitaniaTravelDB";
+
+    // Tabela Reserva
+    private static final String TABLE_RESERVA = "Reservas";
+    private static final String RESERVA_ID = "id";
+    private static final String RESERVA_TIPO = "tipo";
+    private static final String RESERVA_CHECKIN = "checkin";
+    private static final String RESERVA_CHECKOUT = "checkout";
+    private static final String RESERVA_NUMERO_QUARTOS = "numeroquartos";
+    private static final String RESERVA_NUMERO_CLIENTES = "numeroclientes";
+    private static final String RESERVA_VALOR = "valor";
+    private static final String RESERVA_CLIENTE_ID = "cliente_id";
+    private static final String RESERVA_FUNCIONARIO_ID = "funcionario_id";
+    private static final String RESERVA_FORNECEDOR_ID = "fornecedor_id";
+
+    // Tabela Profile
+    private static final String TABLE_PROFILE = "Profile";
+    private static final String PROFILE_ID = "id";
+    private static final String PROFILE_NAME = "name";
+    private static final String PROFILE_MOBILE = "mobile";
+    private static final String PROFILE_STREET = "street";
+    private static final String PROFILE_LOCALE = "locale";
+    private static final String PROFILE_POSTAL_CODE = "postalCode";
+    private static final String PROFILE_ROLE = "role";
+
+    private final SQLiteDatabase db;
+
+    public LusitaniaTravelBDHelper(@Nullable Context context) {
+        super(context, DB_NAME, null, DB_VERSION);
+        this.db = getWritableDatabase();
+    }
+
+    @Override
+    public void onCreate(SQLiteDatabase sqLiteDatabase) {
+        String sqlCreateReservaTable = "CREATE TABLE " + TABLE_RESERVA +
+                "(" + RESERVA_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                RESERVA_TIPO + " TEXT, " +
+                RESERVA_CHECKIN + " DATE NOT NULL, " +
+                RESERVA_CHECKOUT + " DATE NOT NULL, " +
+                RESERVA_NUMERO_QUARTOS + " INT NOT NULL, " +
+                RESERVA_NUMERO_CLIENTES + " INT NOT NULL, " +
+                RESERVA_VALOR + " DECIMAL(10, 2) NOT NULL, " +
+                RESERVA_CLIENTE_ID + " INT NOT NULL, " +
+                RESERVA_FUNCIONARIO_ID + " INT NOT NULL, " +
+                RESERVA_FORNECEDOR_ID + " INT NOT NULL);";
+        sqLiteDatabase.execSQL(sqlCreateReservaTable);
+
+        String sqlCreateProfileTable = "CREATE TABLE " + TABLE_PROFILE +
+                "(" + PROFILE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                PROFILE_NAME + " VARCHAR(25) NOT NULL, " +
+                PROFILE_MOBILE + " VARCHAR(9) NOT NULL, " +
+                PROFILE_STREET + " VARCHAR(30) NOT NULL, " +
+                PROFILE_LOCALE + " VARCHAR(20) NOT NULL, " +
+                PROFILE_POSTAL_CODE + " VARCHAR(10) NOT NULL, " +
+                PROFILE_ROLE + " TEXT DEFAULT NULL);";  // Use TEXT para o ENUM
+        sqLiteDatabase.execSQL(sqlCreateProfileTable);
+    }
+
+    @Override
+    public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
+        // Atualize suas tabelas aqui conforme necessário
+        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TABLE_RESERVA);
+        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TABLE_PROFILE);
+        this.onCreate(sqLiteDatabase);
+    }
+
+    public void adicionarReservaBD(Reserva reserva) throws SQLException {
+        ContentValues values = new ContentValues();
+        values.put(RESERVA_TIPO, reserva.getTipo());
+        values.put(RESERVA_CHECKIN, reserva.getCheckin());
+        values.put(RESERVA_CHECKOUT, reserva.getCheckout());
+        values.put(RESERVA_NUMERO_QUARTOS, reserva.getNumeroQuartos());
+        values.put(RESERVA_NUMERO_CLIENTES, reserva.getNumeroClientes());
+        values.put(RESERVA_VALOR, reserva.getValor());
+        values.put(RESERVA_CLIENTE_ID, reserva.getNomeCliente());
+        values.put(RESERVA_FUNCIONARIO_ID, reserva.getNomeFuncionario());
+        values.put(RESERVA_FORNECEDOR_ID, reserva.getNomeFornecedor());
+
+        long result = this.db.insert(TABLE_RESERVA, null, values);
+
+        if (result == -1) {
+            throw new SQLException("Erro ao adicionar reserva.");
+        }
+    }
+
+    public boolean editarReservaBD(Reserva reserva) throws SQLException {
+        ContentValues values = new ContentValues();
+        values.put(RESERVA_TIPO, reserva.getTipo());
+        values.put(RESERVA_CHECKIN, reserva.getCheckin());
+        values.put(RESERVA_CHECKOUT, reserva.getCheckout());
+        values.put(RESERVA_NUMERO_QUARTOS, reserva.getNumeroQuartos());
+        values.put(RESERVA_NUMERO_CLIENTES, reserva.getNumeroClientes());
+        values.put(RESERVA_VALOR, reserva.getValor());
+        values.put(RESERVA_CLIENTE_ID, reserva.getNomeCliente());
+        values.put(RESERVA_FUNCIONARIO_ID, reserva.getNomeFuncionario());
+        values.put(RESERVA_FORNECEDOR_ID, reserva.getNomeFornecedor());
+
+        int nLinhasUpdate = this.db.update(TABLE_RESERVA, values, RESERVA_ID + "=?", new String[]{String.valueOf(reserva.getId())});
+        return nLinhasUpdate > 0;
+    }
+
+    public boolean removerReservaBD(int idReserva) throws SQLException {
+        int nLinhasDel = this.db.delete(TABLE_RESERVA, RESERVA_ID + "=?", new String[]{String.valueOf(idReserva)});
+        return nLinhasDel > 0;
+    }
+
+    public ArrayList<Reserva> getAllReservasBD() {
+        ArrayList<Reserva> reservas = new ArrayList<>();
+
+        Cursor cursor = this.db.query(TABLE_RESERVA, new String[]{RESERVA_ID, RESERVA_TIPO, RESERVA_CHECKIN, RESERVA_CHECKOUT, RESERVA_NUMERO_QUARTOS, RESERVA_NUMERO_CLIENTES, RESERVA_VALOR, RESERVA_CLIENTE_ID, RESERVA_FUNCIONARIO_ID, RESERVA_FORNECEDOR_ID}, null, null, null, null, null);
+        if (cursor.moveToFirst()) {
+            do {
+                Reserva reserva = new Reserva(
+                        cursor.getInt(0),
+                        cursor.getString(1),
+                        cursor.getString(2),
+                        cursor.getString(3),
+                        cursor.getInt(4),
+                        cursor.getInt(5),
+                        cursor.getDouble(6),
+                        cursor.getString(7),
+                        cursor.getString(8),
+                        cursor.getString(9)
+                );
+                reservas.add(reserva);
+            } while (cursor.moveToNext());
+        }
+        return reservas;
+    }
+
+    public void removerAllReservasBD() {
+        this.db.delete(TABLE_RESERVA, null, null);
+    }
+
+    public void adicionarProfileBD(Profile profile) throws SQLException {
+        ContentValues values = new ContentValues();
+        values.put(PROFILE_NAME, profile.getName());
+        values.put(PROFILE_MOBILE, profile.getMobile());
+        values.put(PROFILE_STREET, profile.getStreet());
+        values.put(PROFILE_LOCALE, profile.getLocale());
+        values.put(PROFILE_POSTAL_CODE, profile.getPostalCode());
+        values.put(PROFILE_ROLE, profile.getRole().toString());
+
+        long result = this.db.insert(TABLE_PROFILE, null, values);
+
+        if (result == -1) {
+            throw new SQLException("Erro ao adicionar perfil.");
+        }
+    }
+
+    public boolean editarProfileBD(Profile profile) throws SQLException {
+        ContentValues values = new ContentValues();
+        values.put(PROFILE_NAME, profile.getName());
+        values.put(PROFILE_MOBILE, profile.getMobile());
+        values.put(PROFILE_STREET, profile.getStreet());
+        values.put(PROFILE_LOCALE, profile.getLocale());
+        values.put(PROFILE_POSTAL_CODE, profile.getPostalCode());
+        values.put(PROFILE_ROLE, profile.getRole().toString());
+
+        int nLinhasUpdate = this.db.update(TABLE_PROFILE, values, PROFILE_ID + "=?", new String[]{String.valueOf(profile.getId())});
+        return nLinhasUpdate > 0;
+    }
+
+    public boolean removerProfileBD(int idProfile) throws SQLException {
+        int nLinhasDel = this.db.delete(TABLE_PROFILE, PROFILE_ID + "=?", new String[]{String.valueOf(idProfile)});
+        return nLinhasDel > 0;
+    }
+
+    public ArrayList<Profile> getAllProfilesBD() {
+        ArrayList<Profile> profiles = new ArrayList<>();
+
+        Cursor cursor = this.db.query(TABLE_PROFILE, new String[]{PROFILE_ID, PROFILE_NAME, PROFILE_MOBILE, PROFILE_STREET, PROFILE_LOCALE, PROFILE_POSTAL_CODE, PROFILE_ROLE}, null, null, null, null, null);
+        if (cursor.moveToFirst()) {
+            do {
+                Profile profile = new Profile(
+                        cursor.getInt(0),
+                        cursor.getString(1),
+                        cursor.getString(2),
+                        cursor.getString(3),
+                        cursor.getString(4),
+                        cursor.getString(5),
+                        cursor.getString(6)
+                );
+                profiles.add(profile);
+            } while (cursor.moveToNext());
+        }
+        return profiles;
+    }
+
+    public void removerAllProfilesBD() {
+        this.db.delete(TABLE_PROFILE, null, null);
+    }
+}

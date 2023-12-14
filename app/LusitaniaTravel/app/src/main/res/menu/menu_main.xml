@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/menu_item_pesquisa"
+        android:icon="@drawable/ic_pesquisa"
+        android:title="@string/txt_menu_pesquisa" />
+    <item
+        android:id="@+id/menu_item_favoritos"
+        android:icon="@drawable/ic_favoritos"
+        android:title="@string/txt_menu_favoritos" />
+    <item
+        android:id="@+id/menu_item_reservas"
+        android:icon="@drawable/ic_reservas"
+        android:title="@string/txt_menu_reservas" />
+    <item
+        android:id="@+id/menu_item_conta"
+        android:icon="@drawable/ic_conta"
+        android:title="@string/txt_menu_conta" />
+</menu>
