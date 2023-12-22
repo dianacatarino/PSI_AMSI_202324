@@ -4,7 +4,7 @@ public class Profile {
     private int id;
     private String name, mobile, street, locale, postalCode, role, usernameUser;
 
-    public Profile(int id, String name, String mobile, String street, String locale, String postalCode, String role) {
+    public Profile(int id, String name, String mobile, String street, String locale, String postalCode, String role, String usernameUser) {
         this.id = id;
         this.name = name;
         this.mobile = mobile;
@@ -12,6 +12,7 @@ public class Profile {
         this.locale = locale;
         this.postalCode = postalCode;
         this.role = role;
+        this.usernameUser = usernameUser;
     }
 
     public int getId() {
@@ -68,5 +69,13 @@ public class Profile {
 
     public void setRole(String role) {
         this.role = role;
+    }
+
+    public String getUsernameUser() {
+        return usernameUser;
+    }
+
+    public void setUsernameUser(String usernameUser) {
+        this.usernameUser = usernameUser;
     }
 }

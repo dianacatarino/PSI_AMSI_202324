@@ -2,16 +2,22 @@ package pt.ipleiria.estg.dei.lusitaniatravel.modelos;
 
 public class Fornecedor {
     private int id;
-    private String responsavel, tipo, nomeAlojamento, localizacaoAlojamento, acomodacoesAlojamento, filename;
+    private String responsavel, tipo, nomeAlojamento, localizacaoAlojamento, acomodacoesAlojamento, tipoQuartos;
+    private int numeroQuartos;
+    private double precoPorNoite;
 
-    public Fornecedor(int id, String responsavel, String tipo, String nomeAlojamento, String localizacaoAlojamento, String acomodacoesAlojamento, String filename) {
+    public Fornecedor(int id, String responsavel, String tipo, String nomeAlojamento,
+                      String localizacaoAlojamento, String acomodacoesAlojamento,
+                      String tipoQuartos, int numeroQuartos, double precoPorNoite) {
         this.id = id;
         this.responsavel = responsavel;
         this.tipo = tipo;
         this.nomeAlojamento = nomeAlojamento;
         this.localizacaoAlojamento = localizacaoAlojamento;
         this.acomodacoesAlojamento = acomodacoesAlojamento;
-        this.filename = filename;
+        this.tipoQuartos = tipoQuartos;
+        this.numeroQuartos = numeroQuartos;
+        this.precoPorNoite = precoPorNoite;
     }
 
     public int getId() {
@@ -56,5 +62,29 @@ public class Fornecedor {
 
     public void setAcomodacoesAlojamento(String acomodacoesAlojamento) {
         this.acomodacoesAlojamento = acomodacoesAlojamento;
+    }
+
+    public String getTipoQuartos() {
+        return tipoQuartos;
+    }
+
+    public void setTipoQuartos(String tipoQuartos) {
+        this.tipoQuartos = tipoQuartos;
+    }
+
+    public int getNumeroQuartos() {
+        return numeroQuartos;
+    }
+
+    public void setNumeroQuartos(int numeroQuartos) {
+        this.numeroQuartos = numeroQuartos;
+    }
+
+    public double getPrecoPorNoite() {
+        return precoPorNoite;
+    }
+
+    public void setPrecoPorNoite(double precoPorNoite) {
+        this.precoPorNoite = precoPorNoite;
     }
 }
