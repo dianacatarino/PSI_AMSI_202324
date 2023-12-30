@@ -1,16 +1,24 @@
 package pt.ipleiria.estg.dei.lusitaniatravel.adaptadores;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+
+import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.List;
 
 import pt.ipleiria.estg.dei.lusitaniatravel.R;
 import pt.ipleiria.estg.dei.lusitaniatravel.modelos.Fornecedor;
+import pt.ipleiria.estg.dei.lusitaniatravel.modelos.Imagem;
 
 public class ListaFornecedoresAdaptador extends BaseAdapter {
 
@@ -51,36 +59,57 @@ public class ListaFornecedoresAdaptador extends BaseAdapter {
             viewHolder = new ViewHolderLista(convertView);
             convertView.setTag(viewHolder);
         }
-        viewHolder.update(fornecedores.get(position));
+        viewHolder.update(fornecedores.get(position), context);
 
         return convertView;
     }
 
     private static class ViewHolderLista {
-        private TextView tvResponsavel, tvTipo, tvNomeAlojamento, tvLocalizacao, tvAcomodacoes;
-        private TextView tvTipoQuartos, tvNumeroQuartos, tvPrecoPorNoite;
+        private ImageView imgFornecedor;
+        private TextView tvTipo, tvNomeAlojamento, tvLocalizacao, tvAcomodacoes, tvPrecoPorNoite;
 
         public ViewHolderLista(View view) {
-            tvResponsavel = view.findViewById(R.id.tvResponsavel);
+            imgFornecedor = view.findViewById(R.id.imgFornecedor);
             tvTipo = view.findViewById(R.id.tvTipo);
             tvNomeAlojamento = view.findViewById(R.id.tvNomeAlojamento);
             tvLocalizacao = view.findViewById(R.id.tvLocalizacao);
             tvAcomodacoes = view.findViewById(R.id.tvAcomodacoes);
-            tvTipoQuartos = view.findViewById(R.id.tvTipoQuartos);
-            tvNumeroQuartos = view.findViewById(R.id.tvNumeroQuartos);
             tvPrecoPorNoite = view.findViewById(R.id.tvPrecoPorNoite);
         }
 
-        public void update(Fornecedor fornecedor) {
-            tvResponsavel.setText("Responsável: " + fornecedor.getResponsavel());
-            tvTipo.setText("Tipo: " + fornecedor.getTipo());
-            tvNomeAlojamento.setText("Nome Alojamento: " + fornecedor.getNomeAlojamento());
-            tvLocalizacao.setText("Localização Alojamento: " + fornecedor.getLocalizacaoAlojamento());
-            tvAcomodacoes.setText("Acomodações Alojamento: " + fornecedor.getAcomodacoesAlojamento());
-            // Update the new fields
-            tvTipoQuartos.setText("Tipo de Quartos: " + fornecedor.getTipoQuartos());
-            tvNumeroQuartos.setText("Número de Quartos: " + String.valueOf(fornecedor.getNumeroQuartos()));
-            tvPrecoPorNoite.setText("Preço por Noite: " + String.valueOf(fornecedor.getPrecoPorNoite()));
+        public void update(Fornecedor fornecedor, Context context) {
+            tvTipo.setText(fornecedor.getTipo());
+            tvNomeAlojamento.setText(fornecedor.getNomeAlojamento());
+            tvLocalizacao.setText(fornecedor.getLocalizacaoAlojamento());
+            tvAcomodacoes.setText(fornecedor.getAcomodacoesAlojamento());
+
+            // Formatando o preço sem casas decimais
+            DecimalFormat decimalFormat = new DecimalFormat("#");
+            String precoFormatado = decimalFormat.format(fornecedor.getPrecoPorNoite());
+            tvPrecoPorNoite.setText(precoFormatado);
+
+            // Obtendo a primeira imagem do fornecedor
+            Imagem primeiraImagem = fornecedor.getImagens().size() > 0 ? fornecedor.getImagens().get(0) : null;
+
+            if (primeiraImagem != null) {
+                // Construindo a URL completa para a primeira imagem
+                String imageUrl = buildImageUrl(primeiraImagem);
+
+                // Usando o Glide para carregar a imagem
+                Glide.with(context)
+                        .load(imageUrl)
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .into(imgFornecedor);
+            } else {
+                // Caso não haja imagem, você pode definir uma imagem de placeholder ou fazer algo adequado ao seu caso
+                imgFornecedor.setImageResource(R.drawable.logo_horizontal); // Substitua com o seu recurso de imagem de placeholder
+            }
+        }
+
+        private String buildImageUrl(Imagem imagem) {
+            // Construindo a URL completa usando o URL base e o caminho relativo da imagem
+            String baseUrl = "http://10.0.2.2/LusitaniaTravel/common/public";
+            return baseUrl + imagem.getFilename();
         }
     }
 }

@@ -1,14 +1,19 @@
 package pt.ipleiria.estg.dei.lusitaniatravel.modelos;
 
+import java.util.List;
+
 public class Fornecedor {
     private int id;
     private String responsavel, tipo, nomeAlojamento, localizacaoAlojamento, acomodacoesAlojamento, tipoQuartos;
     private int numeroQuartos;
     private double precoPorNoite;
 
+    private List<Imagem> imagens;
+
     public Fornecedor(int id, String responsavel, String tipo, String nomeAlojamento,
                       String localizacaoAlojamento, String acomodacoesAlojamento,
-                      String tipoQuartos, int numeroQuartos, double precoPorNoite) {
+                      String tipoQuartos, int numeroQuartos, double precoPorNoite,
+                      List<Imagem> imagens) {
         this.id = id;
         this.responsavel = responsavel;
         this.tipo = tipo;
@@ -18,6 +23,7 @@ public class Fornecedor {
         this.tipoQuartos = tipoQuartos;
         this.numeroQuartos = numeroQuartos;
         this.precoPorNoite = precoPorNoite;
+        this.imagens = imagens;
     }
 
     public int getId() {
@@ -86,5 +92,13 @@ public class Fornecedor {
 
     public void setPrecoPorNoite(double precoPorNoite) {
         this.precoPorNoite = precoPorNoite;
+    }
+
+    public List<Imagem> getImagens() {
+        return imagens;
+    }
+
+    public void setImagens(List<Imagem> imagens) {
+        this.imagens = imagens;
     }
 }

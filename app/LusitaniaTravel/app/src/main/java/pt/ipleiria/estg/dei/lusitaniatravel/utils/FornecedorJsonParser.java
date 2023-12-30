@@ -7,7 +7,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.util.ArrayList;
+import java.util.List;
+
 import pt.ipleiria.estg.dei.lusitaniatravel.modelos.Fornecedor;
+import pt.ipleiria.estg.dei.lusitaniatravel.modelos.Imagem;
 
 public class FornecedorJsonParser {
 
@@ -26,7 +29,20 @@ public class FornecedorJsonParser {
                 int numeroQuartos = fornecedorJson.getInt("numeroquartos");
                 double precoPorNoite = fornecedorJson.getDouble("precopornoite");
 
-                Fornecedor fornecedor = new Fornecedor(id, responsavel, tipo, nomeAlojamento, localizacaoAlojamento, acomodacoesAlojamento, tipoQuartos, numeroQuartos, precoPorNoite);
+                // Parse das imagens
+                JSONArray imagensJsonArray = fornecedorJson.getJSONArray("imagens");
+                List<Imagem> imagens = new ArrayList<>();
+                for (int j = 0; j < imagensJsonArray.length(); j++) {
+                    JSONObject imagemJson = imagensJsonArray.getJSONObject(j);
+                    int imagemId = imagemJson.getInt("id");
+                    String filename = imagemJson.getString("filename");
+                    int fornecedorId = imagemJson.getInt("fornecedor_id");
+
+                    Imagem imagem = new Imagem(imagemId, filename, fornecedorId);
+                    imagens.add(imagem);
+                }
+
+                Fornecedor fornecedor = new Fornecedor(id, responsavel, tipo, nomeAlojamento, localizacaoAlojamento, acomodacoesAlojamento, tipoQuartos, numeroQuartos, precoPorNoite, imagens);
                 fornecedores.add(fornecedor);
             }
         } catch (JSONException e) {
@@ -34,6 +50,7 @@ public class FornecedorJsonParser {
         }
         return fornecedores;
     }
+
 
     public static Fornecedor parserJsonFornecedor(String response) {
         Fornecedor fornecedor = null;
@@ -49,7 +66,20 @@ public class FornecedorJsonParser {
             int numeroQuartos = fornecedorJson.getInt("numeroquartos");
             double precoPorNoite = fornecedorJson.getDouble("precopornoite");
 
-            fornecedor = new Fornecedor(id, responsavel, tipo, nomeAlojamento, localizacaoAlojamento, acomodacoesAlojamento, tipoQuartos, numeroQuartos, precoPorNoite);
+            // Parse das imagens
+            JSONArray imagensJsonArray = fornecedorJson.getJSONArray("imagens");
+            List<Imagem> imagens = new ArrayList<>();
+            for (int i = 0; i < imagensJsonArray.length(); i++) {
+                JSONObject imagemJson = imagensJsonArray.getJSONObject(i);
+                int imagemId = imagemJson.getInt("id");
+                String filename = imagemJson.getString("filename");
+                int fornecedorId = imagemJson.getInt("fornecedor_id");
+
+                Imagem imagem = new Imagem(imagemId, filename, fornecedorId);
+                imagens.add(imagem);
+            }
+
+            fornecedor = new Fornecedor(id, responsavel, tipo, nomeAlojamento, localizacaoAlojamento, acomodacoesAlojamento, tipoQuartos, numeroQuartos, precoPorNoite, imagens);
         } catch (JSONException e) {
             throw new RuntimeException(e);
         }

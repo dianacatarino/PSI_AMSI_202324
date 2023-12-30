@@ -23,12 +23,12 @@
             android:src="@drawable/logo_horizontal"
             android:layout_marginTop="?android:attr/actionBarSize"/>
 
-        <EditText
+        <!--<EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/txt_main_localizacao"
             android:drawableStart="@drawable/ic_pesquisa"
-            android:padding="16dp" />
+            android:padding="16dp" />-->
 
         <!-- Seção de Check-In/Check-Out -->
         <LinearLayout
@@ -37,38 +37,38 @@
             android:orientation="horizontal">
 
             <!-- Check-In Icon -->
-            <ImageView
+            <!--<ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_checkin_out"
                 android:padding="8dp"
-                app:tint="@color/blue"/>
+                app:tint="@color/blue"/>-->
 
             <!-- Check-In Text -->
-            <TextView
+            <!--<TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="@string/txt_main_checkin"
                 android:textColor="@color/black"
-                android:padding="8dp" />
+                android:padding="8dp" />-->
 
             <!-- Check-Out Icon -->
-            <ImageView
+            <!--<ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_checkin_out"
                 android:padding="8dp"
-                app:tint="@color/blue"/>
+                app:tint="@color/blue"/>-->
 
             <!-- Check-Out Text -->
-            <TextView
+            <!--<TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="@string/txt_main_checkout"
                 android:textColor="@color/black"
-                android:padding="8dp" />
+                android:padding="8dp" />-->
         </LinearLayout>
 
         <!-- Seção de Quartos/Pessoas -->
@@ -78,47 +78,47 @@
             android:orientation="horizontal">
 
             <!-- Quartos Icon -->
-            <ImageView
+            <!--<ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_quartos"
                 android:padding="8dp"
-                app:tint="@color/blue"/>
+                app:tint="@color/blue"/>-->
 
             <!-- Quartos Text -->
-            <TextView
+            <!--<TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="@string/txt_main_quartos"
                 android:textColor="@color/black"
-                android:padding="8dp" />
+                android:padding="8dp" />-->
 
             <!-- Pessoas Icon -->
-            <ImageView
+            <!--<ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_pessoas"
                 android:padding="8dp"
-                app:tint="@color/blue"/>
+                app:tint="@color/blue"/>-->
 
             <!-- Pessoas Text -->
-            <TextView
+            <!--<TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="@string/txt_main_pessoas"
                 android:textColor="@color/black"
-                android:padding="8dp" />
+                android:padding="8dp" />-->
         </LinearLayout>
 
         <!-- Botão de Pesquisa -->
-        <Button
+        <!--<Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/txt_main_pesquisar"
             android:padding="16dp"
-            android:backgroundTint="@color/blue"/>
+            android:backgroundTint="@color/blue"/>-->
 
         <androidx.cardview.widget.CardView
             android:id="@+id/cardView"

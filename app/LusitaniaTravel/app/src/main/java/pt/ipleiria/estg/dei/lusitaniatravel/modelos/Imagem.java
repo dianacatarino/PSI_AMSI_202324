@@ -3,12 +3,12 @@ package pt.ipleiria.estg.dei.lusitaniatravel.modelos;
 public class Imagem {
     private int id;
     private String filename;
-    private String fornecedorNome;
+    private int fornecedorId;
 
-    public Imagem(int id, String filename, String fornecedorNome) {
+    public Imagem(int id, String filename, int fornecedorId) {
         this.id = id;
         this.filename = filename;
-        this.fornecedorNome = fornecedorNome;
+        this.fornecedorId = fornecedorId;
     }
 
     public int getId() {
@@ -23,11 +23,11 @@ public class Imagem {
         this.filename = filename;
     }
 
-    public String getFornecedorNome() {
-        return fornecedorNome;
+    public int getFornecedorId() {
+        return fornecedorId;
     }
 
-    public void setFornecedorNome(String fornecedorNome) {
-        this.fornecedorNome = fornecedorNome;
+    public void setFornecedorId(int fornecedorId) {
+        this.fornecedorId = fornecedorId;
     }
 }

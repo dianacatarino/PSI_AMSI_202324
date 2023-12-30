@@ -10,6 +10,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 
 import org.json.JSONArray;
 
@@ -27,15 +28,12 @@ public class SingletonGestorLusitaniaTravel {
     private ArrayList<Profile> profiles;
     private static SingletonGestorLusitaniaTravel instance = null;
     private LusitaniaTravelBDHelper lusitaniaTravelBDHelper = null;
-    private String username = "diana";
-    private String password = "diana123";
-
-
+    private String username = "lusitaniatravel";
+    private String password = "admin123";
 
     private static RequestQueue volleyQueue = null;
-    private static final String mUrlAPIFornecedores = "http://localhost/LusitaniaTravelAPI/backend/web/api/fornecedor";
-    private static final String mUrlAPILogin = "http://localhost/LusitaniaTravelAPI/backend/web/api";
-    private static final String TOKEN = "j8th_N_UlbaTSb2sCmagTNTP-lD28syt";
+    private static final String mUrlAPIFornecedores = "http://10.0.2.2/LusitaniaTravelAPI/backend/web/api/fornecedor/alojamentos";
+    private static final String mUrlAPILogin = "http://10.0.2.2/LusitaniaTravelAPI/backend/web/api";
     private FornecedoresListener fornecedoresListener;
     private FornecedorListener fornecedorListener;
 
@@ -43,6 +41,9 @@ public class SingletonGestorLusitaniaTravel {
     public static synchronized SingletonGestorLusitaniaTravel getInstance(Context context) {
         if (instance == null) {
             instance = new SingletonGestorLusitaniaTravel(context);
+        }
+        if (volleyQueue == null) {
+            volleyQueue = Volley.newRequestQueue(context);
         }
         return instance;
     }
