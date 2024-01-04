@@ -27,12 +27,12 @@
     <string name="txt_menu_conta">Conta</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="txt_item_nome">Nome</string>
+    <string name="txt_item_nome">Nome: </string>
     <string name="txt_item_responsavel">Responsável</string>
-    <string name="txt_item_tipo">Tipo</string>
-    <string name="txt_item_localizacao">Localização</string>
-    <string name="txt_item_acomodacoes">Acomodações</string>
+    <string name="txt_item_tipo">Tipo: </string>
+    <string name="txt_item_localizacao">Localização: </string>
+    <string name="txt_item_acomodacoes">Acomodações: </string>
     <string name="txt_item_tipo_de_quartos">Tipo de Quartos</string>
     <string name="txt_item_n_quartos">Nº Quartos </string>
-    <string name="txt_item_preco_por_noite">Preço</string>
+    <string name="txt_item_preco_por_noite">Preço:</string>
 </resources>

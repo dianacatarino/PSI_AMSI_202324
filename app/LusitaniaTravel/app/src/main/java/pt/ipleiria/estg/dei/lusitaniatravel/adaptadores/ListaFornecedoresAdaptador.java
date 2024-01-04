@@ -107,9 +107,12 @@ public class ListaFornecedoresAdaptador extends BaseAdapter {
         }
 
         private String buildImageUrl(Imagem imagem) {
-            // Construindo a URL completa usando o URL base e o caminho relativo da imagem
-            String baseUrl = "http://10.0.2.2/LusitaniaTravel/common/public";
-            return baseUrl + imagem.getFilename();
+            // Obtendo o caminho relativo da imagem
+            String relativePath = imagem.getFilename();
+
+            // Construindo a URL completa usando o domínio base
+            String baseUrl = "http://10.0.2.2";
+            return baseUrl + relativePath;
         }
     }
 }

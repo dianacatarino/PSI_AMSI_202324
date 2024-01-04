@@ -1,15 +1,20 @@
 package pt.ipleiria.estg.dei.lusitaniatravel.modelos;
 
+import java.util.List;
+
 public class User {
     private int id;
     private String username, password, repeatPassword, email;
 
-    public User(int id, String username, String password, String repeatPassword, String email) {
+    private int profileId;
+
+    public User(int id, String username, String password, String repeatPassword, String email, int profileId) {
         this.id = id;
         this.username = username;
         this.password = password;
         this.repeatPassword = repeatPassword;
         this.email = email;
+        this.profileId = profileId;
     }
 
     public int getId() {
@@ -50,5 +55,13 @@ public class User {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public int getProfileId() {
+        return profileId;
+    }
+
+    public void setProfileId(int profileId) {
+        this.profileId = profileId;
     }
 }

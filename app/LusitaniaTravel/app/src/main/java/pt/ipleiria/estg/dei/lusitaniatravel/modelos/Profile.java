@@ -1,10 +1,14 @@
 package pt.ipleiria.estg.dei.lusitaniatravel.modelos;
 
+import java.util.List;
+
 public class Profile {
     private int id;
-    private String name, mobile, street, locale, postalCode, role, usernameUser;
+    private String name, mobile, street, locale, postalCode, role;
 
-    public Profile(int id, String name, String mobile, String street, String locale, String postalCode, String role, String usernameUser) {
+    private int userId;
+
+    public Profile(int id, String name, String mobile, String street, String locale, String postalCode, String role, int userId) {
         this.id = id;
         this.name = name;
         this.mobile = mobile;
@@ -12,7 +16,7 @@ public class Profile {
         this.locale = locale;
         this.postalCode = postalCode;
         this.role = role;
-        this.usernameUser = usernameUser;
+        this.userId = userId;
     }
 
     public int getId() {
@@ -71,11 +75,11 @@ public class Profile {
         this.role = role;
     }
 
-    public String getUsernameUser() {
-        return usernameUser;
+    public int getUserId() {
+        return userId;
     }
 
-    public void setUsernameUser(String usernameUser) {
-        this.usernameUser = usernameUser;
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 }

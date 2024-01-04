@@ -28,6 +28,15 @@ public class LusitaniaTravelBDHelper extends SQLiteOpenHelper {
     private static final String RESERVA_FUNCIONARIO_ID = "funcionario_id";
     private static final String RESERVA_FORNECEDOR_ID = "fornecedor_id";
 
+    // Tabela User
+    private static final String TABLE_USER = "User";
+    private static final String USER_ID = "id";
+    private static final String USER_USERNAME = "username";
+    private static final String USER_PASSWORD = "password";
+    private static final String USER_REPEAT_PASSWORD = "repeatpassword";
+    private static final String USER_EMAIL = "email";
+    private static final String USER_PROFILE_ID = "profileId";
+
     // Tabela Profile
     private static final String TABLE_PROFILE = "Profile";
     private static final String PROFILE_ID = "id";
@@ -60,6 +69,15 @@ public class LusitaniaTravelBDHelper extends SQLiteOpenHelper {
                 RESERVA_FORNECEDOR_ID + " INT NOT NULL);";
         sqLiteDatabase.execSQL(sqlCreateReservaTable);
 
+        String sqlCreateUserTable = "CREATE TABLE " + TABLE_USER +
+                "(" + USER_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                USER_USERNAME + " VARCHAR(25) NOT NULL, " +
+                USER_PASSWORD + " VARCHAR(50) NOT NULL, " +
+                USER_REPEAT_PASSWORD + " VARCHAR(50) NOT NULL, " +
+                USER_EMAIL + " VARCHAR(50) NOT NULL, " +
+                USER_PROFILE_ID + " INT NOT NULL);";
+        sqLiteDatabase.execSQL(sqlCreateUserTable);
+
         String sqlCreateProfileTable = "CREATE TABLE " + TABLE_PROFILE +
                 "(" + PROFILE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 PROFILE_NAME + " VARCHAR(25) NOT NULL, " +
@@ -73,8 +91,8 @@ public class LusitaniaTravelBDHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
-        // Atualize suas tabelas aqui conforme necessário
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TABLE_RESERVA);
+        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TABLE_USER);
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TABLE_PROFILE);
         this.onCreate(sqLiteDatabase);
     }
@@ -147,6 +165,58 @@ public class LusitaniaTravelBDHelper extends SQLiteOpenHelper {
         this.db.delete(TABLE_RESERVA, null, null);
     }
 
+    public void adicionarUserBD(User user) throws SQLException {
+        ContentValues values = new ContentValues();
+        values.put(USER_USERNAME, user.getUsername());
+        values.put(USER_PASSWORD, user.getPassword());
+        values.put(USER_REPEAT_PASSWORD, user.getRepeatPassword());
+        values.put(USER_EMAIL, user.getEmail());
+        values.put(USER_PROFILE_ID, user.getProfileId());
+
+        long result = this.db.insert(TABLE_USER, null, values);
+
+        if (result == -1) {
+            throw new SQLException("Erro ao adicionar user.");
+        }
+    }
+
+    public boolean editarUserBD(User user) throws SQLException {
+        ContentValues values = new ContentValues();
+        values.put(USER_USERNAME, user.getUsername());
+        values.put(USER_PASSWORD, user.getPassword());
+        values.put(USER_REPEAT_PASSWORD, user.getRepeatPassword());
+        values.put(USER_EMAIL, user.getEmail());
+        values.put(USER_PROFILE_ID, user.getProfileId());
+
+        int nLinhasUpdate = this.db.update(TABLE_USER, values, USER_ID + "=?", new String[]{String.valueOf(user.getId())});
+        return nLinhasUpdate > 0;
+    }
+
+    public boolean removerUserBD(int idUser) throws SQLException {
+        int nLinhasDel = this.db.delete(TABLE_USER, USER_ID + "=?", new String[]{String.valueOf(idUser)});
+        return nLinhasDel > 0;
+    }
+
+    public ArrayList<User> getAllUsersBD() {
+        ArrayList<User> users = new ArrayList<>();
+
+        Cursor cursor = this.db.query(TABLE_USER, new String[]{USER_ID, USER_USERNAME, USER_PASSWORD,USER_REPEAT_PASSWORD,USER_EMAIL, USER_PROFILE_ID}, null, null, null, null, null);
+        if (cursor.moveToFirst()) {
+            do {
+                User user = new User(
+                        cursor.getInt(0),
+                        cursor.getString(1),
+                        cursor.getString(2),
+                        cursor.getString(3),
+                        cursor.getString(4),
+                        cursor.getInt(5)
+                );
+                users.add(user);
+            } while (cursor.moveToNext());
+        }
+        return users;
+    }
+
     public void adicionarProfileBD(Profile profile) throws SQLException {
         ContentValues values = new ContentValues();
         values.put(PROFILE_NAME, profile.getName());
@@ -161,6 +231,10 @@ public class LusitaniaTravelBDHelper extends SQLiteOpenHelper {
         if (result == -1) {
             throw new SQLException("Erro ao adicionar perfil.");
         }
+    }
+
+    public void removerAllUsersBD() {
+        this.db.delete(TABLE_USER, null, null);
     }
 
     public boolean editarProfileBD(Profile profile) throws SQLException {
@@ -195,7 +269,7 @@ public class LusitaniaTravelBDHelper extends SQLiteOpenHelper {
                         cursor.getString(4),
                         cursor.getString(5),
                         cursor.getString(6),
-                        cursor.getString(7)
+                        cursor.getInt(7)
                 );
                 profiles.add(profile);
             } while (cursor.moveToNext());
