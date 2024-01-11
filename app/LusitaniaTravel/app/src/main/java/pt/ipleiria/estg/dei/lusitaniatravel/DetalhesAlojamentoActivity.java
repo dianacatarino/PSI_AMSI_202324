@@ -19,14 +19,14 @@ public class DetalhesAlojamentoActivity extends AppCompatActivity {
         Intent intent = getIntent();
         Fornecedor alojamento = (Fornecedor) intent.getSerializableExtra("fornecedor");
 
-        TextView tvLocalizacao = findViewById(R.id.tvLocalizacao);
+        /*TextView tvLocalizacao = findViewById(R.id.tvLocalizacao);
         TextView tvAcomodacoes = findViewById(R.id.tvAcomodacoes);
         TextView tvPrecoPorNoite = findViewById(R.id.tvPrecoPorNoite);
 
         tvLocalizacao.setText(fornecedor.getLocalizacaoAlojamento());
         tvAcomodacoes.setText(fornecedor.getAcomodacoesAlojamento());
         tvPrecoPorNoite.setText(fornecedor.getPrecoPorNoite);
-
+*/
     }
 
 

@@ -5,7 +5,6 @@ import java.util.List;
 public class User {
     private int id;
     private String username, password, repeatPassword, email;
-
     private int profileId;
 
     public User(int id, String username, String password, String repeatPassword, String email, int profileId) {

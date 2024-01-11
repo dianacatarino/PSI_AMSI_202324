@@ -6,8 +6,7 @@
     android:layout_height="wrap_content"
     android:layout_margin="5dp"
     android:orientation="vertical"
-    tools:context=".BookingActivity"
-    android:name="Reservas">
+    android:name="Favoritos">
 
 
     <LinearLayout
@@ -27,14 +26,15 @@
             android:scaleType="centerCrop"
             android:src="@drawable/ic_launcher_background" />
 
-        <Button
-            android:id="@+id/btnDetails1"
+        <ImageButton
+            android:id="@+id/imgBtnFavorites1"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_gravity="center"
-            android:text="@string/txt_detalhes"
-            android:backgroundTint="#3c9cd4" />
+            android:src="@drawable/ic_favoritos"
+            android:backgroundTint="@color/white"
+            app:tint="@color/pink"/>
     </LinearLayout>
 
     <LinearLayout
@@ -55,14 +55,15 @@
             android:scaleType="centerCrop"
             android:src="@drawable/ic_launcher_background" />
 
-        <Button
-            android:id="@+id/btnDetails2"
+        <ImageButton
+            android:id="@+id/imgBtnFavorites2"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_gravity="center"
-            android:text="@string/txt_detalhes"
-            android:backgroundTint="#3c9cd4" />
+            android:src="@drawable/ic_favoritos"
+            android:backgroundTint="@color/white"
+            app:tint="@color/pink"/>
     </LinearLayout>
 
     <LinearLayout
@@ -83,15 +84,15 @@
             android:scaleType="centerCrop"
             android:src="@drawable/ic_launcher_background" />
 
-        <Button
-            android:id="@+id/btnDetails3"
+        <ImageButton
+            android:id="@+id/imgBtnFavorites3"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_gravity="center"
-
-            android:text="@string/txt_detalhes"
-            android:backgroundTint="#3c9cd4" />
+            android:src="@drawable/ic_favoritos"
+            android:backgroundTint="@color/white"
+            app:tint="@color/pink"/>
     </LinearLayout>
 
     <LinearLayout
@@ -112,14 +113,15 @@
             android:scaleType="centerCrop"
             android:src="@drawable/ic_launcher_background" />
 
-        <Button
-            android:id="@+id/btnDetails4"
+        <ImageButton
+            android:id="@+id/imgBtnFavorites4"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_gravity="center"
-            android:text="@string/txt_detalhes"
-            android:backgroundTint="#3c9cd4" />
+            android:src="@drawable/ic_favoritos"
+            android:backgroundTint="@color/white"
+            app:tint="@color/pink"/>
     </LinearLayout>
 
     <LinearLayout
@@ -140,22 +142,15 @@
             android:scaleType="centerCrop"
             android:src="@drawable/ic_launcher_background" />
 
-        <Button
-            android:id="@+id/btnDetails5"
+        <ImageButton
+            android:id="@+id/imgBtnFavorites5"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_gravity="center"
-            android:text="@string/txt_detalhes"
-            android:backgroundTint="#3c9cd4" />
+            android:src="@drawable/ic_favoritos"
+            android:backgroundTint="@color/white"
+            app:tint="@color/pink"/>
     </LinearLayout>
-
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        app:backgroundTint="@color/white"
-        app:menu="@menu/menu_main" />
 
 </RelativeLayout>

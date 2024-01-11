@@ -35,4 +35,5 @@
     <string name="txt_item_tipo_de_quartos">Tipo de Quartos</string>
     <string name="txt_item_n_quartos">Nº Quartos </string>
     <string name="txt_item_preco_por_noite">Preço:</string>
+    <string name="txt_menu_home">Home</string>
 </resources>
