@@ -13,7 +13,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.SearchView;
 
 import java.util.ArrayList;
 
@@ -22,15 +21,9 @@ import pt.ipleiria.estg.dei.lusitaniatravel.listeners.FornecedoresListener;
 import pt.ipleiria.estg.dei.lusitaniatravel.modelos.Fornecedor;
 import pt.ipleiria.estg.dei.lusitaniatravel.modelos.SingletonGestorLusitaniaTravel;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link ListaFornecedorFragment} factory method to
- * create an instance of this fragment.
- */
 public class ListaFornecedorFragment extends Fragment implements FornecedoresListener {
 
     private ListView lvFornecedores;
-    private SearchView searchView;
 
     public ListaFornecedorFragment () {
         // Required empty public constructor
@@ -56,7 +49,7 @@ public class ListaFornecedorFragment extends Fragment implements FornecedoresLis
             }
         });
 
-        // Configurar a barra de pesquisa
+        // Habilitar o menu para o fragmento
         setHasOptionsMenu(true);
 
         return view;
@@ -64,31 +57,7 @@ public class ListaFornecedorFragment extends Fragment implements FornecedoresLis
 
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_pesquisa, menu);
-
-        MenuItem itemPesquisa = menu.findItem(R.id.itemPesquisa);
-        searchView = (SearchView) itemPesquisa.getActionView();
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String newText) {
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                ArrayList<Fornecedor> tempListaFornecedor = new ArrayList<>();
-                SingletonGestorLusitaniaTravel.getInstance(getContext()).getAllFornecedoresAPI(new FornecedoresListener() {
-                    @Override
-                    public void onRefreshListaFornecedores(ArrayList<Fornecedor> listaFornecedores) {
-                        if (listaFornecedores != null) {
-                            tempListaFornecedor.addAll(listaFornecedores);
-                            lvFornecedores.setAdapter(new ListaFornecedoresAdaptador(getContext(), tempListaFornecedor));
-                        }
-                    }
-                }, getContext());
-                return true;
-            }
-        });
+        // Remover a inflação do menu de pesquisa
         super.onCreateOptionsMenu(menu, inflater);
     }
 

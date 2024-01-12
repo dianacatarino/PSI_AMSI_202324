@@ -1,17 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="5dp"
     android:orientation="horizontal">
-
-    <ImageView
-        android:id="@+id/imgFornecedor"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="0.3" />
 
     <LinearLayout
         android:layout_width="0dp"
@@ -20,21 +12,20 @@
         android:orientation="vertical"
         android:layout_marginStart="5dp">
 
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/textViewNomeAlojamento"
+                android:id="@+id/textViewTipoReserva"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/txt_item_nome"
+                android:text="Tipo: "
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/tvNomeAlojamento"
+                android:id="@+id/tvTipoReserva"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
         </LinearLayout>
@@ -45,68 +36,14 @@
             android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/textViewTipo"
+                android:id="@+id/textViewCheckin"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/txt_item_tipo"
-                android:textStyle="bold"/>
-
-            <TextView
-                android:id="@+id/tvTipo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/textViewLocalizacao"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/txt_item_localizacao"
-                android:textStyle="bold"/>
-
-            <TextView
-                android:id="@+id/tvLocalizacao"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/textViewAcomodacoes"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/txt_item_acomodacoes"
-                android:textStyle="bold"/>
-
-            <TextView
-                android:id="@+id/tvAcomodacoes"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/textViewPrecoPorNoite"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/txt_item_preco_por_noite"
+                android:text="Check-in: "
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/tvPrecoPorNoite"
+                android:id="@+id/tvCheckin"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
         </LinearLayout>
@@ -116,23 +53,89 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <Button
-                android:id="@+id/btnAdicionarFavoritos"
+            <TextView
+                android:id="@+id/textViewCheckout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Favoritos"
-                android:backgroundTint="@color/pink"
-                android:onClick="onAdicionarFavoritosClick"/>
+                android:text="Check-out: "
+                android:textStyle="bold" />
 
-            <Button
-                android:id="@+id/btnAdicionarCarrinho"
+            <TextView
+                android:id="@+id/tvCheckout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/textViewNumeroQuartos"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Carrinho"
-                android:backgroundTint="@color/blue"
-                android:onClick="onAdicionarCarrinhoClick"/>
+                android:text="Número de Quartos: "
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvNumeroQuartos"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/textViewNumeroClientes"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Número de Clientes: "
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvNumeroClientes"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/textViewValor"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Valor: "
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvValor"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+        <!-- Adicione outros campos relevantes para a reserva -->
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
         </LinearLayout>
 
     </LinearLayout>
+
+    <Button
+        android:id="@+id/btnDetalhesReserva"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Detalhes"
+        android:backgroundTint="@color/black"
+        android:onClick="onDetalhesReservaClick" />
 
 </LinearLayout>

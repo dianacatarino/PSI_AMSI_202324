@@ -19,6 +19,7 @@ import org.json.JSONArray;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import pt.ipleiria.estg.dei.lusitaniatravel.listeners.FornecedorListener;
@@ -37,8 +38,9 @@ public class SingletonGestorLusitaniaTravel {
     private String username;
     private String password;
     private static RequestQueue volleyQueue = null;
-    private static final String mUrlAPIFornecedores = "http://10.0.2.2/LusitaniaTravelAPI/backend/web/api/fornecedor/alojamentos";
     private static final String mUrlAPILogin = "http://10.0.2.2/LusitaniaTravelAPI/backend/web/api/user/login/%s/%s";
+    private static final String mUrlAPIFornecedores = "http://10.0.2.2/LusitaniaTravelAPI/backend/web/api/fornecedor/alojamentos";
+    private static final String mUrlAPILocalizacao = "http://10.0.2.2/LusitaniaTravelAPI/backend/web/api/fornecedor/localizacao/%s";
     private FornecedoresListener fornecedoresListener;
     private FornecedorListener fornecedorListener;
 
@@ -285,6 +287,42 @@ public class SingletonGestorLusitaniaTravel {
         }
     }
 
+    // Método para obter fornecedores com base na localização
+    public void getLocalizacaoFornecedoresAPI(String localizacao, FornecedoresListener listener, Context context) {
+        if (!FornecedorJsonParser.isConnectionInternet(context)) {
+            Toast.makeText(context, "Não tem ligação à Internet", Toast.LENGTH_SHORT).show();
+        } else {
+            String username = SingletonGestorLusitaniaTravel.getInstance(context).getUsername();
+            String password = SingletonGestorLusitaniaTravel.getInstance(context).getPassword();
+
+            String url = String.format(mUrlAPILocalizacao, localizacao);
+            JsonArrayRequest req = new JsonArrayRequest(Request.Method.GET, url, null,
+                    new Response.Listener<JSONArray>() {
+                        @Override
+                        public void onResponse(JSONArray response) {
+                            fornecedores = FornecedorJsonParser.parserJsonFornecedores(response);
+                            if (listener != null)
+                                listener.onRefreshListaFornecedores(fornecedores);
+                        }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            Toast.makeText(context, error.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    }) {
+                @Override
+                public Map<String, String> getHeaders() {
+                    Map<String, String> headers = new HashMap<>();
+                    String credentials = username + ":" + password;
+                    String auth = "Basic " + Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
+                    headers.put("Authorization", auth);
+                    return headers;
+                }
+            };
+            volleyQueue.add(req);
+        }
+    }
 
     /*public void removerFornecedorAPI(final Fornecedor fornecedor, final Context context){
         if(!FornecedorJsonParser.isConnectionInternet(context)){
