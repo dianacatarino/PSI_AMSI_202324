@@ -16,6 +16,11 @@ public class User {
         this.profileId = profileId;
     }
 
+    public User(String username, String password) {
+        this.username = username;
+        this.password = password;
+    }
+
     public int getId() {
         return id;
     }
@@ -62,5 +67,10 @@ public class User {
 
     public void setProfileId(int profileId) {
         this.profileId = profileId;
+    }
+
+    @Override
+    public String toString() {
+        return "User{id=" + id + ", username='" + username + '\'' + ", password='" + password + '\'' + '}';
     }
 }

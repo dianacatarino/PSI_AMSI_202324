@@ -1,7 +1,10 @@
 package pt.ipleiria.estg.dei.lusitaniatravel.modelos;
 
 import android.content.Context;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Base64;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -20,7 +23,10 @@ import java.util.Map;
 
 import pt.ipleiria.estg.dei.lusitaniatravel.listeners.FornecedorListener;
 import pt.ipleiria.estg.dei.lusitaniatravel.listeners.FornecedoresListener;
+import pt.ipleiria.estg.dei.lusitaniatravel.listeners.LoginListener;
 import pt.ipleiria.estg.dei.lusitaniatravel.utils.FornecedorJsonParser;
+import pt.ipleiria.estg.dei.lusitaniatravel.utils.LoginJsonParser;
+import pt.ipleiria.estg.dei.lusitaniatravel.modelos.User;
 
 public class SingletonGestorLusitaniaTravel {
     private ArrayList<Fornecedor> fornecedores;
@@ -28,14 +34,15 @@ public class SingletonGestorLusitaniaTravel {
     private ArrayList<Profile> profiles;
     private static SingletonGestorLusitaniaTravel instance = null;
     private LusitaniaTravelBDHelper lusitaniaTravelBDHelper = null;
-    private String username = "lusitaniatravel";
-    private String password = "admin123";
-
+    private String username;
+    private String password;
     private static RequestQueue volleyQueue = null;
     private static final String mUrlAPIFornecedores = "http://10.0.2.2/LusitaniaTravelAPI/backend/web/api/fornecedor/alojamentos";
-    private static final String mUrlAPILogin = "http://10.0.2.2/LusitaniaTravelAPI/backend/web/api";
+    private static final String mUrlAPILogin = "http://10.0.2.2/LusitaniaTravelAPI/backend/web/api/user/login/%s/%s";
     private FornecedoresListener fornecedoresListener;
     private FornecedorListener fornecedorListener;
+
+    private LoginListener loginListener;
 
     // Método que garante apenas uma instância do Singleton
     public static synchronized SingletonGestorLusitaniaTravel getInstance(Context context) {
@@ -64,9 +71,21 @@ public class SingletonGestorLusitaniaTravel {
         this.fornecedorListener = fornecedorListener;
     }
 
+    public void setLoginListener(LoginListener loginListener) {
+        this.loginListener = loginListener;
+    }
+
     public void setCredentials(String username, String password) {
         this.username = username;
         this.password = password;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public String getPassword() {
+        return password;
     }
 
     //region PEDIDOS BDLOCAL
@@ -139,6 +158,63 @@ public class SingletonGestorLusitaniaTravel {
     //endregion
 
     //region PEDIDOS API
+    public void loginAPI(String username, String password, Context context) {
+        if (!LoginJsonParser.isConnectionInternet(context)) {
+            Toast.makeText(context, "Não tem ligação à Internet", Toast.LENGTH_SHORT).show();
+        } else {
+            String url = String.format(mUrlAPILogin, username, password);
+
+            StringRequest req = new StringRequest(Request.Method.GET, url,
+                    new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String response) {
+                            // Executar no thread principal
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    User user = LoginJsonParser.parserJsonLogin(response);
+
+                                    // Chamada ao método onUpdateLogin com o objeto User
+                                    if (loginListener != null) {
+                                        loginListener.onUpdateLogin(user);
+                                    }
+                                }
+                            });
+                        }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            // Executar no thread principal
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Log.e("LoginError", "Error: " + error.getMessage());
+                                    Toast.makeText(context, "Error: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                        }
+                    }) {
+                @Override
+                public Map<String, String> getHeaders() {
+                    Map<String, String> headers = new HashMap<>();
+                    String credentials = username + ":" + password;
+                    String auth = "Basic " + Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
+                    headers.put("Authorization", auth);
+                    return headers;
+                }
+            };
+
+            volleyQueue.add(req);
+        }
+    }
+
+    // Método auxiliar para executar no thread principal
+    private void runOnUiThread(Runnable runnable) {
+        new Handler(Looper.getMainLooper()).post(runnable);
+    }
+
+
     /*public void adicionarFornecedorAPI(final Fornecedor fornecedor, final Context context){
         if(!FornecedorJsonParser.isConnectionInternet(context)){
             Toast.makeText(context,"Não tem ligação à Internet",Toast.LENGTH_SHORT).show();
@@ -178,6 +254,9 @@ public class SingletonGestorLusitaniaTravel {
         if (!FornecedorJsonParser.isConnectionInternet(context)) {
             Toast.makeText(context, "Não tem ligação à Internet", Toast.LENGTH_SHORT).show();
         } else {
+            String username = SingletonGestorLusitaniaTravel.getInstance(context).getUsername();
+            String password = SingletonGestorLusitaniaTravel.getInstance(context).getPassword();
+
             JsonArrayRequest req = new JsonArrayRequest(Request.Method.GET, mUrlAPIFornecedores, null,
                     new Response.Listener<JSONArray>() {
                         @Override
@@ -205,6 +284,7 @@ public class SingletonGestorLusitaniaTravel {
             volleyQueue.add(req);
         }
     }
+
 
     /*public void removerFornecedorAPI(final Fornecedor fornecedor, final Context context){
         if(!FornecedorJsonParser.isConnectionInternet(context)){

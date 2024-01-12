@@ -31,12 +31,14 @@
             android:src="@drawable/logo_horizontal" />
 
         <EditText
-            android:id="@+id/etEmail"
+            android:id="@+id/etUsername"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:hint="@string/txt_email"
-            android:inputType="textEmailAddress" />
+            android:hint="@string/txt_username"
+            android:inputType="textPersonName"
+            android:drawableRight="@drawable/ic_conta"
+            android:drawablePadding="8dp"/>
 
         <EditText
             android:id="@+id/etPassword"
@@ -44,7 +46,9 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:hint="@string/txt_password"
-            android:inputType="textPassword" />
+            android:inputType="textPassword"
+            android:drawableRight="@drawable/ic_password"
+            android:drawablePadding="8dp"/>
         <View
             android:id="@+id/view2"
             android:layout_width="match_parent"
