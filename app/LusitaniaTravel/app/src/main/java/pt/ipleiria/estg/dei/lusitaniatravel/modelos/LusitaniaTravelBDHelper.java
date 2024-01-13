@@ -35,7 +35,7 @@ public class LusitaniaTravelBDHelper extends SQLiteOpenHelper {
     private static final String USER_PASSWORD = "password";
     private static final String USER_REPEAT_PASSWORD = "repeatpassword";
     private static final String USER_EMAIL = "email";
-    private static final String USER_PROFILE_ID = "profileId";
+    private static final String USER_PROFILE = "profile";
 
     // Tabela Profile
     private static final String TABLE_PROFILE = "Profile";
@@ -75,7 +75,7 @@ public class LusitaniaTravelBDHelper extends SQLiteOpenHelper {
                 USER_PASSWORD + " VARCHAR(50) NOT NULL, " +
                 USER_REPEAT_PASSWORD + " VARCHAR(50) NOT NULL, " +
                 USER_EMAIL + " VARCHAR(50) NOT NULL, " +
-                USER_PROFILE_ID + " INT NOT NULL);";
+                USER_PROFILE + " INT NOT NULL);";
         sqLiteDatabase.execSQL(sqlCreateUserTable);
 
         String sqlCreateProfileTable = "CREATE TABLE " + TABLE_PROFILE +
@@ -171,7 +171,6 @@ public class LusitaniaTravelBDHelper extends SQLiteOpenHelper {
         values.put(USER_PASSWORD, user.getPassword());
         values.put(USER_REPEAT_PASSWORD, user.getRepeatPassword());
         values.put(USER_EMAIL, user.getEmail());
-        values.put(USER_PROFILE_ID, user.getProfileId());
 
         long result = this.db.insert(TABLE_USER, null, values);
 
@@ -186,7 +185,6 @@ public class LusitaniaTravelBDHelper extends SQLiteOpenHelper {
         values.put(USER_PASSWORD, user.getPassword());
         values.put(USER_REPEAT_PASSWORD, user.getRepeatPassword());
         values.put(USER_EMAIL, user.getEmail());
-        values.put(USER_PROFILE_ID, user.getProfileId());
 
         int nLinhasUpdate = this.db.update(TABLE_USER, values, USER_ID + "=?", new String[]{String.valueOf(user.getId())});
         return nLinhasUpdate > 0;
@@ -200,17 +198,29 @@ public class LusitaniaTravelBDHelper extends SQLiteOpenHelper {
     public ArrayList<User> getAllUsersBD() {
         ArrayList<User> users = new ArrayList<>();
 
-        Cursor cursor = this.db.query(TABLE_USER, new String[]{USER_ID, USER_USERNAME, USER_PASSWORD,USER_REPEAT_PASSWORD,USER_EMAIL, USER_PROFILE_ID}, null, null, null, null, null);
+        Cursor cursor = this.db.query(TABLE_USER, new String[]{USER_ID, USER_USERNAME, USER_PASSWORD, USER_REPEAT_PASSWORD, USER_EMAIL, USER_PROFILE}, null, null, null, null, null);
         if (cursor.moveToFirst()) {
             do {
-                User user = new User(
-                        cursor.getInt(0),
-                        cursor.getString(1),
-                        cursor.getString(2),
-                        cursor.getString(3),
-                        cursor.getString(4),
-                        cursor.getInt(5)
+                int userId = cursor.getInt(0);
+                String username = cursor.getString(1);
+                String password = cursor.getString(2);
+                String repeatPassword = cursor.getString(3);
+                String email = cursor.getString(4);
+
+                // Agora, crie um objeto Profile com as informações do banco de dados
+                Profile profile = new Profile(
+                        cursor.getInt(5),
+                        cursor.getString(6),
+                        cursor.getString(7),
+                        cursor.getString(8),
+                        cursor.getString(9),
+                        cursor.getString(10),
+                        cursor.getString(11),
+                        cursor.getInt(12)
                 );
+
+                // Crie o objeto User passando o Profile como último parâmetro
+                User user = new User(userId, username, password, repeatPassword, email, profile);
                 users.add(user);
             } while (cursor.moveToNext());
         }

@@ -5,15 +5,15 @@ import java.util.List;
 public class User {
     private int id;
     private String username, password, repeatPassword, email;
-    private int profileId;
+    private Profile profile;
 
-    public User(int id, String username, String password, String repeatPassword, String email, int profileId) {
+    public User(int id, String username, String password, String repeatPassword, String email, Profile profile) {
         this.id = id;
         this.username = username;
         this.password = password;
         this.repeatPassword = repeatPassword;
         this.email = email;
-        this.profileId = profileId;
+        this.profile = profile;
     }
 
     public User(String username, String password) {
@@ -61,12 +61,12 @@ public class User {
         this.email = email;
     }
 
-    public int getProfileId() {
-        return profileId;
+    public void setProfile(Profile profile) {
+        this.profile = profile;
     }
 
-    public void setProfileId(int profileId) {
-        this.profileId = profileId;
+    public Profile getProfile() {
+        return profile;
     }
 
     @Override

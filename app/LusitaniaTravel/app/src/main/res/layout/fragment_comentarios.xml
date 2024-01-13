@@ -6,7 +6,6 @@
     android:layout_height="wrap_content"
     android:layout_margin="5dp"
     android:orientation="vertical"
-    tools:context=".CommentsActivity"
     android:name="Comentários">
 
 
@@ -149,14 +148,6 @@
             android:text="@string/txt_detalhes"
             android:backgroundTint="#3c9cd4" />
     </LinearLayout>
-
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        app:backgroundTint="@color/white"
-        app:menu="@menu/menu_main" />
 
 </RelativeLayout>
 

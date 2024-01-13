@@ -12,10 +12,12 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
 import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -25,9 +27,11 @@ import java.util.Map;
 import pt.ipleiria.estg.dei.lusitaniatravel.listeners.FornecedorListener;
 import pt.ipleiria.estg.dei.lusitaniatravel.listeners.FornecedoresListener;
 import pt.ipleiria.estg.dei.lusitaniatravel.listeners.LoginListener;
+import pt.ipleiria.estg.dei.lusitaniatravel.listeners.UserListener;
 import pt.ipleiria.estg.dei.lusitaniatravel.utils.FornecedorJsonParser;
 import pt.ipleiria.estg.dei.lusitaniatravel.utils.LoginJsonParser;
 import pt.ipleiria.estg.dei.lusitaniatravel.modelos.User;
+import pt.ipleiria.estg.dei.lusitaniatravel.utils.UserJsonParser;
 
 public class SingletonGestorLusitaniaTravel {
     private ArrayList<Fornecedor> fornecedores;
@@ -41,10 +45,11 @@ public class SingletonGestorLusitaniaTravel {
     private static final String mUrlAPILogin = "http://10.0.2.2/LusitaniaTravelAPI/backend/web/api/user/login/%s/%s";
     private static final String mUrlAPIFornecedores = "http://10.0.2.2/LusitaniaTravelAPI/backend/web/api/fornecedor/alojamentos";
     private static final String mUrlAPILocalizacao = "http://10.0.2.2/LusitaniaTravelAPI/backend/web/api/fornecedor/localizacao/%s";
+    private static final String mUrlAPIDefinicoes = "http://10.0.2.2/LusitaniaTravelAPI/backend/web/api/user/mostrar/%s";
     private FornecedoresListener fornecedoresListener;
     private FornecedorListener fornecedorListener;
-
     private LoginListener loginListener;
+    private UserListener userListener;
 
     // Método que garante apenas uma instância do Singleton
     public static synchronized SingletonGestorLusitaniaTravel getInstance(Context context) {
@@ -88,6 +93,10 @@ public class SingletonGestorLusitaniaTravel {
 
     public String getPassword() {
         return password;
+    }
+
+    public void setUserListener(UserListener userListener) {
+        this.userListener = userListener;
     }
 
     //region PEDIDOS BDLOCAL
@@ -286,6 +295,62 @@ public class SingletonGestorLusitaniaTravel {
             volleyQueue.add(req);
         }
     }
+
+    public void getUserDefinicoesAPI(Context context) {
+        if (!LoginJsonParser.isConnectionInternet(context)) {
+            Toast.makeText(context, "Não tem ligação à Internet", Toast.LENGTH_SHORT).show();
+        } else {
+            String url = String.format(mUrlAPIDefinicoes, getUsername());
+
+            JsonObjectRequest req = new JsonObjectRequest(Request.Method.GET, url, null,
+                    new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            // Convert JSONObject to String
+                            String jsonResponse = response.toString();
+
+                            // Executar no thread principal
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    // Parse do JSON para obter as definições do usuário
+                                    User user = UserJsonParser.parserJsonUser(jsonResponse);
+
+                                    // Chamada ao método onUpdateDefinicoes com o objeto UserDefinicoes
+                                    if (userListener != null) {
+                                        userListener.onRefreshDetalhes(user);
+                                    }
+                                }
+                            });
+                        }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            // Executar no thread principal
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Log.e("DefinicoesError", "Error: " + error.getMessage());
+                                    Toast.makeText(context, "Error: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                        }
+                    }) {
+                @Override
+                public Map<String, String> getHeaders() {
+                    Map<String, String> headers = new HashMap<>();
+                    String credentials = getUsername() + ":" + getPassword();
+                    String auth = "Basic " + Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
+                    headers.put("Authorization", auth);
+                    return headers;
+                }
+            };
+
+            volleyQueue.add(req);
+        }
+    }
+
 
     // Método para obter fornecedores com base na localização
     public void getLocalizacaoFornecedoresAPI(String localizacao, FornecedoresListener listener, Context context) {

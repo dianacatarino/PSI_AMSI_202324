@@ -25,7 +25,6 @@
     <string name="txt_menu_favoritos">Favoritos</string>
     <string name="txt_menu_reservas">Reservas</string>
     <string name="txt_menu_conta">Conta</string>
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="txt_item_nome">Nome: </string>
     <string name="txt_item_responsavel">Responsável</string>
@@ -36,4 +35,14 @@
     <string name="txt_item_n_quartos">Nº Quartos </string>
     <string name="txt_item_preco_por_noite">Preço:</string>
     <string name="txt_menu_home">Home</string>
+    <string name="txt_user_definicoes">Definições</string>
+    <string name="txt_user_meus_comentarios">Os Meus Comentários</string>
+    <string name="txt_user_faturas">As Minhas Faturas</string>
+    <string name="txt_definicoes_username">Username</string>
+    <string name="txt_definicoes_email">Email</string>
+    <string name="txt_definicoes_nome">Nome</string>
+    <string name="txt_definicoes_telemovel">Telemóvel</string>
+    <string name="txt_definicoes_rua">Rua</string>
+    <string name="txt_definicoes_localidade">Localidade</string>
+    <string name="txt_definicoes_codigo_postal">Código Postal</string>
 </resources>

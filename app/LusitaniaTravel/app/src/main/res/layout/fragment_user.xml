@@ -6,6 +6,12 @@
     android:layout_height="match_parent"
     android:name="User">
 
+    <FrameLayout
+        android:id="@+id/fragmentContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="16dp"/>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -45,9 +51,10 @@
                 android:src="@drawable/ic_comentarios"
                 app:tint="@color/blue"/>
             <Button
+                android:id="@+id/btnComentarios"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Os Meus Comentários"
+                android:text="@string/txt_user_meus_comentarios"
                 android:textColor="@color/black"
                 android:padding="8dp"
                 android:backgroundTint="@color/white" />
@@ -66,9 +73,10 @@
                 android:src="@drawable/ic_definicoes"
                 app:tint="@color/blue"/>
             <Button
+                android:id="@+id/btnDefinicoes"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Definições"
+                android:text="@string/txt_user_definicoes"
                 android:textColor="@color/black"
                 android:padding="8dp"
                 android:backgroundTint="@color/white" />
@@ -87,12 +95,13 @@
                 android:src="@drawable/ic_faturas"
                 app:tint="@color/blue"/>
             <Button
+                android:id="@+id/btnFaturas"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="As Minhas Faturas"
+                android:text="@string/txt_user_faturas"
                 android:textColor="@color/black"
                 android:padding="8dp"
-                android:backgroundTint="@color/white"/>
+                android:backgroundTint="@color/white" />
         </LinearLayout>
 
     </LinearLayout>
