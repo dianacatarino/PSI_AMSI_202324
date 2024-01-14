@@ -70,4 +70,14 @@
         android:text="@string/txt_definicoes_codigo_postal"
         android:gravity="center"
         android:textSize="18sp"/>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabEdit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_margin="16dp"
+        android:src="@drawable/ic_definicoes_editar"
+        android:backgroundTint="@color/blue"/>
 </LinearLayout>

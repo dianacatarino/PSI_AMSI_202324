@@ -17,6 +17,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -27,10 +28,12 @@ import java.util.Map;
 import pt.ipleiria.estg.dei.lusitaniatravel.listeners.FornecedorListener;
 import pt.ipleiria.estg.dei.lusitaniatravel.listeners.FornecedoresListener;
 import pt.ipleiria.estg.dei.lusitaniatravel.listeners.LoginListener;
+import pt.ipleiria.estg.dei.lusitaniatravel.listeners.SignUpListener;
 import pt.ipleiria.estg.dei.lusitaniatravel.listeners.UserListener;
 import pt.ipleiria.estg.dei.lusitaniatravel.utils.FornecedorJsonParser;
 import pt.ipleiria.estg.dei.lusitaniatravel.utils.LoginJsonParser;
 import pt.ipleiria.estg.dei.lusitaniatravel.modelos.User;
+import pt.ipleiria.estg.dei.lusitaniatravel.utils.SignUpJsonParser;
 import pt.ipleiria.estg.dei.lusitaniatravel.utils.UserJsonParser;
 
 public class SingletonGestorLusitaniaTravel {
@@ -43,12 +46,14 @@ public class SingletonGestorLusitaniaTravel {
     private String password;
     private static RequestQueue volleyQueue = null;
     private static final String mUrlAPILogin = "http://10.0.2.2/LusitaniaTravelAPI/backend/web/api/user/login/%s/%s";
+    private static final String mUrlAPIRegister = "http://10.0.2.2/LusitaniaTravelAPI/backend/web/api/user/register";
     private static final String mUrlAPIFornecedores = "http://10.0.2.2/LusitaniaTravelAPI/backend/web/api/fornecedor/alojamentos";
     private static final String mUrlAPILocalizacao = "http://10.0.2.2/LusitaniaTravelAPI/backend/web/api/fornecedor/localizacao/%s";
     private static final String mUrlAPIDefinicoes = "http://10.0.2.2/LusitaniaTravelAPI/backend/web/api/user/mostrar/%s";
     private FornecedoresListener fornecedoresListener;
     private FornecedorListener fornecedorListener;
     private LoginListener loginListener;
+    private SignUpListener signUpListener;
     private UserListener userListener;
 
     // Método que garante apenas uma instância do Singleton
@@ -80,6 +85,10 @@ public class SingletonGestorLusitaniaTravel {
 
     public void setLoginListener(LoginListener loginListener) {
         this.loginListener = loginListener;
+    }
+
+    public void setSignUpListener(SignUpListener signupListener) {
+        this.signUpListener = signupListener;
     }
 
     public void setCredentials(String username, String password) {
@@ -225,6 +234,77 @@ public class SingletonGestorLusitaniaTravel {
         new Handler(Looper.getMainLooper()).post(runnable);
     }
 
+    public void registerAPI(String username, String password, String email,
+                            String name, String mobile, String street, String locale, String postalCode,
+                            Context context) {
+        if (!LoginJsonParser.isConnectionInternet(context)) {
+            Toast.makeText(context, "Não tem ligação à Internet", Toast.LENGTH_SHORT).show();
+        } else {
+            String url = mUrlAPIRegister;
+
+            // Construir o corpo da solicitação POST
+            JSONObject jsonBody = new JSONObject();
+            try {
+                jsonBody.put("username", username);
+                jsonBody.put("password", password);
+                jsonBody.put("email", email);
+                jsonBody.put("name", name);
+                jsonBody.put("mobile", mobile);
+                jsonBody.put("street", street);
+                jsonBody.put("locale", locale);
+                jsonBody.put("postalCode", postalCode);
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            JsonObjectRequest req = new JsonObjectRequest(Request.Method.POST, url, jsonBody,
+                    new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            // Executar no thread principal
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    // Analisar a resposta usando SignUpJsonParser
+                                    User user = SignUpJsonParser.parserJsonRegister(response.toString());
+                                    Log.d("SignUpResponse", "Raw Response: " + response);
+
+                                    // Notificar o ouvinte de registro
+                                    if (signUpListener != null) {
+                                        signUpListener.onUpdateSignUp(user);
+                                    }
+                                }
+                            });
+                        }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            // Executar no thread principal
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Log.e("RegisterError", "Error: " + error.getMessage());
+                                    Toast.makeText(context, "Error: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                        }
+                    }) {
+                @Override
+                public Map<String, String> getHeaders() {
+                    Map<String, String> headers = new HashMap<>();
+                    // Adicione as credenciais ao cabeçalho (username e password)
+                    String auth = "Basic " + Base64.encodeToString("lusitaniatravel:admin123".getBytes(), Base64.NO_WRAP);
+                    headers.put("Authorization", auth);
+                    return headers;
+                }
+            };
+
+            volleyQueue.add(req);
+        }
+    }
+
 
     /*public void adicionarFornecedorAPI(final Fornecedor fornecedor, final Context context){
         if(!FornecedorJsonParser.isConnectionInternet(context)){
@@ -313,7 +393,7 @@ public class SingletonGestorLusitaniaTravel {
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    // Parse do JSON para obter as definições do usuário
+                                    // Parse do JSON para obter as definições do user
                                     User user = UserJsonParser.parserJsonUser(jsonResponse);
 
                                     // Chamada ao método onUpdateDefinicoes com o objeto UserDefinicoes

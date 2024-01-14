@@ -4,10 +4,12 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import pt.ipleiria.estg.dei.lusitaniatravel.listeners.UserListener;
 import pt.ipleiria.estg.dei.lusitaniatravel.modelos.Profile;
@@ -21,44 +23,19 @@ import pt.ipleiria.estg.dei.lusitaniatravel.modelos.User;
  */
 public class DefinicoesFragment extends Fragment implements UserListener {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
     public DefinicoesFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment DefinicoesFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static DefinicoesFragment newInstance(String param1, String param2) {
+    public static DefinicoesFragment newInstance() {
         DefinicoesFragment fragment = new DefinicoesFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
         return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
@@ -89,7 +66,7 @@ public class DefinicoesFragment extends Fragment implements UserListener {
             TextView textViewProfilePostalCode = view.findViewById(R.id.textViewProfilePostalCode);
 
             // Update user details
-            textViewUsername.setText("Username: " + user.getUsername());
+            textViewUsername.setText(user.getUsername());
             textViewEmail.setText("Email: " + user.getEmail());
 
             // Update profile details if available
@@ -107,11 +84,15 @@ public class DefinicoesFragment extends Fragment implements UserListener {
     // Implement the missing method from UserListener
     @Override
     public void onRefreshDetalhes(User user) {
-        // You can decide what to do when user details are refreshed
-        // For example, update the UI by calling updateUserDetails
         View view = getView();
-        if (view != null) {
+        if (view != null && user != null) {
             updateUserDetails(user, view);
+        } else {
+            Log.e("DefinicoesError", "onRefreshDetalhes: View or User is null");
+
+            // Additional handling, e.g., show an error message to the user
+            Toast.makeText(requireContext(), "Failed to refresh details", Toast.LENGTH_SHORT).show();
         }
     }
+
 }

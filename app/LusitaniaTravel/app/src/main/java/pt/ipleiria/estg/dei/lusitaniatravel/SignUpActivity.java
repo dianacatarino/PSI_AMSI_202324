@@ -8,15 +8,21 @@ import android.util.Patterns;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
+
 import androidx.appcompat.widget.Toolbar;
 import java.util.Objects;
 
-public class SignUpActivity extends AppCompatActivity {
+import pt.ipleiria.estg.dei.lusitaniatravel.listeners.SignUpListener;
+import pt.ipleiria.estg.dei.lusitaniatravel.modelos.SingletonGestorLusitaniaTravel;
+import pt.ipleiria.estg.dei.lusitaniatravel.modelos.User;
 
-    //declarar
+public class SignUpActivity extends AppCompatActivity implements SignUpListener {
+
     private EditText etUsername, etNome, etTelemovel, etRua, etLocalidade, etCodPostal, etEmail, etPassword, etRepeatPassword;
     public static final int MAX_CHAR = 4;
     public static final String EMAIL = "EMAIL";
+    private SingletonGestorLusitaniaTravel singletonGestorLusitaniaTravel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,7 +30,6 @@ public class SignUpActivity extends AppCompatActivity {
         setContentView(R.layout.activity_sign_up);
         setTitle("Sign Up");
 
-        //inicializar
         etUsername = findViewById(R.id.etUsername);
         etPassword = findViewById(R.id.etPassword);
         etRepeatPassword = findViewById(R.id.etRepeatPassword);
@@ -38,9 +43,13 @@ public class SignUpActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        // Adiciona o botão de volta (seta para trás) na ActionBar
-        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+        // Obter a instância do SingletonGestorLusitaniaTravel
+        singletonGestorLusitaniaTravel = SingletonGestorLusitaniaTravel.getInstance(this);
+        // Configurar o listener de SignUp
+        singletonGestorLusitaniaTravel.setSignUpListener(this);
     }
 
     @Override
@@ -66,48 +75,17 @@ public class SignUpActivity extends AppCompatActivity {
         String pass = etPassword.getText().toString();
         String confirmPass = etRepeatPassword.getText().toString();
 
-        if (!isCampoValido(username)) {
-            etUsername.setError("Username inválido");
-            return;
-        }
-        if (!isCampoValido(nome)) {
-            etNome.setError("Nome inválido");
-            return;
-        }
-        if (!isCampoValido(telemovel)) {
-            etTelemovel.setError("Telemovel inválido");
-            return;
-        }
-        if (!isCampoValido(rua)) {
-            etRua.setError("Rua inválida");
-            return;
-        }
-        if (!isCampoValido(localidade)) {
-            etLocalidade.setError("Localidade inválida");
-            return;
-        }
-        if (!isCampoValido(codPostal)) {
-            etCodPostal.setError("Código Postal inválido");
+        if (!isCampoValido(username) || !isCampoValido(nome) || !isCampoValido(telemovel) ||
+                !isCampoValido(rua) || !isCampoValido(localidade) || !isCampoValido(codPostal)) {
             return;
         }
 
-        // Validar campos de e-mail, senha e confirmação de senha
-        if (!isEmailValido(email)) {
-            etEmail.setError("Email inválido");
+        if (!isEmailValido(email) || !isPasswordValida(pass) || !pass.equals(confirmPass)) {
             return;
         }
-        if (!isPasswordValida(pass)) {
-            etPassword.setError("Password inválida");
-            return;
-        }
-        if (!pass.equals(confirmPass)) {
-            etRepeatPassword.setError("As passwords não coincidem");
-            return;
-        }
-        Intent intent = new Intent(this, LoginActivity.class);
-        intent.putExtra(EMAIL, email);
-        startActivity(intent);
-        finish();
+
+        // Chamar o método registerAPI do SingletonGestorLusitaniaTravel
+        singletonGestorLusitaniaTravel.registerAPI(username, pass, email, nome, telemovel, rua, localidade, codPostal, this);
     }
 
     private boolean isCampoValido(String campo) {
@@ -120,5 +98,16 @@ public class SignUpActivity extends AppCompatActivity {
 
     private boolean isPasswordValida(String pass) {
         return pass != null && pass.length() >= MAX_CHAR;
+    }
+
+    @Override
+    public void onUpdateSignUp(User user) {
+        // Este método será chamado após o registro bem-sucedido
+        Toast.makeText(this, "User registado com sucesso", Toast.LENGTH_SHORT).show();
+        // Você pode adicionar lógica aqui, como navegar para a próxima tela
+        Intent intent = new Intent(this, LoginActivity.class);
+        intent.putExtra(EMAIL, user.getEmail());
+        startActivity(intent);
+        finish();
     }
 }

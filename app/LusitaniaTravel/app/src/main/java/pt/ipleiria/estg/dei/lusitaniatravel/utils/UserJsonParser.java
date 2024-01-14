@@ -15,27 +15,24 @@ public class UserJsonParser {
             JSONObject jsonUser = new JSONObject(response);
             JSONObject userData = jsonUser.getJSONObject("data");
 
-            int userId = userData.getInt("id");
+            // Check if the "id" key is present in the "data" object
+            int userId = userData.has("id") ? userData.getInt("id") : -1;
+
             String username = userData.getString("username");
-            String password = userData.getString("password");
-            String repeatPassword = userData.getString("repeatPassword");
+            String password = userData.optString("password", "");
+            String repeatPassword = userData.optString("repeatPassword", "");
             String email = userData.getString("email");
 
-            // If there are profile details in the JSON, parse them
-            Profile profile = null;
-            if (userData.has("profile")) {
-                JSONObject profileData = userData.getJSONObject("profile");
-                int profileId = profileData.getInt("id");
-                String name = profileData.getString("name");
-                String mobile = profileData.getString("mobile");
-                String street = profileData.getString("street");
-                String locale = profileData.getString("locale");
-                String postalCode = profileData.getString("postalCode");
-                String role = profileData.getString("role");
-                int profileUserId = profileData.getInt("userId");
+            int profileId = userData.has("profileId") ? userData.getInt("profileId") : -1;
+            String name = userData.getString("name");
+            String mobile = userData.getString("mobile");
+            String street = userData.getString("street");
+            String locale = userData.getString("locale");
+            String postalCode = userData.getString("postalCode");
+            String role = userData.optString("role");
+            int profileUserId = userData.has("profileUserId") ? userData.getInt("profileUserId") : -1;
 
-                profile = new Profile(profileId, name, mobile, street, locale, postalCode, role, profileUserId);
-            }
+            Profile profile = new Profile(profileId, name, mobile, street, locale, postalCode, role, profileUserId);
 
             user = new User(userId, username, password, repeatPassword, email, profile);
 
