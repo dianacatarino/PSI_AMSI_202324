@@ -28,11 +28,14 @@ import java.util.Map;
 import pt.ipleiria.estg.dei.lusitaniatravel.listeners.FornecedorListener;
 import pt.ipleiria.estg.dei.lusitaniatravel.listeners.FornecedoresListener;
 import pt.ipleiria.estg.dei.lusitaniatravel.listeners.LoginListener;
+import pt.ipleiria.estg.dei.lusitaniatravel.listeners.ReservaListener;
+import pt.ipleiria.estg.dei.lusitaniatravel.listeners.ReservasListener;
 import pt.ipleiria.estg.dei.lusitaniatravel.listeners.SignUpListener;
 import pt.ipleiria.estg.dei.lusitaniatravel.listeners.UserListener;
 import pt.ipleiria.estg.dei.lusitaniatravel.utils.FornecedorJsonParser;
 import pt.ipleiria.estg.dei.lusitaniatravel.utils.LoginJsonParser;
 import pt.ipleiria.estg.dei.lusitaniatravel.modelos.User;
+import pt.ipleiria.estg.dei.lusitaniatravel.utils.ReservaJsonParser;
 import pt.ipleiria.estg.dei.lusitaniatravel.utils.SignUpJsonParser;
 import pt.ipleiria.estg.dei.lusitaniatravel.utils.UserJsonParser;
 
@@ -50,8 +53,11 @@ public class SingletonGestorLusitaniaTravel {
     private static final String mUrlAPIFornecedores = "http://10.0.2.2/LusitaniaTravelAPI/backend/web/api/fornecedor/alojamentos";
     private static final String mUrlAPILocalizacao = "http://10.0.2.2/LusitaniaTravelAPI/backend/web/api/fornecedor/localizacao/%s";
     private static final String mUrlAPIDefinicoes = "http://10.0.2.2/LusitaniaTravelAPI/backend/web/api/user/mostrar/%s";
+    private static final String mUrlAPIReservas = "http://10.0.2.2/LusitaniaTravelAPI/backend/web/api/reserva/mostrar/%s";
     private FornecedoresListener fornecedoresListener;
     private FornecedorListener fornecedorListener;
+    private ReservasListener reservasListener;
+    private ReservaListener reservaListener;
     private LoginListener loginListener;
     private SignUpListener signUpListener;
     private UserListener userListener;
@@ -81,6 +87,14 @@ public class SingletonGestorLusitaniaTravel {
 
     public void setFornecedorListener(FornecedorListener fornecedorListener) {
         this.fornecedorListener = fornecedorListener;
+    }
+
+    public void setReservasListener(ReservasListener reservasListener) {
+        this.reservasListener = reservasListener;
+    }
+
+    public void setReservaListener(ReservaListener reservaListener) {
+        this.reservaListener = reservaListener;
     }
 
     public void setLoginListener(LoginListener loginListener) {
@@ -375,6 +389,61 @@ public class SingletonGestorLusitaniaTravel {
             volleyQueue.add(req);
         }
     }
+
+    public void getAllReservasAPI(ReservasListener listener, Context context) {
+        if (!ReservaJsonParser.isConnectionInternet(context)) {
+            Toast.makeText(context, "Não tem ligação à Internet", Toast.LENGTH_SHORT).show();
+        } else {
+            String username = SingletonGestorLusitaniaTravel.getInstance(context).getUsername();
+            String password = SingletonGestorLusitaniaTravel.getInstance(context).getPassword();
+
+            String url = String.format(mUrlAPIReservas, username);
+
+            JsonObjectRequest req = new JsonObjectRequest(Request.Method.GET, url, null,
+                    new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            try {
+                                // Log the raw JSON response
+                                Log.d("ReservasAPI", "Raw JSON Response: " + response.toString());
+
+                                JSONArray reservasArray = response.getJSONArray("reservas");
+                                reservas = ReservaJsonParser.parserJsonReservas(reservasArray);
+
+                                // Log the parsed Reservas
+                                for (Reserva reserva : reservas) {
+                                    Log.d("ReservasAPI", "Parsed Reserva: " + reserva.toString());
+                                }
+
+                                // Notificar o listener de reservas
+                                if (listener != null) {
+                                    listener.onRefreshListaReservas(reservas);
+                                }
+                            } catch (JSONException e) {
+                                Toast.makeText(context, "Erro ao processar resposta do servidor", Toast.LENGTH_SHORT).show();
+                                Log.e("ReservasAPI", "Error parsing JSON response", e);
+                            }
+                        }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            Toast.makeText(context, error.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    }) {
+                @Override
+                public Map<String, String> getHeaders() {
+                    Map<String, String> headers = new HashMap<>();
+                    String credentials = username + ":" + password;
+                    String auth = "Basic " + Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
+                    headers.put("Authorization", auth);
+                    return headers;
+                }
+            };
+            volleyQueue.add(req);
+        }
+    }
+
 
     public void getUserDefinicoesAPI(Context context) {
         if (!LoginJsonParser.isConnectionInternet(context)) {

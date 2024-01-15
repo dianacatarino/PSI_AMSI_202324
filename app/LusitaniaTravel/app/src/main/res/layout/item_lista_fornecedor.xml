@@ -116,13 +116,13 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <Button
+            <ImageButton
                 android:id="@+id/btnAdicionarFavoritos"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Favoritos"
-                android:backgroundTint="@color/pink"
-                android:onClick="onAdicionarFavoritosClick"/>
+                android:src="@drawable/ic_favoritos"
+                android:backgroundTint="@color/white"
+                android:onClick="onAdicionarFavoritosClick" />
 
             <Button
                 android:id="@+id/btnAdicionarCarrinho"
@@ -131,6 +131,14 @@
                 android:text="Carrinho"
                 android:backgroundTint="@color/blue"
                 android:onClick="onAdicionarCarrinhoClick"/>
+
+            <Button
+                android:id="@+id/btnDetalhes"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Detalhes"
+                android:backgroundTint="@color/black"
+                android:onClick="onDetalhesClick"/>
         </LinearLayout>
 
     </LinearLayout>

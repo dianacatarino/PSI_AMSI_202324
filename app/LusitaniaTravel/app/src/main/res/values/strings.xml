@@ -45,4 +45,12 @@
     <string name="txt_definicoes_rua">Rua</string>
     <string name="txt_definicoes_localidade">Localidade</string>
     <string name="txt_definicoes_codigo_postal">Código Postal</string>
+    <string name="txt_lista_fornecedor_alojamentos">Os Nossos Alojamentos</string>
+    <string name="txt_reserva_tipo">Tipo:</string>
+    <string name="txt_reserva_checkin">Check-in:</string>
+    <string name="txt_reserva_checkout">Check-out:</string>
+    <string name="txt_reserva_n_quartos">Número de Quartos:</string>
+    <string name="txt_reserva_n_clientes">Número de Clientes:</string>
+    <string name="txt_reserva_valor">Valor:</string>
+    <string name="txt_reserva_alojamento">Alojamento:</string>
 </resources>

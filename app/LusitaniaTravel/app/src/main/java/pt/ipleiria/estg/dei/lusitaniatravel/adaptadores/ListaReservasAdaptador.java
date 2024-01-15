@@ -58,7 +58,7 @@ public class ListaReservasAdaptador extends BaseAdapter {
     }
 
     private static class ViewHolderLista {
-        private TextView tvTipoReserva, tvCheckin, tvCheckout, tvNumeroQuartos, tvNumeroClientes, tvValor;
+        private TextView tvTipoReserva, tvCheckin, tvCheckout, tvNumeroQuartos, tvNumeroClientes, tvValor, tvFornecedor;
 
         public ViewHolderLista(View view) {
             tvTipoReserva = view.findViewById(R.id.tvTipoReserva);
@@ -67,6 +67,7 @@ public class ListaReservasAdaptador extends BaseAdapter {
             tvNumeroQuartos = view.findViewById(R.id.tvNumeroQuartos);
             tvNumeroClientes = view.findViewById(R.id.tvNumeroClientes);
             tvValor = view.findViewById(R.id.tvValor);
+            tvFornecedor = view.findViewById(R.id.tvFornecedor);
         }
 
         public void update(Reserva reserva, Context context) {
@@ -80,6 +81,7 @@ public class ListaReservasAdaptador extends BaseAdapter {
             DecimalFormat decimalFormat = new DecimalFormat("#.##");
             String valorFormatado = decimalFormat.format(reserva.getValor());
             tvValor.setText("Valor: " + valorFormatado);
+            tvFornecedor.setText("Alojamento: " + reserva.getNomeFornecedor());
         }
     }
 }
