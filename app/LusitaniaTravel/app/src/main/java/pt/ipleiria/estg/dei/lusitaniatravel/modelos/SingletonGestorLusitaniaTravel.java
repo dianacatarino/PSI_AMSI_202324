@@ -5,6 +5,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.util.Base64;
 import android.util.Log;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -25,6 +26,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import pt.ipleiria.estg.dei.lusitaniatravel.listeners.FaturaListener;
+import pt.ipleiria.estg.dei.lusitaniatravel.listeners.FaturasListener;
 import pt.ipleiria.estg.dei.lusitaniatravel.listeners.FornecedorListener;
 import pt.ipleiria.estg.dei.lusitaniatravel.listeners.FornecedoresListener;
 import pt.ipleiria.estg.dei.lusitaniatravel.listeners.LoginListener;
@@ -32,6 +35,7 @@ import pt.ipleiria.estg.dei.lusitaniatravel.listeners.ReservaListener;
 import pt.ipleiria.estg.dei.lusitaniatravel.listeners.ReservasListener;
 import pt.ipleiria.estg.dei.lusitaniatravel.listeners.SignUpListener;
 import pt.ipleiria.estg.dei.lusitaniatravel.listeners.UserListener;
+import pt.ipleiria.estg.dei.lusitaniatravel.utils.FaturaJsonParser;
 import pt.ipleiria.estg.dei.lusitaniatravel.utils.FornecedorJsonParser;
 import pt.ipleiria.estg.dei.lusitaniatravel.utils.LoginJsonParser;
 import pt.ipleiria.estg.dei.lusitaniatravel.modelos.User;
@@ -47,6 +51,8 @@ public class SingletonGestorLusitaniaTravel {
     private LusitaniaTravelBDHelper lusitaniaTravelBDHelper = null;
     private String username;
     private String password;
+    private EditText editTextSearch;
+
     private static RequestQueue volleyQueue = null;
     private static final String mUrlAPILogin = "http://10.0.2.2/LusitaniaTravelAPI/backend/web/api/user/login/%s/%s";
     private static final String mUrlAPIRegister = "http://10.0.2.2/LusitaniaTravelAPI/backend/web/api/user/register";
@@ -54,10 +60,14 @@ public class SingletonGestorLusitaniaTravel {
     private static final String mUrlAPILocalizacao = "http://10.0.2.2/LusitaniaTravelAPI/backend/web/api/fornecedor/localizacao/%s";
     private static final String mUrlAPIDefinicoes = "http://10.0.2.2/LusitaniaTravelAPI/backend/web/api/user/mostrar/%s";
     private static final String mUrlAPIReservas = "http://10.0.2.2/LusitaniaTravelAPI/backend/web/api/reserva/mostrar/%s";
+
+    private static final String mUrlAPIFaturas = "http://10.0.2.2/LusitaniaTravelAPI/backend/web/api/fatura/ver/%s";
     private FornecedoresListener fornecedoresListener;
     private FornecedorListener fornecedorListener;
     private ReservasListener reservasListener;
     private ReservaListener reservaListener;
+    private FaturasListener faturasListener;
+    private FaturaListener faturaListener;
     private LoginListener loginListener;
     private SignUpListener signUpListener;
     private UserListener userListener;
@@ -95,6 +105,15 @@ public class SingletonGestorLusitaniaTravel {
 
     public void setReservaListener(ReservaListener reservaListener) {
         this.reservaListener = reservaListener;
+    }
+
+
+    public void setFaturasListener(FaturasListener faturasListener) {
+        this.faturasListener = faturasListener;
+    }
+
+    public void setFaturaListener(FaturaListener faturaListener) {
+        this.faturaListener = faturaListener;
     }
 
     public void setLoginListener(LoginListener loginListener) {
@@ -407,14 +426,59 @@ public class SingletonGestorLusitaniaTravel {
                                 JSONArray reservasArray = response.getJSONArray("reservas");
                                 reservas = ReservaJsonParser.parserJsonReservas(reservasArray);
 
-                                // Log the parsed Reservas
-                                for (Reserva reserva : reservas) {
-                                    Log.d("ReservasAPI", "Parsed Reserva: " + reserva.toString());
-                                }
-
                                 // Notificar o listener de reservas
                                 if (listener != null) {
                                     listener.onRefreshListaReservas(reservas);
+                                }
+                            } catch (JSONException e) {
+                                Toast.makeText(context, "Erro ao processar resposta do servidor", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            Toast.makeText(context, error.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    }) {
+                @Override
+                public Map<String, String> getHeaders() {
+                    Map<String, String> headers = new HashMap<>();
+                    String credentials = username + ":" + password;
+                    String auth = "Basic " + Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
+                    headers.put("Authorization", auth);
+                    return headers;
+                }
+            };
+            volleyQueue.add(req);
+        }
+    }
+
+    public void getAllFaturasAPI(FaturasListener listener, Context context) {
+        if (!FaturaJsonParser.isConnectionInternet(context)) {
+            Toast.makeText(context, "Não tem ligação à Internet", Toast.LENGTH_SHORT).show();
+        } else {
+            String username = SingletonGestorLusitaniaTravel.getInstance(context).getUsername();
+            String password = SingletonGestorLusitaniaTravel.getInstance(context).getPassword();
+
+            String url = String.format(mUrlAPIFaturas, username);
+
+            JsonObjectRequest req = new JsonObjectRequest(Request.Method.GET, url, null,
+                    new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            try {
+                                JSONArray faturasArray = response.getJSONArray("faturas");
+                                ArrayList<Fatura> faturas = FaturaJsonParser.parserJsonFaturas(faturasArray);
+
+                                // Log the parsed Faturas
+                                for (Fatura fatura : faturas) {
+                                    Log.d("FaturasAPI", "Parsed Fatura: " + fatura.toString());
+                                }
+
+                                // Notificar o listener de faturas
+                                if (listener != null) {
+                                    listener.onRefreshListaFaturas(faturas);
                                 }
                             } catch (JSONException e) {
                                 Toast.makeText(context, "Erro ao processar resposta do servidor", Toast.LENGTH_SHORT).show();
@@ -497,15 +561,16 @@ public class SingletonGestorLusitaniaTravel {
     }
 
 
-    // Método para obter fornecedores com base na localização
-    public void getLocalizacaoFornecedoresAPI(String localizacao, FornecedoresListener listener, Context context) {
+    public void getLocalizacaoFornecedoresAPI(FornecedoresListener listener, Context context, String localizacao) {
         if (!FornecedorJsonParser.isConnectionInternet(context)) {
             Toast.makeText(context, "Não tem ligação à Internet", Toast.LENGTH_SHORT).show();
         } else {
             String username = SingletonGestorLusitaniaTravel.getInstance(context).getUsername();
             String password = SingletonGestorLusitaniaTravel.getInstance(context).getPassword();
 
+            // Inclua o texto da EditText na URL
             String url = String.format(mUrlAPILocalizacao, localizacao);
+
             JsonArrayRequest req = new JsonArrayRequest(Request.Method.GET, url, null,
                     new Response.Listener<JSONArray>() {
                         @Override
@@ -518,7 +583,13 @@ public class SingletonGestorLusitaniaTravel {
                     new Response.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError error) {
-                            Toast.makeText(context, error.getMessage(), Toast.LENGTH_SHORT).show();
+                            if (error.networkResponse != null && error.networkResponse.statusCode == 404) {
+                                // Localização não existe, exibir Toast
+                                Toast.makeText(context, "Localização não encontrada", Toast.LENGTH_SHORT).show();
+                            } else {
+                                // Outro erro, exibir mensagem padrão
+                                Toast.makeText(context, "Erro na requisição", Toast.LENGTH_SHORT).show();
+                            }
                         }
                     }) {
                 @Override

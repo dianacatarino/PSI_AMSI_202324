@@ -2,14 +2,11 @@ package pt.ipleiria.estg.dei.lusitaniatravel;
 
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -22,31 +19,45 @@ import pt.ipleiria.estg.dei.lusitaniatravel.listeners.FornecedoresListener;
 import pt.ipleiria.estg.dei.lusitaniatravel.modelos.Fornecedor;
 import pt.ipleiria.estg.dei.lusitaniatravel.modelos.SingletonGestorLusitaniaTravel;
 
-public class ListaFornecedorFragment extends Fragment implements FornecedoresListener {
+/**
+ * A simple {@link Fragment} subclass.
+ * Use the {@link ListaLocalizacaoFragment#} factory method to
+ * create an instance of this fragment.
+ */
+public class ListaLocalizacaoFragment extends Fragment implements FornecedoresListener {
 
     private ListView lvFornecedores;
+    private String localizacao;
 
-    public ListaFornecedorFragment () {
+
+    public ListaLocalizacaoFragment() {
         // Required empty public constructor
+    }
+
+    public void setLocalizacao(String localizacao) {
+        this.localizacao = localizacao;
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_lista_fornecedor, container, false);
+        View view = inflater.inflate(R.layout.fragment_lista_localizacao, container, false);
 
         lvFornecedores = view.findViewById(R.id.lvfornecedores);
 
         // Setar o listener para atualização da lista
         SingletonGestorLusitaniaTravel.getInstance(getContext()).setFornecedoresListener(this);
 
-        // Carregar a lista inicial de fornecedores
-        SingletonGestorLusitaniaTravel.getInstance(getContext()).getAllFornecedoresAPI(this, getContext());
+        // Verifica se a localização não está vazia antes de chamar a API
+        if (localizacao != null && !localizacao.isEmpty()) {
+            // Chama a API com base na localização
+            SingletonGestorLusitaniaTravel.getInstance(getContext()).getLocalizacaoFornecedoresAPI(this, getContext(), localizacao);
+        }
 
         // Configurar o clique em um item da lista
         lvFornecedores.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-                // Implemente a ação desejada ao clicar em um fornecedor
+                // Implemente a ação desejada ao clicar em uma reserva
             }
         });
 
@@ -57,15 +68,13 @@ public class ListaFornecedorFragment extends Fragment implements FornecedoresLis
     }
 
     @Override
-    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         // Remover a inflação do menu de pesquisa
         super.onCreateOptionsMenu(menu, inflater);
     }
 
     @Override
     public void onRefreshListaFornecedores(ArrayList<Fornecedor> listaFornecedores) {
-        Log.d("ListaLocalizacaoFragment", "onRefreshListaFornecedores: Size: " + listaFornecedores.size());
-
         if (listaFornecedores != null) {
             lvFornecedores.setAdapter(new ListaFornecedoresAdaptador(getContext(), listaFornecedores));
         }

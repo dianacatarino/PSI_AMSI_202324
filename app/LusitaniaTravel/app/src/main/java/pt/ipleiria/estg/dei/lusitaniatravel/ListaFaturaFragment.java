@@ -4,61 +4,78 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ListView;
+
+import java.util.ArrayList;
+
+import pt.ipleiria.estg.dei.lusitaniatravel.adaptadores.ListaFaturasAdaptador;
+import pt.ipleiria.estg.dei.lusitaniatravel.adaptadores.ListaReservasAdaptador;
+import pt.ipleiria.estg.dei.lusitaniatravel.listeners.FaturasListener;
+import pt.ipleiria.estg.dei.lusitaniatravel.modelos.Fatura;
+import pt.ipleiria.estg.dei.lusitaniatravel.modelos.Reserva;
+import pt.ipleiria.estg.dei.lusitaniatravel.modelos.SingletonGestorLusitaniaTravel;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link ListaFaturaFragment#newInstance} factory method to
+ * Use the {@link ListaFaturaFragment#} factory method to
  * create an instance of this fragment.
  */
-public class ListaFaturaFragment extends Fragment {
+public class ListaFaturaFragment extends Fragment implements FaturasListener {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private ListView lvFaturas;
 
     public ListaFaturaFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment ListaFaturaFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static ListaFaturaFragment newInstance(String param1, String param2) {
-        ListaFaturaFragment fragment = new ListaFaturaFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_lista_fatura, container, false);
+
+        lvFaturas = view.findViewById(R.id.lvfaturas);
+
+        // Setar o listener para atualização da lista
+        SingletonGestorLusitaniaTravel.getInstance(getContext()).setFaturasListener(this);
+
+        // Carregar a lista inicial de reservas
+        SingletonGestorLusitaniaTravel.getInstance(getContext()).getAllFaturasAPI(this, getContext());
+
+        // Configurar o clique em um item da lista
+        lvFaturas.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+                // Implemente a ação desejada ao clicar em uma reserva
+            }
+        });
+
+        // Habilitar o menu para o fragmento
+        setHasOptionsMenu(true);
+
+        return view;
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        // Remover a inflação do menu de pesquisa
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public void onRefreshListaFaturas(ArrayList<Fatura> listaFaturas) {
+        if (listaFaturas != null) {
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    lvFaturas.setAdapter(new ListaFaturasAdaptador(getContext(), listaFaturas));
+                }
+            });
         }
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_lista_fatura, container, false);
     }
 }

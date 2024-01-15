@@ -53,4 +53,13 @@
     <string name="txt_reserva_n_clientes">Número de Clientes:</string>
     <string name="txt_reserva_valor">Valor:</string>
     <string name="txt_reserva_alojamento">Alojamento:</string>
+    <string name="txt_fatura_total_fatura">Total Fatura:</string>
+    <string name="txt_fatura_total_s_iva">Total S/Iva:</string>
+    <string name="txt_fatura_iva">Iva:</string>
+    <string name="txt_fatura_reserva">Reserva:</string>
+    <string name="txt_fatura_detalhes">Detalhes</string>
+    <string name="txt_reserva_detalhes">Detalhes</string>
+    <string name="txt_fatura_data">Data:</string>
+    <string name="txt_pesquisa_localizacao">Localização</string>
+    <string name="txt_pesquisa_pesquisar">Pesquisar</string>
 </resources>

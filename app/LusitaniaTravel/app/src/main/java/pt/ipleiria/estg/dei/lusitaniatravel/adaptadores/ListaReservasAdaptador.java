@@ -78,7 +78,7 @@ public class ListaReservasAdaptador extends BaseAdapter {
             tvNumeroClientes.setText("" + reserva.getNumeroClientes());
 
             // Formatando o valor da reserva
-            DecimalFormat decimalFormat = new DecimalFormat("#");
+            DecimalFormat decimalFormat = new DecimalFormat("#.00");
             String valorFormatado = decimalFormat.format(reserva.getValor());
             tvValor.setText("" + valorFormatado  + "€");
             tvFornecedor.setText("" + reserva.getNomeFornecedor());

@@ -16,22 +16,23 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:hint="Digite sua localização"/>
+            android:hint="@string/txt_pesquisa_localizacao"/>
 
-        <!-- Botão de Pesquisa -->
         <Button
             android:id="@+id/buttonSearch"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Pesquisar"
+            android:text="@string/txt_pesquisa_pesquisar"
             android:onClick="onClickLocalizacao"
             android:backgroundTint="#3c9cd4"/>
     </LinearLayout>
 
-    <ListView
-        android:id="@+id/lvfornecedores"
+    <FrameLayout
+        android:id="@+id/fragmentContainer"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="60dp"/>
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:layout_marginTop="65dp"/>
 
 </FrameLayout>

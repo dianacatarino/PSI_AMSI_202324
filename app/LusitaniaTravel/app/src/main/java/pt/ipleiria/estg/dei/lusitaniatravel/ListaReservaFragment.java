@@ -67,7 +67,6 @@ public class ListaReservaFragment extends Fragment implements ReservasListener {
 
     @Override
     public void onRefreshListaReservas(ArrayList<Reserva> listaReservas) {
-        Log.d("ListaReservaFragment", "onRefreshListaReservas called");
         if (listaReservas != null) {
             getActivity().runOnUiThread(new Runnable() {
                 @Override

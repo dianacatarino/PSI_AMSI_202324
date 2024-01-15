@@ -151,7 +151,7 @@
         android:id="@+id/btnDetalhesReserva"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Detalhes"
+        android:text="@string/txt_reserva_detalhes"
         android:backgroundTint="@color/black"
         android:onClick="onDetalhesReservaClick" />
 

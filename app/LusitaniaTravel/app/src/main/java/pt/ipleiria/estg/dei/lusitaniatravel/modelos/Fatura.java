@@ -7,13 +7,16 @@ public class Fatura {
     private double iva;
     private int empresaId, reservaId;
 
-    public Fatura(int id, double totalF, double totalSI, double iva, int empresaId, int reservaId) {
+    private String data;
+
+    public Fatura(int id, double totalF, double totalSI, double iva, int empresaId, int reservaId, String data) {
         this.id = id;
         this.totalF = totalF;
         this.totalSI = totalSI;
         this.iva = iva;
         this.empresaId = empresaId;
         this.reservaId = reservaId;
+        this.data = data;
     }
 
     public int getId() {
@@ -62,5 +65,13 @@ public class Fatura {
 
     public void setReservaId(int reservaId) {
         this.reservaId = reservaId;
+    }
+
+    public String getData() {
+        return data;
+    }
+
+    public void setData(String data) {
+        this.data = data;
     }
 }
