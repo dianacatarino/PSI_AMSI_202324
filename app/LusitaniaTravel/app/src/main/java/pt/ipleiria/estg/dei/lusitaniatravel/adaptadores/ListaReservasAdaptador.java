@@ -71,17 +71,17 @@ public class ListaReservasAdaptador extends BaseAdapter {
         }
 
         public void update(Reserva reserva, Context context) {
-            tvTipoReserva.setText(reserva.getTipo());
-            tvCheckin.setText("Check-in: " + reserva.getCheckin());
-            tvCheckout.setText("Check-out: " + reserva.getCheckout());
-            tvNumeroQuartos.setText("Número de Quartos: " + reserva.getNumeroQuartos());
-            tvNumeroClientes.setText("Número de Clientes: " + reserva.getNumeroClientes());
+            tvTipoReserva.setText("" + reserva.getTipo());
+            tvCheckin.setText("" + reserva.getCheckin());
+            tvCheckout.setText("" + reserva.getCheckout());
+            tvNumeroQuartos.setText("" + reserva.getNumeroQuartos());
+            tvNumeroClientes.setText("" + reserva.getNumeroClientes());
 
             // Formatando o valor da reserva
-            DecimalFormat decimalFormat = new DecimalFormat("#.##");
+            DecimalFormat decimalFormat = new DecimalFormat("#");
             String valorFormatado = decimalFormat.format(reserva.getValor());
-            tvValor.setText("Valor: " + valorFormatado);
-            tvFornecedor.setText("Alojamento: " + reserva.getNomeFornecedor());
+            tvValor.setText("" + valorFormatado  + "€");
+            tvFornecedor.setText("" + reserva.getNomeFornecedor());
         }
     }
 }

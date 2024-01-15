@@ -86,7 +86,7 @@ public class ListaFornecedoresAdaptador extends BaseAdapter {
             // Formatando o preço sem casas decimais
             DecimalFormat decimalFormat = new DecimalFormat("#");
             String precoFormatado = decimalFormat.format(fornecedor.getPrecoPorNoite());
-            tvPrecoPorNoite.setText(precoFormatado);
+            tvPrecoPorNoite.setText(precoFormatado + "€");
 
             // Obtendo a primeira imagem do fornecedor
             Imagem primeiraImagem = fornecedor.getImagens().size() > 0 ? fornecedor.getImagens().get(0) : null;

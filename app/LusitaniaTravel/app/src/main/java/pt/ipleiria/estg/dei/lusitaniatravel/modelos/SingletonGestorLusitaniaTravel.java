@@ -404,9 +404,6 @@ public class SingletonGestorLusitaniaTravel {
                         @Override
                         public void onResponse(JSONObject response) {
                             try {
-                                // Log the raw JSON response
-                                Log.d("ReservasAPI", "Raw JSON Response: " + response.toString());
-
                                 JSONArray reservasArray = response.getJSONArray("reservas");
                                 reservas = ReservaJsonParser.parserJsonReservas(reservasArray);
 
@@ -421,7 +418,6 @@ public class SingletonGestorLusitaniaTravel {
                                 }
                             } catch (JSONException e) {
                                 Toast.makeText(context, "Erro ao processar resposta do servidor", Toast.LENGTH_SHORT).show();
-                                Log.e("ReservasAPI", "Error parsing JSON response", e);
                             }
                         }
                     },

@@ -25,15 +25,15 @@ public class ReservaJsonParser {
         try {
             for (int i = 0; i < response.length(); i++) {
                 JSONObject reservaJson = response.getJSONObject(i);
-                int id = reservaJson.getInt("id");
+                int id = reservaJson.optInt("id");
                 String tipo = reservaJson.getString("tipo");
                 String checkinStr = reservaJson.getString("checkin");
                 String checkoutStr = reservaJson.getString("checkout");
                 int numeroQuartos = reservaJson.getInt("numeroquartos");
                 int numeroClientes = reservaJson.getInt("numeroclientes");
                 double valor = reservaJson.getDouble("valor");
-                String nomecliente = reservaJson.getString("cliente_id");
-                String nomefuncionario = reservaJson.getString("funcionario_id");
+                String nomecliente = reservaJson.optString("cliente_id");
+                String nomefuncionario = reservaJson.optString("funcionario_id");
                 String nomefornecedor = reservaJson.getString("fornecedor_id");
 
                 // Parse das datas diretamente no método

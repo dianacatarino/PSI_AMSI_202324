@@ -2,6 +2,8 @@ package pt.ipleiria.estg.dei.lusitaniatravel;
 
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
+
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -65,8 +67,14 @@ public class ListaReservaFragment extends Fragment implements ReservasListener {
 
     @Override
     public void onRefreshListaReservas(ArrayList<Reserva> listaReservas) {
+        Log.d("ListaReservaFragment", "onRefreshListaReservas called");
         if (listaReservas != null) {
-            lvReservas.setAdapter(new ListaReservasAdaptador(getContext(), listaReservas));
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    lvReservas.setAdapter(new ListaReservasAdaptador(getContext(), listaReservas));
+                }
+            });
         }
     }
 }
