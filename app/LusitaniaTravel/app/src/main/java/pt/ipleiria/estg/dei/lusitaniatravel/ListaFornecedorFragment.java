@@ -1,5 +1,6 @@
 package pt.ipleiria.estg.dei.lusitaniatravel;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -46,7 +47,10 @@ public class ListaFornecedorFragment extends Fragment implements FornecedoresLis
         lvFornecedores.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-                // Implemente a ação desejada ao clicar em um fornecedor
+                //Toast.makeText(getContext(),livros.get(position).getTitulo(),Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(getContext(), DetalhesFornecedorActivity.class);
+                intent.putExtra(DetalhesFornecedorActivity.ID_FORNECEDOR, (int) id);
+                startActivity(intent);
             }
         });
 
@@ -64,8 +68,6 @@ public class ListaFornecedorFragment extends Fragment implements FornecedoresLis
 
     @Override
     public void onRefreshListaFornecedores(ArrayList<Fornecedor> listaFornecedores) {
-        Log.d("ListaLocalizacaoFragment", "onRefreshListaFornecedores: Size: " + listaFornecedores.size());
-
         if (listaFornecedores != null) {
             lvFornecedores.setAdapter(new ListaFornecedoresAdaptador(getContext(), listaFornecedores));
         }

@@ -62,4 +62,6 @@
     <string name="txt_fatura_data">Data:</string>
     <string name="txt_pesquisa_localizacao">Localização</string>
     <string name="txt_pesquisa_pesquisar">Pesquisar</string>
+    <string name="txt_detalhes_tipo_quartos">Tipo Quartos:</string>
+    <string name="txt_detalhes_n_quartos_disponiveis">Nº Quartos Disponíveis:</string>
 </resources>

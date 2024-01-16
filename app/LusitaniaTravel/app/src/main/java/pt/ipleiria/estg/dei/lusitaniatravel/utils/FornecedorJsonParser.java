@@ -51,23 +51,21 @@ public class FornecedorJsonParser {
         return fornecedores;
     }
 
-
-    public static Fornecedor parserJsonFornecedor(String response) {
+    public static Fornecedor parserJsonFornecedor(JSONObject response) {
         Fornecedor fornecedor = null;
         try {
-            JSONObject fornecedorJson = new JSONObject(response);
-            int id = fornecedorJson.getInt("id");
-            String responsavel = fornecedorJson.getString("responsavel");
-            String tipo = fornecedorJson.getString("tipo");
-            String nomeAlojamento = fornecedorJson.getString("nome_alojamento");
-            String localizacaoAlojamento = fornecedorJson.getString("localizacao_alojamento");
-            String acomodacoesAlojamento = fornecedorJson.getString("acomodacoes_alojamento");
-            String tipoQuartos = fornecedorJson.getString("tipoquartos");
-            int numeroQuartos = fornecedorJson.getInt("numeroquartos");
-            double precoPorNoite = fornecedorJson.getDouble("precopornoite");
+            int id = response.getInt("id");
+            String responsavel = response.getString("responsavel");
+            String tipo = response.getString("tipo");
+            String nomeAlojamento = response.getString("nome_alojamento");
+            String localizacaoAlojamento = response.getString("localizacao_alojamento");
+            String acomodacoesAlojamento = response.getString("acomodacoes_alojamento");
+            String tipoQuartos = response.getString("tipoquartos");
+            int numeroQuartos = response.getInt("numeroquartos");
+            double precoPorNoite = response.getDouble("precopornoite");
 
             // Parse das imagens
-            JSONArray imagensJsonArray = fornecedorJson.getJSONArray("imagens");
+            JSONArray imagensJsonArray = response.getJSONArray("imagens");
             List<Imagem> imagens = new ArrayList<>();
             for (int i = 0; i < imagensJsonArray.length(); i++) {
                 JSONObject imagemJson = imagensJsonArray.getJSONObject(i);

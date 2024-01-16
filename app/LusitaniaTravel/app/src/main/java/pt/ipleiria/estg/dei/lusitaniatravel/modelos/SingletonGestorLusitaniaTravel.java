@@ -24,6 +24,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import pt.ipleiria.estg.dei.lusitaniatravel.listeners.FaturaListener;
@@ -57,6 +58,7 @@ public class SingletonGestorLusitaniaTravel {
     private static final String mUrlAPILogin = "http://10.0.2.2/LusitaniaTravelAPI/backend/web/api/user/login/%s/%s";
     private static final String mUrlAPIRegister = "http://10.0.2.2/LusitaniaTravelAPI/backend/web/api/user/register";
     private static final String mUrlAPIFornecedores = "http://10.0.2.2/LusitaniaTravelAPI/backend/web/api/fornecedor/alojamentos";
+    private static final String mUrlAPIFornecedor = "http://10.0.2.2/LusitaniaTravelAPI/backend/web/api/fornecedor/alojamento/%d";
     private static final String mUrlAPILocalizacao = "http://10.0.2.2/LusitaniaTravelAPI/backend/web/api/fornecedor/localizacao/%s";
     private static final String mUrlAPIDefinicoes = "http://10.0.2.2/LusitaniaTravelAPI/backend/web/api/user/mostrar/%s";
     private static final String mUrlAPIReservas = "http://10.0.2.2/LusitaniaTravelAPI/backend/web/api/reserva/mostrar/%s";
@@ -388,6 +390,44 @@ public class SingletonGestorLusitaniaTravel {
                             fornecedores = FornecedorJsonParser.parserJsonFornecedores(response);
                             if (listener != null)
                                 listener.onRefreshListaFornecedores(fornecedores);
+                        }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            Toast.makeText(context, error.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    }) {
+                @Override
+                public Map<String, String> getHeaders() {
+                    Map<String, String> headers = new HashMap<>();
+                    String credentials = username + ":" + password;
+                    String auth = "Basic " + Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
+                    headers.put("Authorization", auth);
+                    return headers;
+                }
+            };
+            volleyQueue.add(req);
+        }
+    }
+
+    public void getFornecedorAPI(int id, FornecedorListener listener, Context context) {
+        if (!FornecedorJsonParser.isConnectionInternet(context)) {
+            Toast.makeText(context, "Não tem ligação à Internet", Toast.LENGTH_SHORT).show();
+        } else {
+            String username = SingletonGestorLusitaniaTravel.getInstance(context).getUsername();
+            String password = SingletonGestorLusitaniaTravel.getInstance(context).getPassword();
+
+            // Ajuste da URL com o ID do fornecedor
+            String url = String.format(Locale.getDefault(), mUrlAPIFornecedor, id);
+
+            JsonObjectRequest req = new JsonObjectRequest(Request.Method.GET, url, null,
+                    new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            Fornecedor fornecedor = FornecedorJsonParser.parserJsonFornecedor(response);
+                            if (listener != null)
+                                listener.onRefreshDetalhes(fornecedor);
                         }
                     },
                     new Response.ErrorListener() {
