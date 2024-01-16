@@ -35,9 +35,10 @@ public class SignUpJsonParser {
                 String postalCode = profileData.getString("postalCode");
                 String role = profileData.optString("role");
                 int profileUserId = profileData.getInt("user_id");
+                String favorites = userData.optString("favorites");
 
                 // Criar instâncias de User e Profile
-                Profile profile = new Profile(profileId, name, mobile, street, locale, postalCode, role, profileUserId);
+                Profile profile = new Profile(profileId, name, mobile, street, locale, postalCode, role, profileUserId,favorites);
                 user = new User(userId, username, password, repeatPassword, email, profile);
             }
 

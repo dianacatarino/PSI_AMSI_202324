@@ -46,6 +46,7 @@ public class LusitaniaTravelBDHelper extends SQLiteOpenHelper {
     private static final String PROFILE_LOCALE = "locale";
     private static final String PROFILE_POSTAL_CODE = "postalCode";
     private static final String PROFILE_ROLE = "role";
+    private static final String PROFILE_FAVORITES = "favorites";
 
     private final SQLiteDatabase db;
 
@@ -85,7 +86,8 @@ public class LusitaniaTravelBDHelper extends SQLiteOpenHelper {
                 PROFILE_STREET + " VARCHAR(30) NOT NULL, " +
                 PROFILE_LOCALE + " VARCHAR(20) NOT NULL, " +
                 PROFILE_POSTAL_CODE + " VARCHAR(10) NOT NULL, " +
-                PROFILE_ROLE + " TEXT DEFAULT NULL);";  // Use TEXT para o ENUM
+                PROFILE_ROLE + " TEXT DEFAULT NULL, " +
+                PROFILE_FAVORITES + " TEXT DEFAULT NULL);";
         sqLiteDatabase.execSQL(sqlCreateProfileTable);
     }
 
@@ -209,14 +211,15 @@ public class LusitaniaTravelBDHelper extends SQLiteOpenHelper {
 
                 // Agora, crie um objeto Profile com as informações do banco de dados
                 Profile profile = new Profile(
-                        cursor.getInt(5),
+                        cursor.getInt(1),
+                        cursor.getString(2),
+                        cursor.getString(3),
+                        cursor.getString(4),
+                        cursor.getString(5),
                         cursor.getString(6),
                         cursor.getString(7),
-                        cursor.getString(8),
-                        cursor.getString(9),
-                        cursor.getString(10),
-                        cursor.getString(11),
-                        cursor.getInt(12)
+                        cursor.getInt(8),
+                        cursor.getString(9)
                 );
 
                 // Crie o objeto User passando o Profile como último parâmetro
@@ -235,6 +238,7 @@ public class LusitaniaTravelBDHelper extends SQLiteOpenHelper {
         values.put(PROFILE_LOCALE, profile.getLocale());
         values.put(PROFILE_POSTAL_CODE, profile.getPostalCode());
         values.put(PROFILE_ROLE, profile.getRole().toString());
+        values.put(PROFILE_FAVORITES, profile.getFavorites());
 
         long result = this.db.insert(TABLE_PROFILE, null, values);
 
@@ -268,18 +272,19 @@ public class LusitaniaTravelBDHelper extends SQLiteOpenHelper {
     public ArrayList<Profile> getAllProfilesBD() {
         ArrayList<Profile> profiles = new ArrayList<>();
 
-        Cursor cursor = this.db.query(TABLE_PROFILE, new String[]{PROFILE_ID, PROFILE_NAME, PROFILE_MOBILE, PROFILE_STREET, PROFILE_LOCALE, PROFILE_POSTAL_CODE, PROFILE_ROLE}, null, null, null, null, null);
+        Cursor cursor = this.db.query(TABLE_PROFILE, new String[]{PROFILE_ID, PROFILE_NAME, PROFILE_MOBILE, PROFILE_STREET, PROFILE_LOCALE, PROFILE_POSTAL_CODE, PROFILE_ROLE,PROFILE_FAVORITES}, null, null, null, null, null);
         if (cursor.moveToFirst()) {
             do {
                 Profile profile = new Profile(
-                        cursor.getInt(0),
-                        cursor.getString(1),
+                        cursor.getInt(1),
                         cursor.getString(2),
                         cursor.getString(3),
                         cursor.getString(4),
                         cursor.getString(5),
                         cursor.getString(6),
-                        cursor.getInt(7)
+                        cursor.getString(7),
+                        cursor.getInt(8),
+                        cursor.getString(9)
                 );
                 profiles.add(profile);
             } while (cursor.moveToNext());

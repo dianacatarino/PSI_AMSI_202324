@@ -29,6 +29,8 @@ import java.util.Map;
 
 import pt.ipleiria.estg.dei.lusitaniatravel.listeners.FaturaListener;
 import pt.ipleiria.estg.dei.lusitaniatravel.listeners.FaturasListener;
+import pt.ipleiria.estg.dei.lusitaniatravel.listeners.FavoritoListener;
+import pt.ipleiria.estg.dei.lusitaniatravel.listeners.FavoritosListener;
 import pt.ipleiria.estg.dei.lusitaniatravel.listeners.FornecedorListener;
 import pt.ipleiria.estg.dei.lusitaniatravel.listeners.FornecedoresListener;
 import pt.ipleiria.estg.dei.lusitaniatravel.listeners.LoginListener;
@@ -37,6 +39,7 @@ import pt.ipleiria.estg.dei.lusitaniatravel.listeners.ReservasListener;
 import pt.ipleiria.estg.dei.lusitaniatravel.listeners.SignUpListener;
 import pt.ipleiria.estg.dei.lusitaniatravel.listeners.UserListener;
 import pt.ipleiria.estg.dei.lusitaniatravel.utils.FaturaJsonParser;
+import pt.ipleiria.estg.dei.lusitaniatravel.utils.FavoritoJsonParser;
 import pt.ipleiria.estg.dei.lusitaniatravel.utils.FornecedorJsonParser;
 import pt.ipleiria.estg.dei.lusitaniatravel.utils.LoginJsonParser;
 import pt.ipleiria.estg.dei.lusitaniatravel.modelos.User;
@@ -53,7 +56,6 @@ public class SingletonGestorLusitaniaTravel {
     private String username;
     private String password;
     private EditText editTextSearch;
-
     private static RequestQueue volleyQueue = null;
     private static final String mUrlAPILogin = "http://10.0.2.2/LusitaniaTravelAPI/backend/web/api/user/login/%s/%s";
     private static final String mUrlAPIRegister = "http://10.0.2.2/LusitaniaTravelAPI/backend/web/api/user/register";
@@ -62,8 +64,8 @@ public class SingletonGestorLusitaniaTravel {
     private static final String mUrlAPILocalizacao = "http://10.0.2.2/LusitaniaTravelAPI/backend/web/api/fornecedor/localizacao/%s";
     private static final String mUrlAPIDefinicoes = "http://10.0.2.2/LusitaniaTravelAPI/backend/web/api/user/mostrar/%s";
     private static final String mUrlAPIReservas = "http://10.0.2.2/LusitaniaTravelAPI/backend/web/api/reserva/mostrar/%s";
-
     private static final String mUrlAPIFaturas = "http://10.0.2.2/LusitaniaTravelAPI/backend/web/api/fatura/ver/%s";
+    private static final String mUrlAPIFavoritos = "http://10.0.2.2/LusitaniaTravelAPI/backend/web/api/fornecedor/favoritos";
     private FornecedoresListener fornecedoresListener;
     private FornecedorListener fornecedorListener;
     private ReservasListener reservasListener;
@@ -73,6 +75,8 @@ public class SingletonGestorLusitaniaTravel {
     private LoginListener loginListener;
     private SignUpListener signUpListener;
     private UserListener userListener;
+    private FavoritosListener favoritosListener;
+    private FavoritoListener favoritoListener;
 
     // Método que garante apenas uma instância do Singleton
     public static synchronized SingletonGestorLusitaniaTravel getInstance(Context context) {
@@ -92,6 +96,8 @@ public class SingletonGestorLusitaniaTravel {
     public LusitaniaTravelBDHelper getLusitaniaTravelBDHelper() {
         return lusitaniaTravelBDHelper;
     }
+
+    //region GETS E SETTERS
 
     public void setFornecedoresListener(FornecedoresListener fornecedoresListener) {
         this.fornecedoresListener = fornecedoresListener;
@@ -142,6 +148,16 @@ public class SingletonGestorLusitaniaTravel {
     public void setUserListener(UserListener userListener) {
         this.userListener = userListener;
     }
+
+    public void setFavoritosListener(FavoritosListener favoritosListener) {
+        this.favoritosListener = favoritosListener;
+    }
+
+    public void setFavoritoListener(FavoritoListener favoritoListener) {
+        this.favoritoListener = favoritoListener;
+    }
+
+    //endregion
 
     //region PEDIDOS BDLOCAL
 
@@ -644,6 +660,58 @@ public class SingletonGestorLusitaniaTravel {
             volleyQueue.add(req);
         }
     }
+
+    public void getAllFavoritosAPI(FavoritosListener listener, Context context) {
+        if (!FavoritoJsonParser.isConnectionInternet(context)) {
+            Toast.makeText(context, "Não tem ligação à Internet", Toast.LENGTH_SHORT).show();
+            Log.d("FavoritosAPI", "Sem ligação à Internet");
+        } else {
+            String username = SingletonGestorLusitaniaTravel.getInstance(context).getUsername();
+            String password = SingletonGestorLusitaniaTravel.getInstance(context).getPassword();
+            JsonObjectRequest req = new JsonObjectRequest(Request.Method.GET, mUrlAPIFavoritos, null,
+                    new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            try {
+                                JSONArray favoritosArray = response.getJSONArray("favoritos");
+                                fornecedores = FavoritoJsonParser.parserJsonFavoritos(favoritosArray);
+                                if (listener != null) {
+                                    listener.onRefreshListaFornecedores(fornecedores);
+                                }
+                            } catch (JSONException e) {
+                                Toast.makeText(context, "Erro ao processar resposta do servidor", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            Toast.makeText(context, error.getMessage(), Toast.LENGTH_SHORT).show();
+                            Log.e("FavoritosAPI", "Erro na resposta: " + error.getMessage());
+
+                            // Obter o corpo cru da resposta de erro
+                            if (error.networkResponse != null) {
+                                String rawErrorResponse = new String(error.networkResponse.data);
+                                Log.e("FavoritosAPI", "Raw Error Response: " + rawErrorResponse);
+                            }
+                        }
+                    }) {
+                @Override
+                public Map<String, String> getHeaders() {
+                    Map<String, String> headers = new HashMap<>();
+                    String credentials = username + ":" + password;
+                    String auth = "Basic " + Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
+                    headers.put("Authorization", auth);
+                    return headers;
+                }
+            };
+
+            volleyQueue.add(req);
+        }
+    }
+
+
+
 
     /*public void removerFornecedorAPI(final Fornecedor fornecedor, final Context context){
         if(!FornecedorJsonParser.isConnectionInternet(context)){

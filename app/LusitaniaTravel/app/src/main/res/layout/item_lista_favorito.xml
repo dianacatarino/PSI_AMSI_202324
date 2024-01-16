@@ -117,28 +117,12 @@
             android:orientation="horizontal">
 
             <ImageButton
-                android:id="@+id/btnAdicionarFavoritos"
+                android:id="@+id/btnRemoverFavoritos"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_favoritos"
                 android:backgroundTint="@color/white"
-                android:onClick="onAdicionarFavoritosClick" />
-
-            <ImageButton
-                android:id="@+id/btnAdicionarCarrinho"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_carrinho"
-                android:backgroundTint="@color/white"
-                android:onClick="onAdicionarCarrinhoClick"/>
-
-            <Button
-                android:id="@+id/btnDetalhesItem"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Detalhes"
-                android:backgroundTint="@color/black"
-                android:onClick="onDetalhesItemClick"/>
+                android:onClick="onRemoverFavoritosClick"/>
         </LinearLayout>
 
     </LinearLayout>

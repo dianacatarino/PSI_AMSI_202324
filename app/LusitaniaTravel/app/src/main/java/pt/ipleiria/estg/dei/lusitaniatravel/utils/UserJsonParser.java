@@ -31,8 +31,9 @@ public class UserJsonParser {
             String postalCode = userData.getString("postalCode");
             String role = userData.optString("role");
             int profileUserId = userData.has("profileUserId") ? userData.getInt("profileUserId") : -1;
+            String favorites = userData.optString("favorites");
 
-            Profile profile = new Profile(profileId, name, mobile, street, locale, postalCode, role, profileUserId);
+            Profile profile = new Profile(profileId, name, mobile, street, locale, postalCode, role, profileUserId,favorites);
 
             user = new User(userId, username, password, repeatPassword, email, profile);
 

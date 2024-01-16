@@ -4,11 +4,10 @@ import java.util.List;
 
 public class Profile {
     private int id;
-    private String name, mobile, street, locale, postalCode, role;
-
+    private String name, mobile, street, locale, postalCode, role, favorites;
     private int userId;
 
-    public Profile(int id, String name, String mobile, String street, String locale, String postalCode, String role, int userId) {
+    public Profile(int id, String name, String mobile, String street, String locale, String postalCode, String role, int userId, String favorites) {
         this.id = id;
         this.name = name;
         this.mobile = mobile;
@@ -17,6 +16,7 @@ public class Profile {
         this.postalCode = postalCode;
         this.role = role;
         this.userId = userId;
+        this.favorites = favorites;
     }
 
     public int getId() {
@@ -81,5 +81,13 @@ public class Profile {
 
     public void setUserId(int userId) {
         this.userId = userId;
+    }
+
+    public String getFavorites() {
+        return favorites;
+    }
+
+    public void setFavorites(String favorites) {
+        this.favorites = favorites;
     }
 }
