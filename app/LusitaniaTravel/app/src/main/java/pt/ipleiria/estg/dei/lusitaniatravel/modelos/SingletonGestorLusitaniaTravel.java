@@ -28,6 +28,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import pt.ipleiria.estg.dei.lusitaniatravel.CarrinhoFragment;
+import pt.ipleiria.estg.dei.lusitaniatravel.MainActivity;
 import pt.ipleiria.estg.dei.lusitaniatravel.listeners.CarrinhoListener;
 import pt.ipleiria.estg.dei.lusitaniatravel.listeners.CarrinhosListener;
 import pt.ipleiria.estg.dei.lusitaniatravel.listeners.FaturaListener;
@@ -71,6 +73,7 @@ public class SingletonGestorLusitaniaTravel {
     private static final String mUrlAPIFaturas = "http://10.0.2.2/LusitaniaTravelAPI/backend/web/api/fatura/ver/%s";
     private static final String mUrlAPIFavoritos = "http://10.0.2.2/LusitaniaTravelAPI/backend/web/api/fornecedor/favoritos";
     private static final String mUrlAPICarrinho = "http://10.0.2.2/LusitaniaTravelAPI/backend/web/api/carrinho/mostrar";
+    private static final String mUrlAPIAdicionarCarrinho = "http://10.0.2.2/LusitaniaTravelAPI/backend/web/api/carrinho/adicionarcarrinho/%d";
     private FornecedoresListener fornecedoresListener;
     private FornecedorListener fornecedorListener;
     private ReservasListener reservasListener;
@@ -82,8 +85,8 @@ public class SingletonGestorLusitaniaTravel {
     private UserListener userListener;
     private FavoritosListener favoritosListener;
     private FavoritoListener favoritoListener;
-
-    private CarrinhosListener CarrinhoListener;
+    private CarrinhosListener carrinhosListener;
+    private CarrinhoListener carrinhoListener;
 
     // Método que garante apenas uma instância do Singleton
     public static synchronized SingletonGestorLusitaniaTravel getInstance(Context context) {
@@ -164,8 +167,12 @@ public class SingletonGestorLusitaniaTravel {
         this.favoritoListener = favoritoListener;
     }
 
-    public void setCarrinhoListener(CarrinhosListener carrinhoListener) {
-        CarrinhoListener = carrinhoListener;
+    public void setCarrinhosListener(CarrinhosListener carrinhosListener) {
+        this.carrinhosListener = carrinhosListener;
+    }
+
+    public void setCarrinhoListener(CarrinhoListener carrinhoListener) {
+        this.carrinhoListener = carrinhoListener;
     }
 
     //endregion
@@ -722,7 +729,7 @@ public class SingletonGestorLusitaniaTravel {
                     new Response.Listener<JSONObject>() {
                         @Override
                         public void onResponse(JSONObject response) {
-                            List<Carrinho> carrinhos = CarrinhoJsonParser.parserJsonCarrinho(response);
+                            List<Carrinho> carrinhos = CarrinhoJsonParser.parserJsonCarrinhos(response);
                             if (listener != null) {
                                 listener.onRefreshListaCarrinho(new ArrayList<>(carrinhos));
                             }
@@ -734,6 +741,55 @@ public class SingletonGestorLusitaniaTravel {
                             Toast.makeText(context, error.getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     }) {
+                @Override
+                public Map<String, String> getHeaders() {
+                    Map<String, String> headers = new HashMap<>();
+                    String credentials = username + ":" + password;
+                    String auth = "Basic " + Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
+                    headers.put("Authorization", auth);
+                    return headers;
+                }
+            };
+            volleyQueue.add(req);
+        }
+    }
+
+    public void adicionarCarrinhoAPI(final Carrinho carrinho, final int fornecedorId, final Context context) {
+        if (!CarrinhoJsonParser.isConnectionInternet(context)) {
+            Toast.makeText(context, "Não tem ligação à Internet", Toast.LENGTH_SHORT).show();
+        } else {
+            String username = SingletonGestorLusitaniaTravel.getInstance(context).getUsername();
+            String password = SingletonGestorLusitaniaTravel.getInstance(context).getPassword();
+
+            String urlCompleta = mUrlAPIAdicionarCarrinho + fornecedorId;
+            JSONObject jsonBody = new JSONObject();
+            try {
+                jsonBody.put("nome_alojamento", carrinho.getNomeFornecedor());
+                jsonBody.put("quantidade", carrinho.getQuantidade());
+                jsonBody.put("preco", carrinho.getPreco());
+                jsonBody.put("subtotal", carrinho.getSubtotal());
+                jsonBody.put("reserva_id", carrinho.getReservaId());
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            JsonObjectRequest req = new JsonObjectRequest(Request.Method.POST, urlCompleta, jsonBody, new Response.Listener<JSONObject>() {
+                @Override
+                public void onResponse(JSONObject response) {
+                    if (carrinhoListener != null)
+                        carrinhoListener.onRefreshDetalhes(MainActivity.ADD);
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    String errorMessage = error.getMessage();
+                    if (errorMessage == null || errorMessage.isEmpty()) {
+                        errorMessage = "Ocorreu um erro na resposta";
+                    }
+                    Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show();
+                }
+            }) {
                 @Override
                 public Map<String, String> getHeaders() {
                     Map<String, String> headers = new HashMap<>();

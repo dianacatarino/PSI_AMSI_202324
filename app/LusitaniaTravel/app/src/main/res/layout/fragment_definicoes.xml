@@ -82,5 +82,5 @@
         android:layout_alignParentEnd="true"
         android:layout_margin="16dp"
         android:src="@drawable/ic_definicoes_editar"
-        android:backgroundTint="@color/blue"/>
+        android:backgroundTint="@color/blue" />
 </LinearLayout>

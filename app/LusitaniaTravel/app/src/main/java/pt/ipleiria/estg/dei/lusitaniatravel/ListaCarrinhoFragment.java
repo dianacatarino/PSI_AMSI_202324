@@ -41,7 +41,7 @@ public class ListaCarrinhoFragment extends Fragment implements CarrinhosListener
         lvCarrinho = view.findViewById(R.id.lvcarrinho);
 
         // Setar o listener para atualização da lista
-        SingletonGestorLusitaniaTravel.getInstance(getContext()).setCarrinhoListener(this);
+        SingletonGestorLusitaniaTravel.getInstance(getContext()).setCarrinhosListener(this);
 
         // Carregar a lista inicial de reservas
         SingletonGestorLusitaniaTravel.getInstance(getContext()).getAllCarrinhoAPI(this, getContext());

@@ -5,6 +5,8 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,18 +16,22 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ImageButton;
 import android.widget.ListView;
 
 import java.util.ArrayList;
 
 import pt.ipleiria.estg.dei.lusitaniatravel.adaptadores.ListaFornecedoresAdaptador;
 import pt.ipleiria.estg.dei.lusitaniatravel.listeners.FornecedoresListener;
+import pt.ipleiria.estg.dei.lusitaniatravel.modelos.Carrinho;
 import pt.ipleiria.estg.dei.lusitaniatravel.modelos.Fornecedor;
 import pt.ipleiria.estg.dei.lusitaniatravel.modelos.SingletonGestorLusitaniaTravel;
 
 public class ListaFornecedorFragment extends Fragment implements FornecedoresListener {
 
     private ListView lvFornecedores;
+    private int fornecedorId;
+    private Carrinho carrinho;
 
     public ListaFornecedorFragment () {
         // Required empty public constructor
@@ -47,10 +53,40 @@ public class ListaFornecedorFragment extends Fragment implements FornecedoresLis
         lvFornecedores.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+                fornecedorId = (int) id;
                 //Toast.makeText(getContext(),livros.get(position).getTitulo(),Toast.LENGTH_LONG).show();
                 Intent intent = new Intent(getContext(), DetalhesFornecedorActivity.class);
                 intent.putExtra(DetalhesFornecedorActivity.ID_FORNECEDOR, (int) id);
                 startActivity(intent);
+            }
+        });
+
+        // Inflar o layout específico do item
+        View itemListaFornecedor = inflater.inflate(R.layout.item_lista_fornecedor, container, false);
+
+        // Encontrar o ImageButton dentro do layout do item
+        ImageButton adicionarCarrinhoButton = itemListaFornecedor.findViewById(R.id.btnAdicionarCarrinho);
+
+        adicionarCarrinhoButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CarrinhoFragment carrinhoFragment = new CarrinhoFragment();
+
+                // Use o FragmentManager para substituir o fragmento atual pelo Fragmento do Carrinho
+                FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+                // Adicione o fragmento do carrinho ao conteúdo principal (container) do layout
+                fragmentTransaction.replace(R.id.fragmentContainer, carrinhoFragment);
+
+                // Adicione a transação à pilha de volta para que o botão "Voltar" possa reverter a operação
+                fragmentTransaction.addToBackStack(null);
+
+                // Execute a transação
+                fragmentTransaction.commit();
+
+                // Agora, chame a função adicionarCarrinhoAPI do Singleton com o fornecedorId
+                SingletonGestorLusitaniaTravel.getInstance(getContext()).adicionarCarrinhoAPI(carrinho, fornecedorId, getContext());
             }
         });
 

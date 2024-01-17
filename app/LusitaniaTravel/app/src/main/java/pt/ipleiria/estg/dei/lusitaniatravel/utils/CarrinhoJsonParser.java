@@ -15,7 +15,7 @@ import pt.ipleiria.estg.dei.lusitaniatravel.modelos.Carrinho;
 
 public class CarrinhoJsonParser {
 
-    public static List<Carrinho> parserJsonCarrinho(JSONObject response) {
+    public static List<Carrinho> parserJsonCarrinhos(JSONObject response) {
         List<Carrinho> carrinhos = new ArrayList<>();
 
         try {
@@ -41,6 +41,28 @@ public class CarrinhoJsonParser {
         }
 
         return carrinhos;
+    }
+
+    public static Carrinho parserJsonCarrinho(String response){
+        Carrinho carrinho = null;
+        try {
+            JSONObject jsonObject = new JSONObject(response);
+            JSONObject dataObject = jsonObject.getJSONObject("data");
+
+            String nomeAlojamento = dataObject.getString("nome_alojamento");
+            String clienteNome = dataObject.getString("cliente_nome");
+            int quantidade = dataObject.getInt("quantidade");
+            double preco = dataObject.getDouble("preco");
+            double subtotal = dataObject.getDouble("subtotal");
+            int reservaId = dataObject.getInt("reserva_id");
+            String estado = dataObject.optString("estado");
+
+            carrinho = new Carrinho(quantidade,preco,subtotal, nomeAlojamento, clienteNome, reservaId,estado);
+
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        }
+        return carrinho;
     }
 
 
