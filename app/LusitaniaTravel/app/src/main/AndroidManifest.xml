@@ -20,33 +20,13 @@
             android:name=".DetalhesFornecedorActivity"
             android:exported="false" />
         <activity
-            android:name=".MenuMainActivity"
-            android:exported="false"
-            android:launchMode="singleTop" />
-        <activity
-            android:name=".FavoriteActivity"
-            android:exported="false"
-            android:parentActivityName=".MainActivity" />
-        <activity
             android:name=".LoginActivity"
             android:exported="false"
             android:parentActivityName=".LoginOrSignUpActivity" />
         <activity
-            android:name=".LocationActivity"
-            android:exported="false"
-            android:parentActivityName=".MainActivity" />
-        <activity
             android:name=".SignUpActivity"
             android:exported="false"
             android:parentActivityName=".LoginOrSignUpActivity" />
-        <activity
-            android:name=".BookingActivity"
-            android:exported="false"
-            android:parentActivityName=".MainActivity" />
-        <activity
-            android:name=".UserActivity"
-            android:exported="false"
-            android:parentActivityName=".MainActivity" />
         <activity
             android:name=".MainActivity"
             android:exported="false" />

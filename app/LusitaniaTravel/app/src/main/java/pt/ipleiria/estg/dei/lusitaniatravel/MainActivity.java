@@ -37,10 +37,6 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        // Adiciona o botão de volta (seta para trás) na ActionBar
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
-
         //SingletonGestorLusitaniaTravel.getInstance(getApplicationContext());
 
         // Adiciona o fragmento ListaFornecedorFragment à MainActivity
@@ -93,6 +89,18 @@ public class MainActivity extends AppCompatActivity {
                 CarrinhoFragment carrinhoFragment = new CarrinhoFragment();
                 fragmentManager.beginTransaction().replace(R.id.fragmentContainer, carrinhoFragment).commit();
                 setTitle("Carrinho");
+            }
+        });
+
+        // Configurar o OnClickListener para o botão de logout
+        ImageButton logoutButton = findViewById(R.id.imageButtonSair);
+        logoutButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Ao clicar no botão de logout, direcione para o LoginActivity
+                Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                startActivity(intent);
+                finish();
             }
         });
 

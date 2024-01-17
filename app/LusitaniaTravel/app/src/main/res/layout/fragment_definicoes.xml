@@ -3,16 +3,19 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:gravity="center"
     tools:context=".DefinicoesFragment">
 
     <!-- User Details -->
     <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:src="@drawable/logo_icon" />
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:src="@drawable/ic_conta"
+        android:contentDescription="Imagem de Perfil"
+        android:layout_marginTop="32dp"
+        app:tint="@color/blue"/>
 
     <TextView
         android:id="@+id/textViewUsername"

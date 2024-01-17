@@ -10,6 +10,14 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
+        <Button
+            android:id="@+id/btVerificarDisponibilidade"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Verificar Disponibilidade"
+            android:onClick="onClickVerificarDisponibilidade"
+            android:backgroundTint="@color/black"
+            android:layout_gravity="center"/>
 
         <ListView
             android:id="@+id/lvcarrinho"
@@ -17,19 +25,14 @@
             android:layout_height="0dp"
             android:layout_weight="1" />
 
-        <TextView
-            android:id="@+id/textViewTotal"
+        <Button
+            android:id="@+id/btFinalizarCarrinho"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Total:"
-            android:textStyle="bold"
-            android:textSize="20dp"/>
-
-        <TextView
-            android:id="@+id/tvTotal"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp" />
+            android:text="Finalizar Carrinho"
+            android:onClick="onClickFinalizar"
+            android:backgroundTint="@color/blue"
+            android:layout_gravity="right"/>
     </LinearLayout>
 
 </RelativeLayout>

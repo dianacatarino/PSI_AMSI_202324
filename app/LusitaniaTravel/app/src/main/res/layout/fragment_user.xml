@@ -29,22 +29,22 @@
             app:tint="@color/blue"/>
 
         <!-- Nome de Utilizador -->
-        <!--<TextView
+       <TextView
+           android:id="@+id/textViewNomeUser"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Nome de Utilizador"
             android:textColor="@color/black"
-            android:textSize="18sp"
+            android:textSize="20sp"
             android:paddingTop="16dp"
-            android:layout_marginBottom="16dp" />-->
+            android:layout_marginBottom="16dp" />
 
         <!-- Botão Comentários -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:gravity="center"
-            android:layout_marginBottom="16dp">
+            android:gravity="center">
             <ImageView
                 android:layout_width="24dp"
                 android:layout_height="24dp"
@@ -65,8 +65,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:gravity="center"
-            android:layout_marginBottom="16dp">
+            android:gravity="center">
             <ImageView
                 android:layout_width="24dp"
                 android:layout_height="24dp"
@@ -87,8 +86,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:gravity="center"
-            android:layout_marginBottom="32dp">
+            android:gravity="center">
             <ImageView
                 android:layout_width="24dp"
                 android:layout_height="24dp"

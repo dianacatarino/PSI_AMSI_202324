@@ -13,11 +13,22 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
-        android:layout_marginEnd="16dp"
         android:layout_marginTop="16dp"
-        android:src="@drawable/ic_carrinho"
+        android:layout_marginEnd="16dp"
         android:backgroundTint="@color/blue"
-        android:onClick="onClickCarrinho"/>
+        android:onClick="onClickCarrinho"
+        android:src="@drawable/ic_carrinho" />
+
+    <ImageButton
+        android:id="@+id/imageButtonSair"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_toStartOf="@id/imageButton"
+        android:backgroundTint="@color/blue"
+        android:onClick="onClickLogout"
+        android:src="@drawable/ic_sair" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -29,9 +40,9 @@
             android:id="@+id/fragmentContainer"
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:layout_marginTop="50dp"
             android:layout_weight="1"
-            android:orientation="vertical"
-            android:layout_marginTop="50dp"/>
+            android:orientation="vertical" />
 
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/bottom_navigation"

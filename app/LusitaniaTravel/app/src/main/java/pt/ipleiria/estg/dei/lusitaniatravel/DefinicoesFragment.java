@@ -88,8 +88,6 @@ public class DefinicoesFragment extends Fragment implements UserListener {
         if (view != null && user != null) {
             updateUserDetails(user, view);
         } else {
-            Log.e("DefinicoesError", "onRefreshDetalhes: View or User is null");
-
             // Additional handling, e.g., show an error message to the user
             Toast.makeText(requireContext(), "Failed to refresh details", Toast.LENGTH_SHORT).show();
         }

@@ -9,13 +9,20 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import pt.ipleiria.estg.dei.lusitaniatravel.listeners.UserListener;
+import pt.ipleiria.estg.dei.lusitaniatravel.modelos.Profile;
+import pt.ipleiria.estg.dei.lusitaniatravel.modelos.SingletonGestorLusitaniaTravel;
+import pt.ipleiria.estg.dei.lusitaniatravel.modelos.User;
 
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link UserFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class UserFragment extends Fragment {
+public class UserFragment extends Fragment implements UserListener {
 
 
     public UserFragment() {
@@ -72,7 +79,39 @@ public class UserFragment extends Fragment {
             }
         });
 
+        // Initialize the singleton if not already initialized
+        SingletonGestorLusitaniaTravel singleton = SingletonGestorLusitaniaTravel.getInstance(requireContext());
+
+        // Set the listener
+        singleton.setUserListener(this);
+
+        // Now, you can call the getUserDefinicoesAPI method
+        singleton.getUserDefinicoesAPI(requireContext());
+
         return view;
+    }
+
+    public void updateUserDetails(User user, View view) {
+        if (view != null && user != null) {
+            TextView textViewNomeUser = view.findViewById(R.id.textViewNomeUser);
+
+            // Update profile details if available
+            Profile profile = user.getProfile();
+            if (profile != null) {
+                textViewNomeUser.setText("" + profile.getName());
+            }
+        }
+    }
+
+    @Override
+    public void onRefreshDetalhes(User user) {
+        View view = getView();
+        if (view != null && user != null) {
+            updateUserDetails(user, view);
+        } else {
+            // Additional handling, e.g., show an error message to the user
+            Toast.makeText(requireContext(), "Failed to refresh details", Toast.LENGTH_SHORT).show();
+        }
     }
 
 
