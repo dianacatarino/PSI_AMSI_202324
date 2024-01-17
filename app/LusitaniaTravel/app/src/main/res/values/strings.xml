@@ -64,4 +64,9 @@
     <string name="txt_pesquisa_pesquisar">Pesquisar</string>
     <string name="txt_detalhes_tipo_quartos">Tipo Quartos:</string>
     <string name="txt_detalhes_n_quartos_disponiveis">Nº Quartos Disponíveis:</string>
+    <string name="txt_carrinho_reserva">Reserva:</string>
+    <string name="txt_carrinho_quantidade">Quantidade:</string>
+    <string name="txt_carrinho_preco">Preço por noite:</string>
+    <string name="txt_carrinho_subtotal">Preço Total:</string>
+    <string name="txt_carrinho_estado">Estado:</string>
 </resources>

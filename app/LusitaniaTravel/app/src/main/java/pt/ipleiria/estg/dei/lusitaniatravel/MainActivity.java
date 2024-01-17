@@ -9,6 +9,8 @@ import androidx.fragment.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
@@ -79,6 +81,18 @@ public class MainActivity extends AppCompatActivity {
                     fragmentManager.beginTransaction().replace(R.id.fragmentContainer, fragment).commit();
 
                 return onOptionsItemSelected(item);
+            }
+        });
+
+        // Configurar o OnClickListener para o botão de carrinho
+        ImageButton carrinhoButton = findViewById(R.id.imageButton);
+        carrinhoButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Ao clicar no carrinho, direcione para o CarrinhoFragment
+                CarrinhoFragment carrinhoFragment = new CarrinhoFragment();
+                fragmentManager.beginTransaction().replace(R.id.fragmentContainer, carrinhoFragment).commit();
+                setTitle("Carrinho");
             }
         });
 

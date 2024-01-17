@@ -8,13 +8,16 @@ public class Carrinho {
     private String nomeCliente, nomeFornecedor;
     private int reservaId;
 
-    public Carrinho(int quantidade, double preco, double subtotal, String nomeCliente, String nomeFornecedor, int reservaId) {
+    private String estado;
+
+    public Carrinho(int quantidade, double preco, double subtotal, String nomeCliente, String nomeFornecedor, int reservaId, String estado) {
         this.quantidade = quantidade;
         this.preco = preco;
         this.subtotal = subtotal;
         this.nomeCliente = nomeCliente;
         this.nomeFornecedor = nomeFornecedor;
         this.reservaId = reservaId;
+        this.estado = estado;
     }
 
     // Getters e Setters
@@ -72,5 +75,13 @@ public class Carrinho {
 
     public void setReservaId(int reservaId) {
         this.reservaId = reservaId;
+    }
+
+    public String getEstado() {
+        return estado;
+    }
+
+    public void setEstado(String estado) {
+        this.estado = estado;
     }
 }
