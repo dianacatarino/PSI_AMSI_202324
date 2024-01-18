@@ -108,7 +108,7 @@ public class ListaFavoritosAdaptador extends BaseAdapter {
             String relativePath = imagem.getFilename();
 
             // Construindo a URL completa usando o domínio base
-            String baseUrl = "http://10.0.2.2";
+            String baseUrl = "http://172.22.21.204";
             return baseUrl + relativePath;
         }
     }

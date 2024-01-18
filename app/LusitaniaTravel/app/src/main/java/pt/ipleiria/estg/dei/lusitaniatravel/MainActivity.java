@@ -87,8 +87,8 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 // Ao clicar no carrinho, direcione para o CarrinhoFragment
                 CarrinhoFragment carrinhoFragment = new CarrinhoFragment();
-                fragmentManager.beginTransaction().replace(R.id.fragmentContainer, carrinhoFragment).commit();
-                setTitle("Carrinho");
+
+                setTitle("Carrinho");fragmentManager.beginTransaction().replace(R.id.fragmentContainer, carrinhoFragment).commit();
             }
         });
 

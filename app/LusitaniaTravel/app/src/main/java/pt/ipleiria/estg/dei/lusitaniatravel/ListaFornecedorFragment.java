@@ -18,10 +18,12 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
 import pt.ipleiria.estg.dei.lusitaniatravel.adaptadores.ListaFornecedoresAdaptador;
+import pt.ipleiria.estg.dei.lusitaniatravel.listeners.CarrinhoListener;
 import pt.ipleiria.estg.dei.lusitaniatravel.listeners.FornecedoresListener;
 import pt.ipleiria.estg.dei.lusitaniatravel.modelos.Carrinho;
 import pt.ipleiria.estg.dei.lusitaniatravel.modelos.Fornecedor;
@@ -61,7 +63,7 @@ public class ListaFornecedorFragment extends Fragment implements FornecedoresLis
             }
         });
 
-        // Inflar o layout específico do item
+        /*// Inflar o layout específico do item
         View itemListaFornecedor = inflater.inflate(R.layout.item_lista_fornecedor, container, false);
 
         // Encontrar o ImageButton dentro do layout do item
@@ -70,25 +72,19 @@ public class ListaFornecedorFragment extends Fragment implements FornecedoresLis
         adicionarCarrinhoButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                CarrinhoFragment carrinhoFragment = new CarrinhoFragment();
-
-                // Use o FragmentManager para substituir o fragmento atual pelo Fragmento do Carrinho
-                FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-
-                // Adicione o fragmento do carrinho ao conteúdo principal (container) do layout
-                fragmentTransaction.replace(R.id.fragmentContainer, carrinhoFragment);
-
-                // Adicione a transação à pilha de volta para que o botão "Voltar" possa reverter a operação
-                fragmentTransaction.addToBackStack(null);
-
-                // Execute a transação
-                fragmentTransaction.commit();
-
                 // Agora, chame a função adicionarCarrinhoAPI do Singleton com o fornecedorId
-                SingletonGestorLusitaniaTravel.getInstance(getContext()).adicionarCarrinhoAPI(carrinho, fornecedorId, getContext());
+                SingletonGestorLusitaniaTravel.getInstance(getContext()).adicionarCarrinhoAPI(carrinho, fornecedorId, getContext(), new CarrinhoListener() {
+                    @Override
+                    public void onRefreshDetalhes(int op) {
+                        // Este método será chamado quando o carrinho for adicionado com sucesso
+                        if (op == MainActivity.ADD) {
+                            // Exibir Toast após o carrinho ser adicionado com sucesso
+                            Toast.makeText(getContext(), "Item adicionado ao carrinho com sucesso", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
             }
-        });
+        });*/
 
         // Habilitar o menu para o fragmento
         setHasOptionsMenu(true);

@@ -63,17 +63,17 @@ public class SingletonGestorLusitaniaTravel {
     private String password;
     private EditText editTextSearch;
     private static RequestQueue volleyQueue = null;
-    private static final String mUrlAPILogin = "http://10.0.2.2/LusitaniaTravelAPI/backend/web/api/user/login/%s/%s";
-    private static final String mUrlAPIRegister = "http://10.0.2.2/LusitaniaTravelAPI/backend/web/api/user/register";
-    private static final String mUrlAPIFornecedores = "http://10.0.2.2/LusitaniaTravelAPI/backend/web/api/fornecedor/alojamentos";
-    private static final String mUrlAPIFornecedor = "http://10.0.2.2/LusitaniaTravelAPI/backend/web/api/fornecedor/alojamento/%d";
-    private static final String mUrlAPILocalizacao = "http://10.0.2.2/LusitaniaTravelAPI/backend/web/api/fornecedor/localizacao/%s";
-    private static final String mUrlAPIDefinicoes = "http://10.0.2.2/LusitaniaTravelAPI/backend/web/api/user/mostrar/%s";
-    private static final String mUrlAPIReservas = "http://10.0.2.2/LusitaniaTravelAPI/backend/web/api/reserva/mostrar/%s";
-    private static final String mUrlAPIFaturas = "http://10.0.2.2/LusitaniaTravelAPI/backend/web/api/fatura/ver/%s";
-    private static final String mUrlAPIFavoritos = "http://10.0.2.2/LusitaniaTravelAPI/backend/web/api/fornecedor/favoritos";
-    private static final String mUrlAPICarrinho = "http://10.0.2.2/LusitaniaTravelAPI/backend/web/api/carrinho/mostrar";
-    private static final String mUrlAPIAdicionarCarrinho = "http://10.0.2.2/LusitaniaTravelAPI/backend/web/api/carrinho/adicionarcarrinho/%d";
+    private static final String mUrlAPILogin = "http://172.22.21.204/LusitaniaTravelAPI/backend/web/api/user/login/%s/%s";
+    private static final String mUrlAPIRegister = "http://172.22.21.204/LusitaniaTravelAPI/backend/web/api/user/register";
+    private static final String mUrlAPIFornecedores = "http://172.22.21.204/LusitaniaTravelAPI/backend/web/api/fornecedor/alojamentos";
+    private static final String mUrlAPIFornecedor = "http://172.22.21.204/LusitaniaTravelAPI/backend/web/api/fornecedor/alojamento/%d";
+    private static final String mUrlAPILocalizacao = "http://172.22.21.204/LusitaniaTravelAPI/backend/web/api/fornecedor/localizacao/%s";
+    private static final String mUrlAPIDefinicoes = "http://172.22.21.204/LusitaniaTravelAPI/backend/web/api/user/mostrar/%s";
+    private static final String mUrlAPIReservas = "http://172.22.21.204/LusitaniaTravelAPI/backend/web/api/reserva/mostrar/%s";
+    private static final String mUrlAPIFaturas = "http://172.22.21.204/LusitaniaTravelAPI/backend/web/api/fatura/ver/%s";
+    private static final String mUrlAPIFavoritos = "http://172.22.21.204/LusitaniaTravelAPI/backend/web/api/fornecedor/favoritos";
+    private static final String mUrlAPICarrinho = "http://172.22.21.204/LusitaniaTravelAPI/backend/web/api/carrinho/mostrar";
+    private static final String mUrlAPIAdicionarCarrinho = "http://172.22.21.204/LusitaniaTravelAPI/backend/web/api/carrinho/adicionarcarrinho/%d";
     private FornecedoresListener fornecedoresListener;
     private FornecedorListener fornecedorListener;
     private ReservasListener reservasListener;
@@ -754,7 +754,7 @@ public class SingletonGestorLusitaniaTravel {
         }
     }
 
-    public void adicionarCarrinhoAPI(final Carrinho carrinho, final int fornecedorId, final Context context) {
+    public void adicionarCarrinhoAPI(final Carrinho carrinho, final int fornecedorId, final Context context,final CarrinhoListener listener) {
         if (!CarrinhoJsonParser.isConnectionInternet(context)) {
             Toast.makeText(context, "Não tem ligação à Internet", Toast.LENGTH_SHORT).show();
         } else {
@@ -762,32 +762,21 @@ public class SingletonGestorLusitaniaTravel {
             String password = SingletonGestorLusitaniaTravel.getInstance(context).getPassword();
 
             String urlCompleta = mUrlAPIAdicionarCarrinho + fornecedorId;
-            JSONObject jsonBody = new JSONObject();
-            try {
-                jsonBody.put("nome_alojamento", carrinho.getNomeFornecedor());
-                jsonBody.put("quantidade", carrinho.getQuantidade());
-                jsonBody.put("preco", carrinho.getPreco());
-                jsonBody.put("subtotal", carrinho.getSubtotal());
-                jsonBody.put("reserva_id", carrinho.getReservaId());
 
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
+            Log.d("CarrinhoAPI", "URL: " + urlCompleta);
 
-            JsonObjectRequest req = new JsonObjectRequest(Request.Method.POST, urlCompleta, jsonBody, new Response.Listener<JSONObject>() {
+            JsonObjectRequest req = new JsonObjectRequest(Request.Method.POST, urlCompleta, null, new Response.Listener<JSONObject>() {
                 @Override
                 public void onResponse(JSONObject response) {
-                    if (carrinhoListener != null)
-                        carrinhoListener.onRefreshDetalhes(MainActivity.ADD);
+                    Log.d("CarrinhoAPI", "Response: " + response.toString());
+                    if (listener != null)
+                        listener.onRefreshDetalhes(MainActivity.ADD);
                 }
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    String errorMessage = error.getMessage();
-                    if (errorMessage == null || errorMessage.isEmpty()) {
-                        errorMessage = "Ocorreu um erro na resposta";
-                    }
-                    Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show();
+                    Log.e("CarrinhoAPI", "Erro na resposta: " + error);
+                    Toast.makeText(context, error.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             }) {
                 @Override
@@ -802,6 +791,7 @@ public class SingletonGestorLusitaniaTravel {
             volleyQueue.add(req);
         }
     }
+
 
 
     /*public void removerFornecedorAPI(final Fornecedor fornecedor, final Context context){
