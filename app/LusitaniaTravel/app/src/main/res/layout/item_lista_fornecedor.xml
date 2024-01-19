@@ -130,7 +130,10 @@
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_carrinho"
                 android:backgroundTint="@color/white"
-                android:onClick="onAdicionarCarrinhoClick"/>
+                android:onClick="onAdicionarCarrinhoClick"
+                android:clickable="true"
+                android:visibility="visible"
+                android:focusable="false"/>
 
             <Button
                 android:id="@+id/btnDetalhesItem"

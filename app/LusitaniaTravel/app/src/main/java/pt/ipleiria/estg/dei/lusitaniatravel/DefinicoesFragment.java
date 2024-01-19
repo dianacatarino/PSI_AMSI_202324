@@ -1,5 +1,7 @@
 package pt.ipleiria.estg.dei.lusitaniatravel;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -8,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -117,39 +120,70 @@ public class DefinicoesFragment extends Fragment implements UserListener {
     }
 }
 
-private void openEditProfileFieldDialog(final String fieldLabel, String fieldValue, final TextView textView, final User user, final String fieldKey) {
-    AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
-    LayoutInflater inflater = requireActivity().getLayoutInflater();
-    View dialogView = inflater.inflate(R.layout.dialog_edit_profile_field, null);
-    builder.setView(dialogView);
+    private void openEditProfileFieldDialog(final String fieldLabel, String fieldValue, final TextView textView, final User user, final String fieldKey) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+        LayoutInflater inflater = requireActivity().getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.dialog_edit_profile_field, null);
+        builder.setView(dialogView);
 
-    final EditText editTextFieldValue = dialogView.findViewById(R.id.editTextFieldValue);
-    editTextFieldValue.setText(fieldValue);
+        // Adicione todas as EditText do layout
+        final EditText editTextFieldUsername = dialogView.findViewById(R.id.editTextFieldUsername);
+        final EditText editTextFieldEmail = dialogView.findViewById(R.id.editTextFieldEmail);
+        final EditText editTextFieldNome = dialogView.findViewById(R.id.editTextFieldNome);
+        final EditText editTextFieldTelemovel = dialogView.findViewById(R.id.editTextFieldTelemovel);
+        final EditText editTextFieldRua = dialogView.findViewById(R.id.editTextFieldRua);
+        final EditText editTextFieldLocalidade = dialogView.findViewById(R.id.editTextFieldLocalidade);
+        final EditText editTextFieldCodPostal = dialogView.findViewById(R.id.editTextFieldCodPostal);
 
-    builder.setPositiveButton("Salvar", new DialogInterface.OnClickListener() {
-        @Override
-        public void onClick(DialogInterface dialog, int which) {
-            // Obtenha o valor inserido pelo usuário
-            String newFieldValue = editTextFieldValue.getText().toString();
+        // Defina os valores iniciais
+        editTextFieldUsername.setText(fieldValue);
+        editTextFieldEmail.setText(fieldValue);
+        editTextFieldNome.setText(fieldValue);
+        editTextFieldTelemovel.setText(fieldValue);
+        editTextFieldRua.setText(fieldValue);
+        editTextFieldLocalidade.setText(fieldValue);
+        editTextFieldCodPostal.setText(fieldValue);
 
-            // Atualize o perfil do usuário com o novo valor
-            updateProfileField(user, fieldKey, newFieldValue);
+        builder.setPositiveButton("Salvar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // Obtenha os valores inseridos pelo usuário
+                String newFieldValueUsername = editTextFieldUsername.getText().toString();
+                String newFieldValueEmail = editTextFieldEmail.getText().toString();
+                String newFieldValueNome = editTextFieldNome.getText().toString();
+                String newFieldValueTelemovel = editTextFieldTelemovel.getText().toString();
+                String newFieldValueRua = editTextFieldRua.getText().toString();
+                String newFieldValueLocalidade = editTextFieldLocalidade.getText().toString();
+                String newFieldValueCodPostal = editTextFieldCodPostal.getText().toString();
 
-            // Atualize a interface do usuário
-            textView.setText(fieldLabel + ": " + newFieldValue);
-        }
-    });
+                // Atualize o perfil do usuário com os novos valores
+                updateProfileField(user, "name", newFieldValueNome);
+                updateProfileField(user, "mobile", newFieldValueTelemovel);
+                updateProfileField(user, "street", newFieldValueRua);
+                updateProfileField(user, "locale", newFieldValueLocalidade);
+                updateProfileField(user, "postalCode", newFieldValueCodPostal);
 
-    builder.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
-        @Override
-        public void onClick(DialogInterface dialog, int which) {
-            dialog.dismiss();
-        }
-    });
+                // Atualize a interface do usuário
+                textView.setText(fieldLabel + ": " + newFieldValueUsername);
+                textView.setText(fieldLabel + ": " + newFieldValueEmail);
+                textView.setText(fieldLabel + ": " + newFieldValueNome);
+                textView.setText(fieldLabel + ": " + newFieldValueTelemovel);
+                textView.setText(fieldLabel + ": " + newFieldValueRua);
+                textView.setText(fieldLabel + ": " + newFieldValueLocalidade);
+                textView.setText(fieldLabel + ": " + newFieldValueCodPostal);
+            }
+        });
 
-    AlertDialog dialog = builder.create();
-    dialog.show();
-}
+        builder.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
 
 private void updateProfileField(User user, String fieldKey, String newValue) {
     // Atualize o perfil do usuário com o novo valor
@@ -171,7 +205,6 @@ private void updateProfileField(User user, String fieldKey, String newValue) {
             case "postalCode":
                 profile.setPostalCode(newValue);
                 break;
-            // Adicione mais casos conforme necessário
         }
     }
 }

@@ -12,7 +12,7 @@ import pt.ipleiria.estg.dei.lusitaniatravel.listeners.ReservaListener;
 import pt.ipleiria.estg.dei.lusitaniatravel.modelos.Reserva;
 import pt.ipleiria.estg.dei.lusitaniatravel.modelos.SingletonGestorLusitaniaTravel;
 
-public class DetalhesReservaActivity extends AppCompatActivity implements ReservaListener {
+/*public class DetalhesReservaActivity extends AppCompatActivity implements ReservaListener {
 
     private TextView tvCheckIn, tvCheckOut, tvTipo, tvValor, tvNumeroClientes, tvNumeroQuartos;
     public static final String ID_RESERVA = "id";
@@ -53,4 +53,4 @@ public class DetalhesReservaActivity extends AppCompatActivity implements Reserv
         }
     }
 
-}
+}*/

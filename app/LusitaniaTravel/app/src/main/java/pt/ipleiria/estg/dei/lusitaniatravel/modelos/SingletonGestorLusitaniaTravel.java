@@ -73,7 +73,8 @@ public class SingletonGestorLusitaniaTravel {
     private static final String mUrlAPIFaturas = "http://172.22.21.204/LusitaniaTravelAPI/backend/web/api/fatura/ver/%s";
     private static final String mUrlAPIFavoritos = "http://172.22.21.204/LusitaniaTravelAPI/backend/web/api/fornecedor/favoritos";
     private static final String mUrlAPICarrinho = "http://172.22.21.204/LusitaniaTravelAPI/backend/web/api/carrinho/mostrar";
-    private static final String mUrlAPIAdicionarCarrinho = "http://172.22.21.204/LusitaniaTravelAPI/backend/web/api/carrinho/adicionarcarrinho/%d";
+    private static final String mUrlAPIAdicionarCarrinho = "http://172.22.21.204/LusitaniaTravelAPI/backend/web/api/carrinho/adicionarcarrinho/";
+    private static final String mUrlAPIRemoverCarrinho = "http://172.22.21.204/LusitaniaTravelAPI/backend/web/api/carrinho/removercarrinho/";
     private FornecedoresListener fornecedoresListener;
     private FornecedorListener fornecedorListener;
     private ReservasListener reservasListener;
@@ -484,6 +485,13 @@ public class SingletonGestorLusitaniaTravel {
     public void getAllReservasAPI(ReservasListener listener, Context context) {
         if (!ReservaJsonParser.isConnectionInternet(context)) {
             Toast.makeText(context, "Não tem ligação à Internet", Toast.LENGTH_SHORT).show();
+
+            ArrayList<Reserva> reservasBD = getReservasBD();
+
+            if (listener != null) {
+                listener.onRefreshListaReservas(reservasBD);
+            }
+
         } else {
             String username = SingletonGestorLusitaniaTravel.getInstance(context).getUsername();
             String password = SingletonGestorLusitaniaTravel.getInstance(context).getPassword();
@@ -502,6 +510,10 @@ public class SingletonGestorLusitaniaTravel {
                                 if (listener != null) {
                                     listener.onRefreshListaReservas(reservas);
                                 }
+
+                                // Adicionar reservas à BD local
+                                adicionarAllReservasBD(reservas);
+
                             } catch (JSONException e) {
                                 Toast.makeText(context, "Erro ao processar resposta do servidor", Toast.LENGTH_SHORT).show();
                             }
@@ -763,19 +775,15 @@ public class SingletonGestorLusitaniaTravel {
 
             String urlCompleta = mUrlAPIAdicionarCarrinho + fornecedorId;
 
-            Log.d("CarrinhoAPI", "URL: " + urlCompleta);
-
             JsonObjectRequest req = new JsonObjectRequest(Request.Method.POST, urlCompleta, null, new Response.Listener<JSONObject>() {
                 @Override
                 public void onResponse(JSONObject response) {
-                    Log.d("CarrinhoAPI", "Response: " + response.toString());
                     if (listener != null)
                         listener.onRefreshDetalhes(MainActivity.ADD);
                 }
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    Log.e("CarrinhoAPI", "Erro na resposta: " + error);
                     Toast.makeText(context, error.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             }) {
@@ -792,7 +800,40 @@ public class SingletonGestorLusitaniaTravel {
         }
     }
 
+    public void removerCarrinhoAPI(final Carrinho carrinho, final int fornecedorId, final Context context, final CarrinhoListener listener) {
+        if (!CarrinhoJsonParser.isConnectionInternet(context)) {
+            Toast.makeText(context, "Não tem ligação à Internet", Toast.LENGTH_SHORT).show();
+        } else {
+            String username = SingletonGestorLusitaniaTravel.getInstance(context).getUsername();
+            String password = SingletonGestorLusitaniaTravel.getInstance(context).getPassword();
 
+            String urlCompleta = mUrlAPIRemoverCarrinho + fornecedorId;
+
+            JsonObjectRequest req = new JsonObjectRequest(Request.Method.DELETE, urlCompleta, null, new Response.Listener<JSONObject>() {
+                @Override
+                public void onResponse(JSONObject response) {
+                    if (listener != null)
+                        listener.onRefreshDetalhes(MainActivity.DELETE);
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Toast.makeText(context, error.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }) {
+                @Override
+                public Map<String, String> getHeaders() {
+                    Map<String, String> headers = new HashMap<>();
+                    String credentials = username + ":" + password;
+                    String auth = "Basic " + Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
+                    headers.put("Authorization", auth);
+                    return headers;
+                }
+            };
+
+            volleyQueue.add(req);
+        }
+    }
 
     /*public void removerFornecedorAPI(final Fornecedor fornecedor, final Context context){
         if(!FornecedorJsonParser.isConnectionInternet(context)){

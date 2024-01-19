@@ -1,27 +1,47 @@
 package pt.ipleiria.estg.dei.lusitaniatravel.adaptadores;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
+import pt.ipleiria.estg.dei.lusitaniatravel.CarrinhoFragment;
 import pt.ipleiria.estg.dei.lusitaniatravel.R;
+import pt.ipleiria.estg.dei.lusitaniatravel.listeners.CarrinhoListener;
+import pt.ipleiria.estg.dei.lusitaniatravel.listeners.CarrinhosListener;
+import pt.ipleiria.estg.dei.lusitaniatravel.listeners.FornecedoresListener;
 import pt.ipleiria.estg.dei.lusitaniatravel.modelos.Carrinho;
+import pt.ipleiria.estg.dei.lusitaniatravel.modelos.Fornecedor;
+import pt.ipleiria.estg.dei.lusitaniatravel.modelos.SingletonGestorLusitaniaTravel;
 
 public class ListaCarrinhoAdaptador extends BaseAdapter {
 
     private Context context;
     private LayoutInflater inflater;
     private ArrayList<Carrinho> carrinhos;
+    private String fornecedorNome;
+    private int fornecedorId = -1;
+    private CarrinhoFragment fragmento;
 
     public ListaCarrinhoAdaptador(Context context, ArrayList<Carrinho> carrinhos) {
         this.context = context;
         this.carrinhos = carrinhos;
+    }
+
+    public void atualizarListaCarrinho(ArrayList<Carrinho> listaCarrinho) {
+        this.carrinhos = listaCarrinho;
+        notifyDataSetChanged();
     }
 
     @Override
@@ -49,7 +69,7 @@ public class ListaCarrinhoAdaptador extends BaseAdapter {
         // Otimização
         ViewHolderLista viewHolder = (ViewHolderLista) convertView.getTag();
         if (viewHolder == null) {
-            viewHolder = new ViewHolderLista(convertView);
+            viewHolder = new ViewHolderLista(convertView,position);
             convertView.setTag(viewHolder);
         }
         viewHolder.update(carrinhos.get(position), context);
@@ -57,15 +77,64 @@ public class ListaCarrinhoAdaptador extends BaseAdapter {
         return convertView;
     }
 
-    private static class ViewHolderLista {
+    private class ViewHolderLista {
         private TextView tvQuantidade, tvPreco, tvSubtotal, tvReservaId, tvEstado;
+        private ImageButton btnRemoverCarrinho;
 
-        public ViewHolderLista(View view) {
+        public ViewHolderLista(View view, final int position) {
             tvQuantidade = view.findViewById(R.id.tvQuantidade);
             tvPreco = view.findViewById(R.id.tvPreco);
             tvSubtotal = view.findViewById(R.id.tvSubtotal);
             tvReservaId = view.findViewById(R.id.tvReserva);
             tvEstado = view.findViewById(R.id.tvEstado);
+            btnRemoverCarrinho = view.findViewById(R.id.btnRemoverCarrinho);
+
+            btnRemoverCarrinho.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (carrinhos != null && carrinhos.size() > position) {
+                        Carrinho carrinhoClicado = carrinhos.get(position);
+                        fornecedorNome = carrinhoClicado.getNomeFornecedor();
+
+                        SingletonGestorLusitaniaTravel singleton = SingletonGestorLusitaniaTravel.getInstance(context);
+
+                        singleton.getAllFornecedoresAPI(new FornecedoresListener() {
+                            @Override
+                            public void onRefreshListaFornecedores(ArrayList<Fornecedor> fornecedores) {
+                                // Faça algo com a lista de fornecedores
+
+                                // Percorre a lista de fornecedores para encontrar o ID correspondente ao nome
+                                for (Fornecedor fornecedor : fornecedores) {
+                                    if (fornecedor.getNomeAlojamento().equals(fornecedorNome)) {
+                                        fornecedorId = fornecedor.getId();
+                                        break;
+                                    }
+                                }
+
+                                // Verifique se o fornecedor foi encontrado
+                                if (fornecedorId != -1) {
+                                    final int idFornecedor = fornecedorId;
+                                }
+
+                                singleton.getAllCarrinhoAPI(new CarrinhosListener() {
+                                    @Override
+                                    public void onRefreshListaCarrinho(ArrayList<Carrinho> carrinhos) {
+                                        Carrinho carrinho = carrinhos.get(0);
+                                        // Remover o fornecedor ao carrinho
+                                        singleton.removerCarrinhoAPI(carrinho, fornecedorId, context, new CarrinhoListener() {
+                                            @Override
+                                            public void onRefreshDetalhes(int action) {
+                                                Toast.makeText(context, "Item removido ao carrinho", Toast.LENGTH_SHORT).show();
+
+                                            }
+                                        });
+                                    }
+                                }, context);
+                            }
+                        }, context);
+                    }
+                }
+            });
         }
 
         public void update(Carrinho carrinho, Context context) {

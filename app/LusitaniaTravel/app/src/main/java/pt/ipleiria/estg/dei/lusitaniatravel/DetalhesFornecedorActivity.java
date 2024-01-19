@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import pt.ipleiria.estg.dei.lusitaniatravel.listeners.FornecedorListener;
 import pt.ipleiria.estg.dei.lusitaniatravel.modelos.Fornecedor;
@@ -48,14 +49,14 @@ public class DetalhesFornecedorActivity extends AppCompatActivity implements For
             tvPrecoPorNoite.setText(String.valueOf(fornecedor.getPrecoPorNoite()));
             tvTipoQuartos.setText(fornecedor.getTipoQuartos());
             tvNumeroQuartos.setText(fornecedor.getNumeroQuartos());
-        }
+        /*}
         if (fornecedor.getNumeroQuartos() != null) {
             tvNumeroQuartos.setText(fornecedor.getNumeroQuartos());
         } else {
             tvNumeroQuartos.setText("N/A");
-        }
+        }*/
     } else {
-         Toast.makeText(this, "Erro ao obter detalhes do fornecedor: " + errorMessage, Toast.LENGTH_SHORT).show();
+         /*Toast.makeText(this, "Erro ao obter detalhes do fornecedor: " + errorMessage, Toast.LENGTH_SHORT).show();*/
         }
     }
 }

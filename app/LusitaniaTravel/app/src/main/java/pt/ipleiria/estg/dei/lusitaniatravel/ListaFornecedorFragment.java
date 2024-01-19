@@ -56,35 +56,12 @@ public class ListaFornecedorFragment extends Fragment implements FornecedoresLis
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
                 fornecedorId = (int) id;
-                //Toast.makeText(getContext(),livros.get(position).getTitulo(),Toast.LENGTH_LONG).show();
+                //Toast.makeText(getContext(),fornecedores.get(position).getFornecedor(),Toast.LENGTH_LONG).show();
                 Intent intent = new Intent(getContext(), DetalhesFornecedorActivity.class);
                 intent.putExtra(DetalhesFornecedorActivity.ID_FORNECEDOR, (int) id);
                 startActivity(intent);
             }
         });
-
-        /*// Inflar o layout específico do item
-        View itemListaFornecedor = inflater.inflate(R.layout.item_lista_fornecedor, container, false);
-
-        // Encontrar o ImageButton dentro do layout do item
-        ImageButton adicionarCarrinhoButton = itemListaFornecedor.findViewById(R.id.btnAdicionarCarrinho);
-
-        adicionarCarrinhoButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Agora, chame a função adicionarCarrinhoAPI do Singleton com o fornecedorId
-                SingletonGestorLusitaniaTravel.getInstance(getContext()).adicionarCarrinhoAPI(carrinho, fornecedorId, getContext(), new CarrinhoListener() {
-                    @Override
-                    public void onRefreshDetalhes(int op) {
-                        // Este método será chamado quando o carrinho for adicionado com sucesso
-                        if (op == MainActivity.ADD) {
-                            // Exibir Toast após o carrinho ser adicionado com sucesso
-                            Toast.makeText(getContext(), "Item adicionado ao carrinho com sucesso", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
-            }
-        });*/
 
         // Habilitar o menu para o fragmento
         setHasOptionsMenu(true);

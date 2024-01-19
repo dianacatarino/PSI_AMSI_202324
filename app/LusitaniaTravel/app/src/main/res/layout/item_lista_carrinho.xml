@@ -116,7 +116,10 @@
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_carrinho_remover"
                 android:backgroundTint="@color/white"
-                android:onClick="onRemoverCarrinhoClick"/>
+                android:onClick="onRemoverCarrinhoClick"
+                android:clickable="true"
+                android:visibility="visible"
+                android:focusable="false"/>
         </LinearLayout>
 
     </LinearLayout>

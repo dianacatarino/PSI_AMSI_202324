@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <!-- Título da caixa de diálogo -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/txt_definicoes_editar_perfil"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:gravity="center"/>
+
+    <!-- Campo de edição -->
+    <EditText
+        android:id="@+id/editTextFieldUsername"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/txt_definicoes_username"/>
+
+    <EditText
+        android:id="@+id/editTextFieldEmail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/txt_definicoes_email"/>
+
+    <EditText
+        android:id="@+id/editTextFieldNome"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/txt_definicoes_nome"/>
+
+    <EditText
+        android:id="@+id/editTextFieldTelemovel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/txt_definicoes_telemovel"/>
+
+    <EditText
+        android:id="@+id/editTextFieldRua"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/txt_definicoes_rua"/>
+
+    <EditText
+        android:id="@+id/editTextFieldLocalidade"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/txt_definicoes_localidade"/>
+
+    <EditText
+        android:id="@+id/editTextFieldCodPostal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/txt_definicoes_codigo_postal"/>
+
+    <!-- Botões Salvar/Cancelar -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center">
+
+        <Button
+            android:id="@+id/btnSalvar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Salvar"
+            android:layout_marginEnd="8dp"
+            android:backgroundTint="@color/blue"/>
+
+        <Button
+            android:id="@+id/btnCancelar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Cancelar"
+            android:backgroundTint="@color/red"/>
+    </LinearLayout>
+</LinearLayout>

@@ -3,6 +3,8 @@ package pt.ipleiria.estg.dei.lusitaniatravel;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -29,6 +31,7 @@ import pt.ipleiria.estg.dei.lusitaniatravel.modelos.SingletonGestorLusitaniaTrav
 public class ListaCarrinhoFragment extends Fragment implements CarrinhosListener {
 
     private ListView lvCarrinho;
+    private ListaCarrinhoAdaptador adaptador;
 
     public ListaCarrinhoFragment() {
         // Required empty public constructor
@@ -69,12 +72,20 @@ public class ListaCarrinhoFragment extends Fragment implements CarrinhosListener
     @Override
     public void onRefreshListaCarrinho(ArrayList<Carrinho> listaCarrinho) {
         if (listaCarrinho != null) {
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    lvCarrinho.setAdapter(new ListaCarrinhoAdaptador(getContext(), listaCarrinho));
-                }
-            });
+            // Verificar se a atividade ainda está disponível antes de atualizar a UI
+            if (getActivity() != null) {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        lvCarrinho.setAdapter(new ListaCarrinhoAdaptador(getContext(), listaCarrinho));
+                        atualizarListaCarrinho();
+                    }
+                });
+            }
         }
+    }
+
+    public void atualizarListaCarrinho() {
+        SingletonGestorLusitaniaTravel.getInstance(getContext()).getAllCarrinhoAPI(this, getContext());
     }
 }

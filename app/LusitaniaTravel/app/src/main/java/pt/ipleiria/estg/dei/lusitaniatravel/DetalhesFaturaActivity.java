@@ -10,7 +10,7 @@ import pt.ipleiria.estg.dei.lusitaniatravel.listeners.FaturaListener;
 import pt.ipleiria.estg.dei.lusitaniatravel.modelos.Fatura;
 import pt.ipleiria.estg.dei.lusitaniatravel.modelos.SingletonGestorLusitaniaTravel;
 
-public class DetalhesFaturaActivity extends AppCompatActivity implements FaturaListener{
+/*public class DetalhesFaturaActivity extends AppCompatActivity implements FaturaListener{
 
     private TextView tvTotalF, tvTotalSI, tvIva, tvData;
 
@@ -47,4 +47,4 @@ public class DetalhesFaturaActivity extends AppCompatActivity implements FaturaL
             finish();
         }
     }
-}
+}*/

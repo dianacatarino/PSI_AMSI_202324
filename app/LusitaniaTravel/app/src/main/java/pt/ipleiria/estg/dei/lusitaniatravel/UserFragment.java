@@ -94,12 +94,7 @@ public class UserFragment extends Fragment implements UserListener {
     public void updateUserDetails(User user, View view) {
         if (view != null && user != null) {
             TextView textViewNomeUser = view.findViewById(R.id.textViewNomeUser);
-
-            // Update profile details if available
-            Profile profile = user.getProfile();
-            if (profile != null) {
-                textViewNomeUser.setText("" + profile.getName());
-            }
+            textViewNomeUser.setText("" + user.getUsername());
         }
     }
 
