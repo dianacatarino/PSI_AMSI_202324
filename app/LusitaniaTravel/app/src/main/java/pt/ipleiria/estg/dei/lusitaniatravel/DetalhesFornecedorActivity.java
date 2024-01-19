@@ -49,5 +49,13 @@ public class DetalhesFornecedorActivity extends AppCompatActivity implements For
             tvTipoQuartos.setText(fornecedor.getTipoQuartos());
             tvNumeroQuartos.setText(fornecedor.getNumeroQuartos());
         }
+        if (fornecedor.getNumeroQuartos() != null) {
+            tvNumeroQuartos.setText(fornecedor.getNumeroQuartos());
+        } else {
+            tvNumeroQuartos.setText("N/A");
+        }
+    } else {
+         Toast.makeText(this, "Erro ao obter detalhes do fornecedor: " + errorMessage, Toast.LENGTH_SHORT).show();
+        }
     }
 }
