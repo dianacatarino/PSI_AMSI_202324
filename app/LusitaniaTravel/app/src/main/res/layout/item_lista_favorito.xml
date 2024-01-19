@@ -122,7 +122,11 @@
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_favoritos"
                 android:backgroundTint="@color/white"
-                android:onClick="onRemoverFavoritosClick"/>
+                app:tint="@color/pink"
+                android:onClick="onRemoverFavoritosClick"
+                android:clickable="true"
+                android:visibility="visible"
+                android:focusable="false"/>
         </LinearLayout>
 
     </LinearLayout>

@@ -5,8 +5,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -15,8 +17,15 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 import pt.ipleiria.estg.dei.lusitaniatravel.R;
+import pt.ipleiria.estg.dei.lusitaniatravel.listeners.CarrinhoListener;
+import pt.ipleiria.estg.dei.lusitaniatravel.listeners.CarrinhosListener;
+import pt.ipleiria.estg.dei.lusitaniatravel.listeners.FavoritoListener;
+import pt.ipleiria.estg.dei.lusitaniatravel.listeners.FavoritosListener;
+import pt.ipleiria.estg.dei.lusitaniatravel.listeners.FornecedoresListener;
+import pt.ipleiria.estg.dei.lusitaniatravel.modelos.Carrinho;
 import pt.ipleiria.estg.dei.lusitaniatravel.modelos.Fornecedor;
 import pt.ipleiria.estg.dei.lusitaniatravel.modelos.Imagem;
+import pt.ipleiria.estg.dei.lusitaniatravel.modelos.SingletonGestorLusitaniaTravel;
 
 public class ListaFavoritosAdaptador extends BaseAdapter {
     private Context context;
@@ -53,7 +62,7 @@ public class ListaFavoritosAdaptador extends BaseAdapter {
         // Otimização
         ListaFavoritosAdaptador.ViewHolderLista viewHolder = (ListaFavoritosAdaptador.ViewHolderLista) convertView.getTag();
         if (viewHolder == null) {
-            viewHolder = new ListaFavoritosAdaptador.ViewHolderLista(convertView);
+            viewHolder = new ListaFavoritosAdaptador.ViewHolderLista(convertView,position);
             convertView.setTag(viewHolder);
         }
         viewHolder.update(fornecedores.get(position), context);
@@ -61,17 +70,46 @@ public class ListaFavoritosAdaptador extends BaseAdapter {
         return convertView;
     }
 
-    private static class ViewHolderLista {
+    private class ViewHolderLista {
         private ImageView imgFornecedor;
         private TextView tvTipo, tvNomeAlojamento, tvLocalizacao, tvAcomodacoes, tvPrecoPorNoite;
+        private ImageButton btnRemoverFavoritos;
 
-        public ViewHolderLista(View view) {
+        public ViewHolderLista(View view, final int position) {
             imgFornecedor = view.findViewById(R.id.imgFornecedor);
             tvTipo = view.findViewById(R.id.tvTipo);
             tvNomeAlojamento = view.findViewById(R.id.tvNomeAlojamento);
             tvLocalizacao = view.findViewById(R.id.tvLocalizacao);
             tvAcomodacoes = view.findViewById(R.id.tvAcomodacoes);
             tvPrecoPorNoite = view.findViewById(R.id.tvPrecoPorNoite);
+            btnRemoverFavoritos = view.findViewById(R.id.btnRemoverFavoritos);
+
+            btnRemoverFavoritos.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (fornecedores != null && fornecedores.size() > position) {
+                        Fornecedor favoritoClicado = fornecedores.get(position);
+
+                        SingletonGestorLusitaniaTravel singleton = SingletonGestorLusitaniaTravel.getInstance(context);
+                        singleton.getAllFornecedoresAPI(new FornecedoresListener() {
+                            @Override
+                            public void onRefreshListaFornecedores(ArrayList<Fornecedor> fornecedores) {
+                                singleton.getAllFavoritosAPI(new FavoritosListener() {
+                                    @Override
+                                    public void onRefreshListaFornecedores(ArrayList<Fornecedor> fornecedores) {
+                                        singleton.removerFavoritoAPI(favoritoClicado.getId(), context, new FavoritoListener() {
+                                            @Override
+                                            public void onRefreshDetalhes(int action) {
+                                                Toast.makeText(context, "Alojamento removido dos favoritos", Toast.LENGTH_SHORT).show();
+                                            }
+                                        });
+                                    }
+                                }, context);
+                            }
+                        }, context);
+                    }
+                }
+            });
         }
 
         public void update(Fornecedor fornecedor, Context context) {

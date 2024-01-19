@@ -1,6 +1,7 @@
 package pt.ipleiria.estg.dei.lusitaniatravel.adaptadores;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,6 +22,8 @@ import java.util.List;
 import pt.ipleiria.estg.dei.lusitaniatravel.R;
 import pt.ipleiria.estg.dei.lusitaniatravel.listeners.CarrinhoListener;
 import pt.ipleiria.estg.dei.lusitaniatravel.listeners.CarrinhosListener;
+import pt.ipleiria.estg.dei.lusitaniatravel.listeners.FavoritoListener;
+import pt.ipleiria.estg.dei.lusitaniatravel.listeners.FavoritosListener;
 import pt.ipleiria.estg.dei.lusitaniatravel.modelos.Carrinho;
 import pt.ipleiria.estg.dei.lusitaniatravel.modelos.Fornecedor;
 import pt.ipleiria.estg.dei.lusitaniatravel.modelos.Imagem;
@@ -77,7 +80,7 @@ public class ListaFornecedoresAdaptador extends BaseAdapter {
     private class ViewHolderLista {
         private ImageView imgFornecedor;
         private TextView tvTipo, tvNomeAlojamento, tvLocalizacao, tvAcomodacoes, tvPrecoPorNoite;
-        private ImageButton btnAdicionarCarrinho;
+        private ImageButton btnAdicionarCarrinho, btnAdicionarFavorito;
 
         public ViewHolderLista(View view, final int position) {
             imgFornecedor = view.findViewById(R.id.imgFornecedor);
@@ -87,6 +90,7 @@ public class ListaFornecedoresAdaptador extends BaseAdapter {
             tvAcomodacoes = view.findViewById(R.id.tvAcomodacoes);
             tvPrecoPorNoite = view.findViewById(R.id.tvPrecoPorNoite);
             btnAdicionarCarrinho = view.findViewById(R.id.btnAdicionarCarrinho);
+            btnAdicionarFavorito = view.findViewById(R.id.btnAdicionarFavoritos);
 
             btnAdicionarCarrinho.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -116,11 +120,40 @@ public class ListaFornecedoresAdaptador extends BaseAdapter {
                                     singleton.adicionarCarrinhoAPI(novoCarrinho, fornecedorClicado.getId(), context, new CarrinhoListener() {
                                         @Override
                                         public void onRefreshDetalhes(int action) {
-                                            Log.d("ListaFornecedoresAdapter", "onRefreshDetalhes chamado. Ação: " + action);
                                             Toast.makeText(context, "Item adicionado ao carrinho", Toast.LENGTH_SHORT).show();
                                         }
                                     });
                                 }
+                            }
+                        }, context);
+                    }
+                }
+            });
+
+            btnAdicionarFavorito.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (fornecedores != null && fornecedores.size() > position) {
+                        Fornecedor fornecedorClicado = fornecedores.get(position);
+
+                        // Obtendo uma instância válida do Singleton
+                        SingletonGestorLusitaniaTravel singleton = SingletonGestorLusitaniaTravel.getInstance(context);
+
+                        // Obtendo a lista de carrinhos diretamente do Singleton
+                        singleton.getAllFavoritosAPI(new FavoritosListener() {
+                            @Override
+                            public void onRefreshListaFornecedores(ArrayList<Fornecedor> fornecedores) {
+                                    // Adicionar o fornecedor aos favoritos
+                                    singleton.adicionarFavoritoAPI(fornecedorClicado.getId(), context, new FavoritoListener() {
+                                        @Override
+                                        public void onRefreshDetalhes(int action) {
+                                            Toast.makeText(context, "Alojamento adicionado aos favoritos", Toast.LENGTH_SHORT).show();
+                                            // Referenciar o botão
+                                            ImageButton btnAdicionarFavorito = view.findViewById(R.id.btnAdicionarFavoritos);
+
+                                            btnAdicionarFavorito.setColorFilter(Color.parseColor("#E91E63"));
+                                        }
+                                    });
                             }
                         }, context);
                     }

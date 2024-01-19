@@ -122,7 +122,10 @@
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_favoritos"
                 android:backgroundTint="@color/white"
-                android:onClick="onAdicionarFavoritosClick" />
+                android:onClick="onAdicionarFavoritosClick"
+                android:clickable="true"
+                android:visibility="visible"
+                android:focusable="false"/>
 
             <ImageButton
                 android:id="@+id/btnAdicionarCarrinho"

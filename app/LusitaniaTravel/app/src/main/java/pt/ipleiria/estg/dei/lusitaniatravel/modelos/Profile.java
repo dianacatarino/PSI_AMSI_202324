@@ -1,5 +1,6 @@
 package pt.ipleiria.estg.dei.lusitaniatravel.modelos;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Profile {
@@ -89,5 +90,32 @@ public class Profile {
 
     public void setFavorites(String favorites) {
         this.favorites = favorites;
+    }
+
+    public List<Integer> getFavoritesList() {
+        List<Integer> favoritesList = new ArrayList<>();
+        if (favorites != null && !favorites.isEmpty()) {
+            String[] idsArray = favorites.split(",");
+            for (String id : idsArray) {
+                try {
+                    favoritesList.add(Integer.parseInt(id.trim()));
+                } catch (NumberFormatException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return favoritesList;
+    }
+
+    public void setFavoritesList(List<Integer> favoritesList) {
+        StringBuilder builder = new StringBuilder();
+        for (Integer id : favoritesList) {
+            builder.append(id).append(",");
+        }
+        // Remover a última vírgula, se houver
+        if (builder.length() > 0) {
+            builder.setLength(builder.length() - 1);
+        }
+        favorites = builder.toString();
     }
 }

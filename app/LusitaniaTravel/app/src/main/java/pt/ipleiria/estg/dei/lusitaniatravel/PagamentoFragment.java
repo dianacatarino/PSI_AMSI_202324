@@ -1,3 +1,5 @@
+package pt.ipleiria.estg.dei.lusitaniatravel;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -22,9 +24,9 @@ public class PagamentoFragment extends Fragment {
         // Construtor vazio obrigatório
     }
 
-    @Override
+    /*@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_pagamento, container, false);
+        View view = inflater.inflate(R.id.fragment_pagamento, container, false);
 
         tvEntidade = view.findViewById(R.id.tvEntidade);
         tvReferencia = view.findViewById(R.id.tvReferencia);
@@ -56,5 +58,5 @@ public class PagamentoFragment extends Fragment {
     private void navigateBackToMenuPrincipal() {
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
-    }
+    }*/
 }

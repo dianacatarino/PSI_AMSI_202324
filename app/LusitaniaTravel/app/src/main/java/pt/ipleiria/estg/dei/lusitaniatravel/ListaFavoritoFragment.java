@@ -16,6 +16,7 @@ import android.widget.ListView;
 
 import java.util.ArrayList;
 
+import pt.ipleiria.estg.dei.lusitaniatravel.adaptadores.ListaCarrinhoAdaptador;
 import pt.ipleiria.estg.dei.lusitaniatravel.adaptadores.ListaFavoritosAdaptador;
 import pt.ipleiria.estg.dei.lusitaniatravel.adaptadores.ListaFornecedoresAdaptador;
 import pt.ipleiria.estg.dei.lusitaniatravel.listeners.FavoritosListener;
@@ -69,7 +70,20 @@ public class ListaFavoritoFragment extends Fragment implements FavoritosListener
     @Override
     public void onRefreshListaFornecedores(ArrayList<Fornecedor> listaFornecedores) {
         if (listaFornecedores != null) {
-            lvFavoritos.setAdapter(new ListaFavoritosAdaptador(getContext(), listaFornecedores));
+            // Verificar se a atividade ainda está disponível antes de atualizar a UI
+            if (getActivity() != null) {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        lvFavoritos.setAdapter(new ListaFavoritosAdaptador(getContext(), listaFornecedores));
+                        atualizarListaFavorito();
+                    }
+                });
+            }
         }
+    }
+
+    public void atualizarListaFavorito() {
+        SingletonGestorLusitaniaTravel.getInstance(getContext()).getAllFavoritosAPI(this, getContext());
     }
 }
