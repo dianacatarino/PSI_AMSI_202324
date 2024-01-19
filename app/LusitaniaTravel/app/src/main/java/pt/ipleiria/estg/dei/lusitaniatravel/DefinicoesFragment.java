@@ -55,31 +55,127 @@ public class DefinicoesFragment extends Fragment implements UserListener {
     }
 
     // Add the updateUserDetails method to update the UI with user details
-    public void updateUserDetails(User user, View view) {
-        if (view != null && user != null) {
-            TextView textViewUsername = view.findViewById(R.id.textViewUsername);
-            TextView textViewEmail = view.findViewById(R.id.textViewEmail);
-            TextView textViewProfileName = view.findViewById(R.id.textViewProfileName);
-            TextView textViewProfileMobile = view.findViewById(R.id.textViewProfileMobile);
-            TextView textViewProfileStreet = view.findViewById(R.id.textViewProfileStreet);
-            TextView textViewProfileLocale = view.findViewById(R.id.textViewProfileLocale);
-            TextView textViewProfilePostalCode = view.findViewById(R.id.textViewProfilePostalCode);
+    public void updateUserDetails(final User user, View view) {
+    if (view != null && user != null) {
+        TextView textViewUsername = view.findViewById(R.id.textViewUsername);
+        TextView textViewEmail = view.findViewById(R.id.textViewEmail);
+        final TextView textViewProfileName = view.findViewById(R.id.textViewProfileName);
+        final TextView textViewProfileMobile = view.findViewById(R.id.textViewProfileMobile);
+        final TextView textViewProfileStreet = view.findViewById(R.id.textViewProfileStreet);
+        final TextView textViewProfileLocale = view.findViewById(R.id.textViewProfileLocale);
+        final TextView textViewProfilePostalCode = view.findViewById(R.id.textViewProfilePostalCode);
 
-            // Update user details
-            textViewUsername.setText(user.getUsername());
-            textViewEmail.setText("Email: " + user.getEmail());
+        // Update user details
+        textViewUsername.setText(user.getUsername());
+        textViewEmail.setText("Email: " + user.getEmail());
 
-            // Update profile details if available
-            Profile profile = user.getProfile();
-            if (profile != null) {
-                textViewProfileName.setText("Nome: " + profile.getName());
-                textViewProfileMobile.setText("Telemóvel: " + profile.getMobile());
-                textViewProfileStreet.setText("Rua: " + profile.getStreet());
-                textViewProfileLocale.setText("Localidade: " + profile.getLocale());
-                textViewProfilePostalCode.setText("Código Postal: " + profile.getPostalCode());
-            }
+        // Update profile details if available
+        final Profile profile = user.getProfile();
+        if (profile != null) {
+            textViewProfileName.setText("Nome: " + profile.getName());
+            textViewProfileMobile.setText("Telemóvel: " + profile.getMobile());
+            textViewProfileStreet.setText("Rua: " + profile.getStreet());
+            textViewProfileLocale.setText("Localidade: " + profile.getLocale());
+            textViewProfilePostalCode.setText("Código Postal: " + profile.getPostalCode());
+
+            // Add click listeners for editing each field
+            textViewProfileName.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    openEditProfileFieldDialog("Nome", profile.getName(), textViewProfileName, user, "name");
+                }
+            });
+
+            textViewProfileMobile.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    openEditProfileFieldDialog("Telemóvel", profile.getMobile(), textViewProfileMobile, user, "mobile");
+                }
+            });
+
+            textViewProfileStreet.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    openEditProfileFieldDialog("Rua", profile.getStreet(), textViewProfileStreet, user, "street");
+                }
+            });
+
+            textViewProfileLocale.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    openEditProfileFieldDialog("Localidade", profile.getLocale(), textViewProfileLocale, user, "locale");
+                }
+            });
+
+            textViewProfilePostalCode.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    openEditProfileFieldDialog("Código Postal", profile.getPostalCode(), textViewProfilePostalCode, user, "postalCode");
+                }
+            });
         }
     }
+}
+
+private void openEditProfileFieldDialog(final String fieldLabel, String fieldValue, final TextView textView, final User user, final String fieldKey) {
+    AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+    LayoutInflater inflater = requireActivity().getLayoutInflater();
+    View dialogView = inflater.inflate(R.layout.dialog_edit_profile_field, null);
+    builder.setView(dialogView);
+
+    final EditText editTextFieldValue = dialogView.findViewById(R.id.editTextFieldValue);
+    editTextFieldValue.setText(fieldValue);
+
+    builder.setPositiveButton("Salvar", new DialogInterface.OnClickListener() {
+        @Override
+        public void onClick(DialogInterface dialog, int which) {
+            // Obtenha o valor inserido pelo usuário
+            String newFieldValue = editTextFieldValue.getText().toString();
+
+            // Atualize o perfil do usuário com o novo valor
+            updateProfileField(user, fieldKey, newFieldValue);
+
+            // Atualize a interface do usuário
+            textView.setText(fieldLabel + ": " + newFieldValue);
+        }
+    });
+
+    builder.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+        @Override
+        public void onClick(DialogInterface dialog, int which) {
+            dialog.dismiss();
+        }
+    });
+
+    AlertDialog dialog = builder.create();
+    dialog.show();
+}
+
+private void updateProfileField(User user, String fieldKey, String newValue) {
+    // Atualize o perfil do usuário com o novo valor
+    Profile profile = user.getProfile();
+    if (profile != null) {
+        switch (fieldKey) {
+            case "name":
+                profile.setName(newValue);
+                break;
+            case "mobile":
+                profile.setMobile(newValue);
+                break;
+            case "street":
+                profile.setStreet(newValue);
+                break;
+            case "locale":
+                profile.setLocale(newValue);
+                break;
+            case "postalCode":
+                profile.setPostalCode(newValue);
+                break;
+            // Adicione mais casos conforme necessário
+        }
+    }
+}
+
 
     // Implement the missing method from UserListener
     @Override
