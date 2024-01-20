@@ -1,78 +1,111 @@
+package pt.ipleiria.estg.dei.lusitaniatravel;
+
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import java.util.Date;
 
 import pt.ipleiria.estg.dei.lusitaniatravel.R;
+import pt.ipleiria.estg.dei.lusitaniatravel.listeners.ReservaListener;
+import pt.ipleiria.estg.dei.lusitaniatravel.modelos.SingletonGestorLusitaniaTravel;
 
-public class VerificarDisponibilidadeFragment extends Fragment {
+public class VerificarDisponibilidadeFragment extends Fragment implements ReservaListener {
 
-    private DatePicker dpCheckin, dpCheckout;
-    private EditText etNumeroQuartos, etNumeroClientes;
+    private EditText etNumeroClientes, etNumeroQuartos, etNumeroCamas;
+    private Spinner spinnerTipoQuartos;
     private Button btnVerificarDisponibilidade;
+    private DatePicker datePickerCheckIn, datePickerCheckOut;
+    public static final int ADD = 100, EDIT = 200, DELETE = 300;
+    public static final String OP_CODE = "op_detalhes";
+    private int carrinhoId;
 
     public VerificarDisponibilidadeFragment() {
-        // Construtor vazio obrigatório
+        // Required empty public constructor
+    }
+
+    public void setCarrinhoId(int carrinhoId) {
+        this.carrinhoId = carrinhoId;
+    }
+
+    public int getCarrinhoId() {
+        return carrinhoId;
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_verificar_disponibilidade, container, false);
 
-        dpCheckin = view.findViewById(R.id.dpCheckin);
-        dpCheckout = view.findViewById(R.id.dpCheckout);
-        etNumeroQuartos = view.findViewById(R.id.etNumeroQuartos);
+        datePickerCheckIn = view.findViewById(R.id.datePickerCheckIn);
+        datePickerCheckOut = view.findViewById(R.id.datePickerCheckOut);
         etNumeroClientes = view.findViewById(R.id.etNumeroClientes);
+        etNumeroQuartos = view.findViewById(R.id.etNumeroQuartos);
+        etNumeroCamas = view.findViewById(R.id.etNumeroCamas);
+        spinnerTipoQuartos = view.findViewById(R.id.spinnerTipoQuartos);
         btnVerificarDisponibilidade = view.findViewById(R.id.btnVerificarDisponibilidade);
 
+        // Set an onClickListener for the button
         btnVerificarDisponibilidade.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                verificarDisponibilidade();
+                carrinhoId = getCarrinhoId();
+                Log.d("CarrinhoId", "CarrinhoId: " + carrinhoId);
+
+                // Obter as datas selecionadas do DatePicker
+                int checkInDay = datePickerCheckIn.getDayOfMonth();
+                int checkInMonth = datePickerCheckIn.getMonth() + 1;
+                int checkInYear = datePickerCheckIn.getYear();
+
+                int checkOutDay = datePickerCheckOut.getDayOfMonth();
+                int checkOutMonth = datePickerCheckOut.getMonth() + 1;
+                int checkOutYear = datePickerCheckOut.getYear();
+
+                // Criar as strings de data no formato desejado
+                String checkin = checkInYear + "/" + checkInMonth + "/" + checkInDay;
+                String checkout = checkOutYear + "/" + checkOutMonth + "/" + checkOutDay;
+
+                int numeroClientes = Integer.parseInt(etNumeroClientes.getText().toString());
+                int numeroQuartos = Integer.parseInt(etNumeroQuartos.getText().toString());
+                String tipoQuarto = spinnerTipoQuartos.getSelectedItem().toString();
+                int numeroCamas = Integer.parseInt(etNumeroCamas.getText().toString());
+
+                // Call the singleton to verify the reservation
+                SingletonGestorLusitaniaTravel.getInstance(getContext())
+                        .verificarReservaAPI(checkin, checkout, numeroClientes, numeroQuartos, tipoQuarto, numeroCamas, getContext(), carrinhoId, VerificarDisponibilidadeFragment.this);
             }
         });
 
         return view;
     }
 
-    private void verificarDisponibilidade() {
+    @Override
+    public void onRefreshDetalhes(int op) {
+        // Handle the result of the reservation verification
+        if (op == VerificarDisponibilidadeFragment.ADD) {
+            Toast.makeText(getContext(), "Reserva verificada com sucesso", Toast.LENGTH_SHORT).show();
+            // Redirecionar para o CarrinhoFragment
+            CarrinhoFragment carrinhoFragment = new CarrinhoFragment();
 
-        int diaCheckin = dpCheckin.getDayOfMonth();
-        int mesCheckin = dpCheckin.getMonth();
-        int anoCheckin = dpCheckin.getYear();
-
-        int diaCheckout = dpCheckout.getDayOfMonth();
-        int mesCheckout = dpCheckout.getMonth();
-        int anoCheckout = dpCheckout.getYear();
-
-        Date checkin = new Date(anoCheckin, mesCheckin, diaCheckin);
-        Date checkout = new Date(anoCheckout, mesCheckout, diaCheckout);
-
-        int numeroQuartos = Integer.parseInt(etNumeroQuartos.getText().toString());
-        int numeroClientes = Integer.parseInt(etNumeroClientes.getText().toString());
-
-        // Chama o método para verificar a disponibilidade
-        if (verificarDisponibilidadeNoFragmento(checkin, checkout, numeroQuartos, numeroClientes)) {
-            Toast.makeText(getActivity(), "Quartos disponíveis para as datas que selecionou.", Toast.LENGTH_SHORT).show();
+            FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
+            FragmentTransaction transaction = fragmentManager.beginTransaction();
+            transaction.replace(R.id.fragmentContainer, carrinhoFragment);
+            transaction.addToBackStack(null);  // Adiciona a transação à pilha de volta
+            transaction.commit();
         } else {
-            Toast.makeText(getActivity(), "Quartos não disponíveis para as datas selecionadas.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "Reserva não foi verificada com sucesso", Toast.LENGTH_SHORT).show();
         }
-    }
-
-    // Método para verificar a disponibilidade (você precisará implementar a lógica real)
-    private boolean verificarDisponibilidadeNoFragmento(Date checkin, Date checkout, int numeroQuartos, int numeroClientes) {
-        // Implemente a lógica real para verificar a disponibilidade aqui
-        // Retorne true se os quartos estiverem disponíveis, false caso contrário
-        return true;  // Por enquanto, sempre retorna true para fins de exemplo
     }
 }

@@ -1,6 +1,7 @@
 package pt.ipleiria.estg.dei.lusitaniatravel.modelos;
 
 import java.util.Date;
+import java.util.List;
 
 public class Reserva {
     private int id;
@@ -8,6 +9,8 @@ public class Reserva {
     private int numeroQuartos, numeroClientes;
     private double valor;
     private String nomeCliente, nomeFuncionario, nomeFornecedor;
+
+    private List<LinhaReserva> linhasReservas;
 
     public Reserva(int id, String tipo, String checkin, String checkout, int numeroQuartos, int numeroClientes, double valor, String nomeCliente, String nomeFuncionario, String nomeFornecedor) {
         this.id = id;
@@ -100,5 +103,9 @@ public class Reserva {
 
     public void setNomeFornecedor(String nomeFornecedor) {
         this.nomeFornecedor = nomeFornecedor;
+    }
+
+    public List<LinhaReserva> getLinhasReservas() {
+        return linhasReservas;
     }
 }

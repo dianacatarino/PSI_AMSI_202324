@@ -120,8 +120,28 @@
                 android:clickable="true"
                 android:visibility="visible"
                 android:focusable="false"/>
+
+            <Button
+                android:id="@+id/btnVerificarDisponibilidade"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/txt_carrinho_verificar_disponibilidade"
+                android:onClick="onClickVerificarDisponibilidade"
+                android:backgroundTint="@color/black"
+                android:clickable="true"
+                android:visibility="visible"
+                android:focusable="false"/>
         </LinearLayout>
 
+        <FrameLayout
+            android:id="@+id/fragmentContainer"
+            android:layout_width="match_parent"
+            android:layout_height="450dp"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:layout_marginTop="10dp"/>
+
     </LinearLayout>
+
 
 </LinearLayout>

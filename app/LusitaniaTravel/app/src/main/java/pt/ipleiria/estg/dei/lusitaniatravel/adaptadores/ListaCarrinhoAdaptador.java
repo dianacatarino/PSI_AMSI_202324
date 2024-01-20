@@ -1,15 +1,18 @@
 package pt.ipleiria.estg.dei.lusitaniatravel.adaptadores;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -18,6 +21,7 @@ import java.util.ArrayList;
 
 import pt.ipleiria.estg.dei.lusitaniatravel.CarrinhoFragment;
 import pt.ipleiria.estg.dei.lusitaniatravel.R;
+import pt.ipleiria.estg.dei.lusitaniatravel.VerificarDisponibilidadeFragment;
 import pt.ipleiria.estg.dei.lusitaniatravel.listeners.CarrinhoListener;
 import pt.ipleiria.estg.dei.lusitaniatravel.listeners.CarrinhosListener;
 import pt.ipleiria.estg.dei.lusitaniatravel.listeners.FornecedoresListener;
@@ -80,6 +84,7 @@ public class ListaCarrinhoAdaptador extends BaseAdapter {
     private class ViewHolderLista {
         private TextView tvQuantidade, tvPreco, tvSubtotal, tvReservaId, tvEstado;
         private ImageButton btnRemoverCarrinho;
+        private Button btnVerificarDisponibilidade;
 
         public ViewHolderLista(View view, final int position) {
             tvQuantidade = view.findViewById(R.id.tvQuantidade);
@@ -88,6 +93,7 @@ public class ListaCarrinhoAdaptador extends BaseAdapter {
             tvReservaId = view.findViewById(R.id.tvReserva);
             tvEstado = view.findViewById(R.id.tvEstado);
             btnRemoverCarrinho = view.findViewById(R.id.btnRemoverCarrinho);
+            btnVerificarDisponibilidade = view.findViewById(R.id.btnVerificarDisponibilidade);
 
             btnRemoverCarrinho.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -132,6 +138,50 @@ public class ListaCarrinhoAdaptador extends BaseAdapter {
                                 }, context);
                             }
                         }, context);
+                    }
+                }
+            });
+            btnVerificarDisponibilidade.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (carrinhos != null && carrinhos.size() > position) {
+                        Carrinho carrinhoClicado = carrinhos.get(position);
+                        int carrinhoId = carrinhoClicado.getId();
+
+                        // Call getAllCarrinhoAPI to fetch details for the selected carrinhoId
+                        SingletonGestorLusitaniaTravel.getInstance(context)
+                                .getAllCarrinhoAPI(new CarrinhosListener() {
+                                    @Override
+                                    public void onRefreshListaCarrinho(ArrayList<Carrinho> carrinhos) {
+                                        Carrinho selectedCarrinho = null;
+                                        for (Carrinho carrinho : carrinhos) {
+                                            if (carrinho.getId() == carrinhoId) {
+                                                selectedCarrinho = carrinho;
+                                                break;
+                                            }
+                                        }
+
+                                        // Now you have the selectedCarrinho, you can use its details as needed
+                                        if (selectedCarrinho != null) {
+                                            // Create a Bundle to pass data to the fragment
+                                            Bundle bundle = new Bundle();
+                                            bundle.putInt("carrinhoId", carrinhoId);
+
+                                            // Create an instance of VerificarDisponibilidadeFragment
+                                            VerificarDisponibilidadeFragment verificarDisponibilidadeFragment = new VerificarDisponibilidadeFragment();
+
+                                            // Configuração do carrinhoId
+                                            verificarDisponibilidadeFragment.setCarrinhoId(carrinhoId);
+
+                                            // Replace ou navegação para o VerificarDisponibilidadeFragment
+                                            FragmentManager fragmentManager = ((FragmentActivity) context).getSupportFragmentManager();
+                                            FragmentTransaction transaction = fragmentManager.beginTransaction();
+                                            transaction.replace(R.id.fragmentContainer, verificarDisponibilidadeFragment);
+                                            transaction.addToBackStack(null);
+                                            transaction.commit();
+                                        }
+                                    }
+                                }, context);
                     }
                 }
             });

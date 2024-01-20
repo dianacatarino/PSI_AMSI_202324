@@ -30,6 +30,7 @@ import java.util.Map;
 
 import pt.ipleiria.estg.dei.lusitaniatravel.CarrinhoFragment;
 import pt.ipleiria.estg.dei.lusitaniatravel.MainActivity;
+import pt.ipleiria.estg.dei.lusitaniatravel.VerificarDisponibilidadeFragment;
 import pt.ipleiria.estg.dei.lusitaniatravel.listeners.CarrinhoListener;
 import pt.ipleiria.estg.dei.lusitaniatravel.listeners.CarrinhosListener;
 import pt.ipleiria.estg.dei.lusitaniatravel.listeners.FaturaListener;
@@ -73,10 +74,12 @@ public class SingletonGestorLusitaniaTravel {
     private static final String mUrlAPIFaturas = "http://172.22.21.204/LusitaniaTravelAPI/backend/web/api/fatura/ver/%s";
     private static final String mUrlAPIFavoritos = "http://172.22.21.204/LusitaniaTravelAPI/backend/web/api/fornecedor/favoritos";
     private static final String mUrlAPIAdicionarFavorito = "http://172.22.21.204/LusitaniaTravelAPI/backend/web/api/fornecedor/adicionarfavorito/";
-    private static final String mUrlAPIRemoverFavorito= "http://172.22.21.204/LusitaniaTravelAPI/backend/web/api/fornecedor/removerfavorito/";
+    private static final String mUrlAPIRemoverFavorito = "http://172.22.21.204/LusitaniaTravelAPI/backend/web/api/fornecedor/removerfavorito/";
     private static final String mUrlAPICarrinho = "http://172.22.21.204/LusitaniaTravelAPI/backend/web/api/carrinho/mostrar";
     private static final String mUrlAPIAdicionarCarrinho = "http://172.22.21.204/LusitaniaTravelAPI/backend/web/api/carrinho/adicionarcarrinho/";
     private static final String mUrlAPIRemoverCarrinho = "http://172.22.21.204/LusitaniaTravelAPI/backend/web/api/carrinho/removercarrinho/";
+    private static final String mUrlAPIVerificarReserva = "http://172.22.21.204/LusitaniaTravelAPI/backend/web/api/reserva/verificar/";
+    private static final String mUrlAPIFinalizarCarrinho = "http://172.22.21.204/LusitaniaTravelAPI/backend/web/api/carrinho/finalizarcarrinho/";
     private FornecedoresListener fornecedoresListener;
     private FornecedorListener fornecedorListener;
     private ReservasListener reservasListener;
@@ -328,7 +331,7 @@ public class SingletonGestorLusitaniaTravel {
                 e.printStackTrace();
             }
 
-            JsonObjectRequest req = new JsonObjectRequest(Request.Method.POST,  mUrlAPIRegister, jsonBody,
+            JsonObjectRequest req = new JsonObjectRequest(Request.Method.POST, mUrlAPIRegister, jsonBody,
                     new Response.Listener<JSONObject>() {
                         @Override
                         public void onResponse(JSONObject response) {
@@ -839,7 +842,7 @@ public class SingletonGestorLusitaniaTravel {
         }
     }
 
-    public void adicionarCarrinhoAPI(final Carrinho carrinho, final int fornecedorId, final Context context,final CarrinhoListener listener) {
+    public void adicionarCarrinhoAPI(final Carrinho carrinho, final int fornecedorId, final Context context, final CarrinhoListener listener) {
         if (!CarrinhoJsonParser.isConnectionInternet(context)) {
             Toast.makeText(context, "Não tem ligação à Internet", Toast.LENGTH_SHORT).show();
         } else {
@@ -908,6 +911,55 @@ public class SingletonGestorLusitaniaTravel {
         }
     }
 
+    public void verificarReservaAPI(final String checkin, final String checkout, final int numeroClientes, final int numeroQuartos,
+            final String tipoQuarto, final int numeroCamas, final Context context, final int carrinhoId, final ReservaListener listener) {
+        if (!ReservaJsonParser.isConnectionInternet(context)) {
+            Toast.makeText(context, "Não tem ligação à Internet", Toast.LENGTH_SHORT).show();
+        } else {
+            StringRequest req = new StringRequest(Request.Method.POST, mUrlAPIVerificarReserva + carrinhoId,
+                    new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String response) {
+                            // Notificar o listener com o resultado
+                            if (listener != null) {
+                                listener.onRefreshDetalhes(VerificarDisponibilidadeFragment.ADD);
+                            }
+                        }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            Toast.makeText(context, "Erro na solicitação HTTP", Toast.LENGTH_SHORT).show();
+                        }
+                    }) {
+                @Override
+                protected Map<String, String> getParams() {
+                    Map<String, String> params = new HashMap<>();
+                    params.put("checkin", checkin);
+                    params.put("checkout", checkout);
+                    params.put("numeroclientes", String.valueOf(numeroClientes));
+                    params.put("numeroquartos", String.valueOf(numeroQuartos));
+                    params.put("tipoquarto", tipoQuarto);
+                    params.put("numerocamas", String.valueOf(numeroCamas));
+
+                    return params;
+                }
+
+                @Override
+                public Map<String, String> getHeaders() {
+                    Map<String, String> headers = new HashMap<>();
+                    String credentials = SingletonGestorLusitaniaTravel.getInstance(context).getUsername() +
+                            ":" + SingletonGestorLusitaniaTravel.getInstance(context).getPassword();
+                    String auth = "Basic " + Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
+                    headers.put("Authorization", auth);
+                    return headers;
+                }
+            };
+
+            volleyQueue.add(req);
+        }
+    }
+
     /*public void removerFornecedorAPI(final Fornecedor fornecedor, final Context context){
         if(!FornecedorJsonParser.isConnectionInternet(context)){
             Toast.makeText(context,"Não tem ligação à Internet",Toast.LENGTH_SHORT).show();
@@ -965,5 +1017,5 @@ public class SingletonGestorLusitaniaTravel {
         };
         volleyQueue.add(req);
     }*/
-    //endregion
-}
+        //endregion
+    }

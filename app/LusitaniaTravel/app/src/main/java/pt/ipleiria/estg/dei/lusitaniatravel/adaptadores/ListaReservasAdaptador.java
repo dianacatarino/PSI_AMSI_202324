@@ -58,9 +58,10 @@ public class ListaReservasAdaptador extends BaseAdapter {
     }
 
     private static class ViewHolderLista {
-        private TextView tvTipoReserva, tvCheckin, tvCheckout, tvNumeroQuartos, tvNumeroClientes, tvValor, tvFornecedor;
+        private TextView tvReservaId, tvTipoReserva, tvCheckin, tvCheckout, tvNumeroQuartos, tvNumeroClientes, tvValor, tvFornecedor;
 
         public ViewHolderLista(View view) {
+            tvReservaId = view.findViewById(R.id.tvReservaId);
             tvTipoReserva = view.findViewById(R.id.tvTipoReserva);
             tvCheckin = view.findViewById(R.id.tvCheckin);
             tvCheckout = view.findViewById(R.id.tvCheckout);
@@ -71,6 +72,7 @@ public class ListaReservasAdaptador extends BaseAdapter {
         }
 
         public void update(Reserva reserva, Context context) {
+            tvReservaId.setText("" + reserva.getId());
             tvTipoReserva.setText("" + reserva.getTipo());
             tvCheckin.setText("" + reserva.getCheckin());
             tvCheckout.setText("" + reserva.getCheckout());

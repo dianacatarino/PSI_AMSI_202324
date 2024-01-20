@@ -10,7 +10,8 @@ public class Carrinho {
 
     private String estado;
 
-    public Carrinho(int quantidade, double preco, double subtotal, String nomeCliente, String nomeFornecedor, int reservaId, String estado) {
+    public Carrinho(int id, int quantidade, double preco, double subtotal, String nomeCliente, String nomeFornecedor, int reservaId, String estado) {
+        this.id = id;
         this.quantidade = quantidade;
         this.preco = preco;
         this.subtotal = subtotal;

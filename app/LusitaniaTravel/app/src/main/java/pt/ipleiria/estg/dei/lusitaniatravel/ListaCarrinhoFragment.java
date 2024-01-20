@@ -12,6 +12,7 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
 
 import java.util.ArrayList;
@@ -54,6 +55,17 @@ public class ListaCarrinhoFragment extends Fragment implements CarrinhosListener
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
                 // Implemente a ação desejada ao clicar em uma reserva
+            }
+        });
+
+        Button btnFinalizarCarrinho = view.findViewById(R.id.btnFinalizarCarrinho);
+
+        btnFinalizarCarrinho.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Fragment fragment = new PagamentoFragment();
+                FragmentManager fragmentManager = getParentFragmentManager();
+                fragmentManager.beginTransaction().replace(R.id.fragmentContainer, fragment).commit();
             }
         });
 
