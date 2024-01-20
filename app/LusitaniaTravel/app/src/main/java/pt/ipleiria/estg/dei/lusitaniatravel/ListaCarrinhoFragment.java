@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -13,15 +14,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
 import pt.ipleiria.estg.dei.lusitaniatravel.adaptadores.ListaCarrinhoAdaptador;
-import pt.ipleiria.estg.dei.lusitaniatravel.adaptadores.ListaReservasAdaptador;
 import pt.ipleiria.estg.dei.lusitaniatravel.listeners.CarrinhosListener;
+import pt.ipleiria.estg.dei.lusitaniatravel.listeners.CarrinhoListener;
 import pt.ipleiria.estg.dei.lusitaniatravel.modelos.Carrinho;
-import pt.ipleiria.estg.dei.lusitaniatravel.modelos.Reserva;
 import pt.ipleiria.estg.dei.lusitaniatravel.modelos.SingletonGestorLusitaniaTravel;
 
 /**
@@ -33,6 +36,7 @@ public class ListaCarrinhoFragment extends Fragment implements CarrinhosListener
 
     private ListView lvCarrinho;
     private ListaCarrinhoAdaptador adaptador;
+    private ArrayList<Carrinho> carrinhos;
 
     public ListaCarrinhoFragment() {
         // Required empty public constructor
@@ -63,9 +67,22 @@ public class ListaCarrinhoFragment extends Fragment implements CarrinhosListener
         btnFinalizarCarrinho.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Fragment fragment = new PagamentoFragment();
-                FragmentManager fragmentManager = getParentFragmentManager();
-                fragmentManager.beginTransaction().replace(R.id.fragmentContainer, fragment).commit();
+                if (carrinhos != null && !carrinhos.isEmpty()) {
+                    Carrinho carrinho = carrinhos.get(0);
+                    int reservaId = carrinho.getReservaId();
+                    double subtotal = carrinho.getSubtotal();
+
+                    Log.d("ReservaID", String.valueOf(reservaId));
+
+                    SingletonGestorLusitaniaTravel.getInstance(getContext()).finalizarCarrinhoAPI(reservaId, getContext(), new CarrinhoListener() {
+                        @Override
+                        public void onRefreshDetalhes(int op) {
+                            if (op == CarrinhoFragment.ADD) {
+                                Toast.makeText(getContext(), "Carrinho finalizado com sucesso", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+                }
             }
         });
 

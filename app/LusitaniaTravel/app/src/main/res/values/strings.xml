@@ -78,6 +78,9 @@
     <string name="txt_verificar_tipo_de_quartos">Tipo de Quartos</string>
     <string name="txt_verificar_n_de_camas">Número de Camas</string>
     <string name="txt_reserva_id">Reserva:</string>
+    <string name="txt_pagamento_entidade">Entidade</string>
+    <string name="txt_pagamento_referencia">Referência</string>
+    <string name="txt_pagamento_valor">Valor</string>
     <string-array name="tipo_quartos">
         <item>Quarto Individual</item>
         <item>Quarto Duplo</item>

@@ -21,9 +21,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Finalizar Carrinho"
-            android:onClick="onClickFinalizar"
             android:backgroundTint="@color/blue"
-            android:layout_gravity="right"/>
+            android:layout_gravity="right"
+            android:clickable="true"
+            android:visibility="visible"
+            android:focusable="false"/>
     </LinearLayout>
 
 </RelativeLayout>

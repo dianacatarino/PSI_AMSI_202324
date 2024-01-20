@@ -7,7 +7,6 @@ public class Carrinho {
     private double subtotal;
     private String nomeCliente, nomeFornecedor;
     private int reservaId;
-
     private String estado;
 
     public Carrinho(int id, int quantidade, double preco, double subtotal, String nomeCliente, String nomeFornecedor, int reservaId, String estado) {

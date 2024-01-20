@@ -960,31 +960,43 @@ public class SingletonGestorLusitaniaTravel {
         }
     }
 
-    /*public void removerFornecedorAPI(final Fornecedor fornecedor, final Context context){
-        if(!FornecedorJsonParser.isConnectionInternet(context)){
-            Toast.makeText(context,"Não tem ligação à Internet",Toast.LENGTH_SHORT).show();
-        }
-        else {
-            StringRequest req = new StringRequest(Request.Method.DELETE, mUrlAPIFornecedores + "/" + fornecedor.getId(), new Response.Listener<String>() {
-                @Override
-                public void onResponse(String response) {
-                    // Remover do BD local
-                    removerFornecedorBD(fornecedor.getId());
+    public void finalizarCarrinhoAPI(int reservaId, Context context, final CarrinhoListener listener) {
+        if (!CarrinhoJsonParser.isConnectionInternet(context)) {
+            Toast.makeText(context, "Não tem ligação à Internet", Toast.LENGTH_SHORT).show();
+        } else {
+            String username = SingletonGestorLusitaniaTravel.getInstance(context).getUsername();
+            String password = SingletonGestorLusitaniaTravel.getInstance(context).getPassword();
 
-                    if(fornecedorListener != null)
-                        fornecedorListener.onRefreshDetalhes(MainActivity.DELETE);
+            String urlCompleta = mUrlAPIFinalizarCarrinho + reservaId;
+
+            JsonObjectRequest req = new JsonObjectRequest(Request.Method.GET, urlCompleta, null, new Response.Listener<JSONObject>() {
+                @Override
+                public void onResponse(JSONObject response) {
+                    if (listener != null)
+                        listener.onRefreshDetalhes(CarrinhoFragment.ADD);
                 }
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
                     Toast.makeText(context, error.getMessage(), Toast.LENGTH_SHORT).show();
                 }
-            });
+            }) {
+                @Override
+                public Map<String, String> getHeaders() {
+                    Map<String, String> headers = new HashMap<>();
+                    String credentials = username + ":" + password;
+                    String auth = "Basic " + Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
+                    headers.put("Authorization", auth);
+                    return headers;
+                }
+            };
             volleyQueue.add(req);
         }
     }
 
-    public void editarFornecedorAPI(final Fornecedor fornecedor, final Context context){
+
+
+    /*public void editarFornecedorAPI(final Fornecedor fornecedor, final Context context){
     if(!FornecedorJsonParser.isConnectionInternet(context)){
         Toast.makeText(context,"Não tem ligação à Internet",Toast.LENGTH_SHORT).show();
     }
