@@ -1,62 +1,72 @@
 package pt.ipleiria.estg.dei.lusitaniatravel;
 
-import android.content.Intent;
 import android.os.Bundle;
+
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
+import pt.ipleiria.estg.dei.lusitaniatravel.listeners.CarrinhoListener;
+import pt.ipleiria.estg.dei.lusitaniatravel.modelos.SingletonGestorLusitaniaTravel;
 
-import pt.ipleiria.estg.dei.lusitaniatravel.MainActivity;
+public class PagamentoFragment extends Fragment implements CarrinhoListener {
 
-public class PagamentoFragment extends Fragment {
-
+    private ImageView imageView;
     private TextView tvEntidade, tvReferencia, tvValor;
-    private Button btnFinalizarPagamento;
+    private int entidade = 21223;
+    private int reservaId;
+    private double subtotal;
 
     public PagamentoFragment() {
-        // Construtor vazio obrigatório
+        // Required empty public constructor
     }
 
-    /*@Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.id.fragment_pagamento, container, false);
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        View view = inflater.inflate(R.layout.fragment_pagamento, container, false);
 
+        // Initialize views
+        imageView = view.findViewById(R.id.imageView2);
         tvEntidade = view.findViewById(R.id.tvEntidade);
         tvReferencia = view.findViewById(R.id.tvReferencia);
         tvValor = view.findViewById(R.id.tvValor);
-        btnFinalizarPagamento = view.findViewById(R.id.btnFinalizarPagamento);
 
-        // Configurar valores fictícios para a entidade, referência e valor total
-        tvEntidade.setText("Entidade: 21223");
-        int reservaID = getArguments().getInt("idReserva", -1);
-        tvReferencia.setText("REF0000: " + reservaID);
-        double valorTotalReserva = getArguments().getDouble("valorTotalReserva", 0.0);
-        tvValor.setText("Valor Total: " + valorTotalReserva);
-
-        btnFinalizarPagamento.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finalizarPagamento();
-            }
-        });
+        // Retrieve the reservation ID from arguments
+        Bundle args = getArguments();
+        if (args != null) {
+            reservaId = args.getInt("reservaId", -1);
+            subtotal = args.getDouble("subtotal", 0.0);
+            tvEntidade.setText("Entidade: " + entidade);
+            tvReferencia.setText("Referência: REF000000" + reservaId);
+            tvValor.setText("Valor Total: " + subtotal);
+        }
 
         return view;
     }
 
-    private void finalizarPagamento() {
-        Toast.makeText(getActivity(), "Pagamento finalizado com sucesso!", Toast.LENGTH_SHORT).show();
-        navigateBackToMenuPrincipal();
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        // Remover a inflação do menu de pesquisa
+        super.onCreateOptionsMenu(menu, inflater);
     }
 
-    private void navigateBackToMenuPrincipal() {
-        Intent intent = new Intent(this, MainActivity.class);
-        startActivity(intent);
-    }*/
+    @Override
+    public void onRefreshDetalhes(int op) {
+        if (op == CarrinhoFragment.ADD) {
+            Toast.makeText(getContext(), "Carrinho finalizado com sucesso", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(getContext(), "Carrinho não foi finalizado com sucesso", Toast.LENGTH_SHORT).show();
+        }
+    }
 }
