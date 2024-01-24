@@ -60,7 +60,7 @@ public class ListaReservaFragment extends Fragment implements ReservasListener {
         // Verificar se há conexão com a internet
         if (ReservaJsonParser.isConnectionInternet(getContext())) {
             // Se há conexão com a internet, buscar as reservas da API
-            SingletonGestorLusitaniaTravel.getInstance(getContext()).getAllReservasAPI(this, getContext());
+            SingletonGestorLusitaniaTravel.getInstance(getContext()).getAllReservasAPI(getContext());
         } else {
             // Se não há conexão com a internet, carregar as reservas da BD local
             ArrayList<Reserva> reservasBD = SingletonGestorLusitaniaTravel.getInstance(getContext()).getReservasBD();

@@ -1,11 +1,14 @@
 package pt.ipleiria.estg.dei.lusitaniatravel;
 
+import static androidx.constraintlayout.helper.widget.MotionEffect.TAG;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Base64;
 import android.util.Log;
 import android.util.Patterns;
 import android.view.MenuItem;
@@ -55,14 +58,20 @@ public class LoginActivity extends AppCompatActivity implements LoginListener {
     // Método chamado quando o token de login é recebido
     @Override
     public void onUpdateLogin(User user) {
-        Log.d("LoginListener", "onUpdateLogin called");
         if (user != null) {
-            // Armazenar o username e password no SharedPreferences
+
+            String combinedCredentials = user.getUsername() + ":" + user.getPassword();
+
+            // Base64 encode the combined credentials
+            String base64EncodedToken = Base64.encodeToString(combinedCredentials.getBytes(), Base64.DEFAULT);
+
+            // Save the Base64-encoded credentials in SharedPreferences
             SharedPreferences prefs = getSharedPreferences("MyPrefs", MODE_PRIVATE);
             prefs.edit()
-                    .putString("username", user.getUsername())
-                    .putString("password", user.getPassword())
+                    .putString("token", base64EncodedToken)
                     .apply();
+
+            Log.d(TAG,"Token saved: " + base64EncodedToken);
 
             // Exibir uma mensagem ou iniciar a próxima atividade após o login
             Toast.makeText(this, "Login bem-sucedido para o user: " + user.getUsername(), Toast.LENGTH_SHORT).show();

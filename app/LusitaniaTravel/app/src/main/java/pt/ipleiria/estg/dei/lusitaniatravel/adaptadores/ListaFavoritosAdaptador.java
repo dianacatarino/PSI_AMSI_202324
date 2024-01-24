@@ -84,7 +84,7 @@ public class ListaFavoritosAdaptador extends BaseAdapter {
             tvPrecoPorNoite = view.findViewById(R.id.tvPrecoPorNoite);
             btnRemoverFavoritos = view.findViewById(R.id.btnRemoverFavoritos);
 
-            btnRemoverFavoritos.setOnClickListener(new View.OnClickListener() {
+            /*btnRemoverFavoritos.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (fornecedores != null && fornecedores.size() > position) {
@@ -109,7 +109,7 @@ public class ListaFavoritosAdaptador extends BaseAdapter {
                         }, context);
                     }
                 }
-            });
+            });*/
         }
 
         public void update(Fornecedor fornecedor, Context context) {

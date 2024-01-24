@@ -35,7 +35,6 @@ public class ListaCarrinhoAdaptador extends BaseAdapter {
     private LayoutInflater inflater;
     private ArrayList<Carrinho> carrinhos;
     private String fornecedorNome;
-    private int fornecedorId = -1;
     private CarrinhoFragment fragmento;
 
     public ListaCarrinhoAdaptador(Context context, ArrayList<Carrinho> carrinhos) {
@@ -95,7 +94,7 @@ public class ListaCarrinhoAdaptador extends BaseAdapter {
             btnRemoverCarrinho = view.findViewById(R.id.btnRemoverCarrinho);
             btnVerificarDisponibilidade = view.findViewById(R.id.btnVerificarDisponibilidade);
 
-            btnRemoverCarrinho.setOnClickListener(new View.OnClickListener() {
+           /*  btnRemoverCarrinho.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (carrinhos != null && carrinhos.size() > position) {
@@ -140,8 +139,8 @@ public class ListaCarrinhoAdaptador extends BaseAdapter {
                         }, context);
                     }
                 }
-            });
-            btnVerificarDisponibilidade.setOnClickListener(new View.OnClickListener() {
+            });*/
+            /*btnVerificarDisponibilidade.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (carrinhos != null && carrinhos.size() > position) {
@@ -184,7 +183,7 @@ public class ListaCarrinhoAdaptador extends BaseAdapter {
                                 }, context);
                     }
                 }
-            });
+            });*/
         }
 
         public void update(Carrinho carrinho, Context context) {

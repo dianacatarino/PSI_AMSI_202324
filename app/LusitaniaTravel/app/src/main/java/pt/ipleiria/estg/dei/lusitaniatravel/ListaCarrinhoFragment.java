@@ -52,7 +52,7 @@ public class ListaCarrinhoFragment extends Fragment implements CarrinhosListener
         SingletonGestorLusitaniaTravel.getInstance(getContext()).setCarrinhosListener(this);
 
         // Carregar a lista inicial de reservas
-        SingletonGestorLusitaniaTravel.getInstance(getContext()).getAllCarrinhoAPI(this, getContext());
+        SingletonGestorLusitaniaTravel.getInstance(getContext()).getAllCarrinhoAPI( getContext());
 
         // Configurar o clique em um item da lista
         lvCarrinho.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -74,14 +74,9 @@ public class ListaCarrinhoFragment extends Fragment implements CarrinhosListener
 
                     Log.d("ReservaID", String.valueOf(reservaId));
 
-                    SingletonGestorLusitaniaTravel.getInstance(getContext()).finalizarCarrinhoAPI(reservaId, getContext(), new CarrinhoListener() {
-                        @Override
-                        public void onRefreshDetalhes(int op) {
-                            if (op == CarrinhoFragment.ADD) {
-                                Toast.makeText(getContext(), "Carrinho finalizado com sucesso", Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                    });
+                    SingletonGestorLusitaniaTravel.getInstance(getContext()).finalizarCarrinhoAPI(reservaId, getContext());
+
+                    Toast.makeText(getContext(), "Carrinho finalizado com sucesso", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -115,6 +110,6 @@ public class ListaCarrinhoFragment extends Fragment implements CarrinhosListener
     }
 
     public void atualizarListaCarrinho() {
-        SingletonGestorLusitaniaTravel.getInstance(getContext()).getAllCarrinhoAPI(this, getContext());
+        SingletonGestorLusitaniaTravel.getInstance(getContext()).getAllCarrinhoAPI(getContext());
     }
 }

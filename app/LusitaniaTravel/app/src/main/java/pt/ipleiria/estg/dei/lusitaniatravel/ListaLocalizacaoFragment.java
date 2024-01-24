@@ -50,7 +50,7 @@ public class ListaLocalizacaoFragment extends Fragment implements FornecedoresLi
         // Verifica se a localização não está vazia antes de chamar a API
         if (localizacao != null && !localizacao.isEmpty()) {
             // Chama a API com base na localização
-            SingletonGestorLusitaniaTravel.getInstance(getContext()).getLocalizacaoFornecedoresAPI(this, getContext(), localizacao);
+            SingletonGestorLusitaniaTravel.getInstance(getContext()).getLocalizacaoFornecedoresAPI(getContext(), localizacao);
         }
 
         // Configurar o clique em um item da lista

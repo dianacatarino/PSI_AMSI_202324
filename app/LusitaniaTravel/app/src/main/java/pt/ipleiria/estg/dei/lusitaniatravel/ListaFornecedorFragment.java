@@ -49,7 +49,7 @@ public class ListaFornecedorFragment extends Fragment implements FornecedoresLis
         SingletonGestorLusitaniaTravel.getInstance(getContext()).setFornecedoresListener(this);
 
         // Carregar a lista inicial de fornecedores
-        SingletonGestorLusitaniaTravel.getInstance(getContext()).getAllFornecedoresAPI(this, getContext());
+        SingletonGestorLusitaniaTravel.getInstance(getContext()).getAllFornecedoresAPI(getContext());
 
         // Configurar o clique em um item da lista
         lvFornecedores.setOnItemClickListener(new AdapterView.OnItemClickListener() {

@@ -9,6 +9,17 @@
     <include layout="@layout/app_bar_main" />
 
     <ImageButton
+        android:id="@+id/imageButtonCount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:backgroundTint="@color/blue"
+        android:onClick="onClickCarrinho"
+        android:src="@drawable/ic_carrinho" />
+
+    <ImageButton
         android:id="@+id/imageButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

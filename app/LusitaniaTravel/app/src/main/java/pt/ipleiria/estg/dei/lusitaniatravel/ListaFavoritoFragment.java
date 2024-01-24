@@ -45,7 +45,7 @@ public class ListaFavoritoFragment extends Fragment implements FavoritosListener
         SingletonGestorLusitaniaTravel.getInstance(getContext()).setFavoritosListener(this);
 
         // Carregar a lista inicial de fornecedores
-        SingletonGestorLusitaniaTravel.getInstance(getContext()).getAllFavoritosAPI(this, getContext());
+        SingletonGestorLusitaniaTravel.getInstance(getContext()).getAllFavoritosAPI(getContext());
 
         // Configurar o clique em um item da lista
         lvFavoritos.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -84,6 +84,6 @@ public class ListaFavoritoFragment extends Fragment implements FavoritosListener
     }
 
     public void atualizarListaFavorito() {
-        SingletonGestorLusitaniaTravel.getInstance(getContext()).getAllFavoritosAPI(this, getContext());
+        SingletonGestorLusitaniaTravel.getInstance(getContext()).getAllFavoritosAPI(getContext());
     }
 }

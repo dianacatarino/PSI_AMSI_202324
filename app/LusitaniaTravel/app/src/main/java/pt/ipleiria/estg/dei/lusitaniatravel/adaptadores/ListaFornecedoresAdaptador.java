@@ -92,7 +92,7 @@ public class ListaFornecedoresAdaptador extends BaseAdapter {
             btnAdicionarCarrinho = view.findViewById(R.id.btnAdicionarCarrinho);
             btnAdicionarFavorito = view.findViewById(R.id.btnAdicionarFavoritos);
 
-            btnAdicionarCarrinho.setOnClickListener(new View.OnClickListener() {
+            /*btnAdicionarCarrinho.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (fornecedores != null && fornecedores.size() > position) {
@@ -128,7 +128,7 @@ public class ListaFornecedoresAdaptador extends BaseAdapter {
                         }, context);
                     }
                 }
-            });
+            });*/
 
             btnAdicionarFavorito.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -140,7 +140,7 @@ public class ListaFornecedoresAdaptador extends BaseAdapter {
                         SingletonGestorLusitaniaTravel singleton = SingletonGestorLusitaniaTravel.getInstance(context);
 
                         // Obtendo a lista de carrinhos diretamente do Singleton
-                        singleton.getAllFavoritosAPI(new FavoritosListener() {
+                        /*singleton.getAllFavoritosAPI(new FavoritosListener() {
                             @Override
                             public void onRefreshListaFornecedores(ArrayList<Fornecedor> fornecedores) {
                                     // Adicionar o fornecedor aos favoritos
@@ -155,7 +155,7 @@ public class ListaFornecedoresAdaptador extends BaseAdapter {
                                         }
                                     });
                             }
-                        }, context);
+                        }, context);*/
                     }
                 }
             });

@@ -64,22 +64,23 @@ public class SingletonGestorLusitaniaTravel {
     private String password;
     private EditText editTextSearch;
     private static RequestQueue volleyQueue = null;
-    private static final String mUrlAPILogin = "http://172.22.21.204/LusitaniaTravelAPI/backend/web/api/user/login/%s/%s";
-    private static final String mUrlAPIRegister = "http://172.22.21.204/LusitaniaTravelAPI/backend/web/api/user/register";
-    private static final String mUrlAPIFornecedores = "http://172.22.21.204/LusitaniaTravelAPI/backend/web/api/fornecedor/alojamentos";
-    private static final String mUrlAPIFornecedor = "http://172.22.21.204/LusitaniaTravelAPI/backend/web/api/fornecedor/alojamento/%d";
-    private static final String mUrlAPILocalizacao = "http://172.22.21.204/LusitaniaTravelAPI/backend/web/api/fornecedor/localizacao/%s";
-    private static final String mUrlAPIDefinicoes = "http://172.22.21.204/LusitaniaTravelAPI/backend/web/api/user/mostrar/%s";
-    private static final String mUrlAPIReservas = "http://172.22.21.204/LusitaniaTravelAPI/backend/web/api/reserva/mostrar/%s";
-    private static final String mUrlAPIFaturas = "http://172.22.21.204/LusitaniaTravelAPI/backend/web/api/fatura/ver/%s";
-    private static final String mUrlAPIFavoritos = "http://172.22.21.204/LusitaniaTravelAPI/backend/web/api/fornecedor/favoritos";
-    private static final String mUrlAPIAdicionarFavorito = "http://172.22.21.204/LusitaniaTravelAPI/backend/web/api/fornecedor/adicionarfavorito/";
-    private static final String mUrlAPIRemoverFavorito = "http://172.22.21.204/LusitaniaTravelAPI/backend/web/api/fornecedor/removerfavorito/";
-    private static final String mUrlAPICarrinho = "http://172.22.21.204/LusitaniaTravelAPI/backend/web/api/carrinho/mostrar";
-    private static final String mUrlAPIAdicionarCarrinho = "http://172.22.21.204/LusitaniaTravelAPI/backend/web/api/carrinho/adicionarcarrinho/";
-    private static final String mUrlAPIRemoverCarrinho = "http://172.22.21.204/LusitaniaTravelAPI/backend/web/api/carrinho/removercarrinho/";
-    private static final String mUrlAPIVerificarReserva = "http://172.22.21.204/LusitaniaTravelAPI/backend/web/api/reserva/verificar/";
-    private static final String mUrlAPIFinalizarCarrinho = "http://172.22.21.204/LusitaniaTravelAPI/backend/web/api/carrinho/finalizarcarrinho/";
+    private static final String BASE_URL = "http://172.22.21.204/LusitaniaTravelAPI/backend/web/api";
+    private static final String mUrlAPILogin = BASE_URL + "/user/login/%s/%s";
+    private static final String mUrlAPIRegister = BASE_URL + "/user/register";
+    private static final String mUrlAPIFornecedores = BASE_URL + "/fornecedor/alojamentos";
+    private static final String mUrlAPIFornecedor = BASE_URL + "/fornecedor/alojamento/%d";
+    private static final String mUrlAPILocalizacao = BASE_URL + "/fornecedor/localizacao/%s";
+    private static final String mUrlAPIDefinicoes = BASE_URL + "/user/mostrar/%s";
+    private static final String mUrlAPIReservas = BASE_URL + "/reserva/mostrar/%s";
+    private static final String mUrlAPIFaturas = BASE_URL + "/fatura/ver/%s";
+    private static final String mUrlAPIFavoritos = BASE_URL + "/fornecedor/favoritos";
+    private static final String mUrlAPIAdicionarFavorito = BASE_URL + "/fornecedor/adicionarfavorito/";
+    private static final String mUrlAPIRemoverFavorito = BASE_URL + "/fornecedor/removerfavorito/";
+    private static final String mUrlAPICarrinho = BASE_URL + "/carrinho/mostrar";
+    private static final String mUrlAPIAdicionarCarrinho = BASE_URL + "/carrinho/adicionarcarrinho/";
+    private static final String mUrlAPIRemoverCarrinho = BASE_URL + "/carrinho/removercarrinho/";
+    private static final String mUrlAPIVerificarReserva = BASE_URL + "/reserva/verificar/";
+    private static final String mUrlAPIFinalizarCarrinho = BASE_URL + "/carrinho/finalizarcarrinho/";
     private FornecedoresListener fornecedoresListener;
     private FornecedorListener fornecedorListener;
     private ReservasListener reservasListener;
@@ -378,43 +379,7 @@ public class SingletonGestorLusitaniaTravel {
         }
     }
 
-
-    /*public void adicionarFornecedorAPI(final Fornecedor fornecedor, final Context context){
-        if(!FornecedorJsonParser.isConnectionInternet(context)){
-            Toast.makeText(context,"Não tem ligação à Internet",Toast.LENGTH_SHORT).show();
-        }
-        else{
-            StringRequest req = new StringRequest(Request.Method.POST, mUrlAPIFornecedores, new Response.Listener<String>() {
-                @Override
-                public void onResponse(String response) {
-                    // Adicionar ao BD local
-                    adicionarFornecedorBD(FornecedorJsonParser.parserJsonFornecedor(response));
-                    if(fornecedorListener != null)
-                        fornecedorListener.onRefreshDetalhes(MainActivity.ADD);
-                }
-            }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    Toast.makeText(context, error.getMessage(), Toast.LENGTH_SHORT).show();
-                }
-            }){
-                @Override
-                protected Map<String, String> getParams(){
-                    Map<String,String> params = new HashMap<>();
-                    params.put("token", TOKEN);
-                    params.put("responsavel", fornecedor.getResponsavel());
-                    params.put("tipo", fornecedor.getTipo());
-                    params.put("nome_alojamento", fornecedor.getNomeAlojamento());
-                    params.put("localizacao_alojamento", fornecedor.getLocalizacaoAlojamento());
-                    params.put("acomodacoes_alojamento", fornecedor.getAcomodacoesAlojamento());
-                    return params;
-                }
-            };
-            volleyQueue.add(req);
-        }
-    }*/
-
-    public void getAllFornecedoresAPI(FornecedoresListener listener, Context context) {
+    public void getAllFornecedoresAPI(final Context context) {
         if (!FornecedorJsonParser.isConnectionInternet(context)) {
             Toast.makeText(context, "Não tem ligação à Internet", Toast.LENGTH_SHORT).show();
         } else {
@@ -426,8 +391,8 @@ public class SingletonGestorLusitaniaTravel {
                         @Override
                         public void onResponse(JSONArray response) {
                             fornecedores = FornecedorJsonParser.parserJsonFornecedores(response);
-                            if (listener != null)
-                                listener.onRefreshListaFornecedores(fornecedores);
+                            if (fornecedoresListener != null)
+                                fornecedoresListener.onRefreshListaFornecedores(fornecedores);
                         }
                     },
                     new Response.ErrorListener() {
@@ -449,7 +414,7 @@ public class SingletonGestorLusitaniaTravel {
         }
     }
 
-    public void getFornecedorAPI(int id, FornecedorListener listener, Context context) {
+    public void getFornecedorAPI(int id, final Context context) {
         if (!FornecedorJsonParser.isConnectionInternet(context)) {
             Toast.makeText(context, "Não tem ligação à Internet", Toast.LENGTH_SHORT).show();
         } else {
@@ -487,14 +452,14 @@ public class SingletonGestorLusitaniaTravel {
         }
     }
 
-    public void getAllReservasAPI(ReservasListener listener, Context context) {
+    public void getAllReservasAPI(final Context context) {
         if (!ReservaJsonParser.isConnectionInternet(context)) {
             Toast.makeText(context, "Não tem ligação à Internet", Toast.LENGTH_SHORT).show();
 
             ArrayList<Reserva> reservasBD = getReservasBD();
 
-            if (listener != null) {
-                listener.onRefreshListaReservas(reservasBD);
+            if (reservasListener != null) {
+                reservasListener.onRefreshListaReservas(reservasBD);
             }
 
         } else {
@@ -512,8 +477,8 @@ public class SingletonGestorLusitaniaTravel {
                                 reservas = ReservaJsonParser.parserJsonReservas(reservasArray);
 
                                 // Notificar o listener de reservas
-                                if (listener != null) {
-                                    listener.onRefreshListaReservas(reservas);
+                                if (reservasListener != null) {
+                                    reservasListener.onRefreshListaReservas(reservas);
                                 }
 
                                 // Adicionar reservas à BD local
@@ -543,7 +508,7 @@ public class SingletonGestorLusitaniaTravel {
         }
     }
 
-    public void getAllFaturasAPI(FaturasListener listener, Context context) {
+    public void getAllFaturasAPI(final Context context) {
         if (!FaturaJsonParser.isConnectionInternet(context)) {
             Toast.makeText(context, "Não tem ligação à Internet", Toast.LENGTH_SHORT).show();
         } else {
@@ -566,8 +531,8 @@ public class SingletonGestorLusitaniaTravel {
                                 }
 
                                 // Notificar o listener de faturas
-                                if (listener != null) {
-                                    listener.onRefreshListaFaturas(faturas);
+                                if (faturasListener != null) {
+                                    faturasListener.onRefreshListaFaturas(faturas);
                                 }
                             } catch (JSONException e) {
                                 Toast.makeText(context, "Erro ao processar resposta do servidor", Toast.LENGTH_SHORT).show();
@@ -594,7 +559,7 @@ public class SingletonGestorLusitaniaTravel {
     }
 
 
-    public void getUserDefinicoesAPI(Context context) {
+    public void getUserDefinicoesAPI(final Context context) {
         if (!LoginJsonParser.isConnectionInternet(context)) {
             Toast.makeText(context, "Não tem ligação à Internet", Toast.LENGTH_SHORT).show();
         } else {
@@ -650,7 +615,7 @@ public class SingletonGestorLusitaniaTravel {
     }
 
 
-    public void getLocalizacaoFornecedoresAPI(FornecedoresListener listener, Context context, String localizacao) {
+    public void getLocalizacaoFornecedoresAPI(final Context context, String localizacao) {
         if (!FornecedorJsonParser.isConnectionInternet(context)) {
             Toast.makeText(context, "Não tem ligação à Internet", Toast.LENGTH_SHORT).show();
         } else {
@@ -665,8 +630,8 @@ public class SingletonGestorLusitaniaTravel {
                         @Override
                         public void onResponse(JSONArray response) {
                             fornecedores = FornecedorJsonParser.parserJsonFornecedores(response);
-                            if (listener != null)
-                                listener.onRefreshListaFornecedores(fornecedores);
+                            if (fornecedoresListener != null)
+                                fornecedoresListener.onRefreshListaFornecedores(fornecedores);
                         }
                     },
                     new Response.ErrorListener() {
@@ -694,7 +659,7 @@ public class SingletonGestorLusitaniaTravel {
         }
     }
 
-    public void getAllFavoritosAPI(FavoritosListener listener, Context context) {
+    public void getAllFavoritosAPI(final Context context) {
         if (!FavoritoJsonParser.isConnectionInternet(context)) {
             Toast.makeText(context, "Não tem ligação à Internet", Toast.LENGTH_SHORT).show();
         } else {
@@ -707,8 +672,8 @@ public class SingletonGestorLusitaniaTravel {
                             try {
                                 JSONArray favoritosArray = response.getJSONArray("favoritos");
                                 fornecedores = FavoritoJsonParser.parserJsonFavoritos(favoritosArray);
-                                if (listener != null) {
-                                    listener.onRefreshListaFornecedores(fornecedores);
+                                if (favoritosListener != null) {
+                                    favoritosListener.onRefreshListaFornecedores(fornecedores);
                                 }
                             } catch (JSONException e) {
                                 Toast.makeText(context, "Erro ao processar resposta do servidor", Toast.LENGTH_SHORT).show();
@@ -735,7 +700,7 @@ public class SingletonGestorLusitaniaTravel {
         }
     }
 
-    public void adicionarFavoritoAPI(final int fornecedorId, final Context context, final FavoritoListener listener) {
+    public void adicionarFavoritoAPI(final int fornecedorId, final Context context) {
         if (!CarrinhoJsonParser.isConnectionInternet(context)) {
             Toast.makeText(context, "Não tem ligação à Internet", Toast.LENGTH_SHORT).show();
         } else {
@@ -747,8 +712,8 @@ public class SingletonGestorLusitaniaTravel {
             JsonObjectRequest req = new JsonObjectRequest(Request.Method.POST, urlCompleta, null, new Response.Listener<JSONObject>() {
                 @Override
                 public void onResponse(JSONObject response) {
-                    if (listener != null)
-                        listener.onRefreshDetalhes(MainActivity.ADD);
+                    if (favoritoListener != null)
+                        favoritoListener.onRefreshDetalhes(MainActivity.ADD);
                 }
             }, new Response.ErrorListener() {
                 @Override
@@ -770,7 +735,7 @@ public class SingletonGestorLusitaniaTravel {
         }
     }
 
-    public void removerFavoritoAPI(final int fornecedorId, final Context context, final FavoritoListener listener) {
+    public void removerFavoritoAPI(final int fornecedorId, final Context context) {
         if (!CarrinhoJsonParser.isConnectionInternet(context)) {
             Toast.makeText(context, "Não tem ligação à Internet", Toast.LENGTH_SHORT).show();
         } else {
@@ -782,8 +747,8 @@ public class SingletonGestorLusitaniaTravel {
             JsonObjectRequest req = new JsonObjectRequest(Request.Method.DELETE, urlCompleta, null, new Response.Listener<JSONObject>() {
                 @Override
                 public void onResponse(JSONObject response) {
-                    if (listener != null)
-                        listener.onRefreshDetalhes(MainActivity.DELETE);
+                    if (favoritoListener != null)
+                        favoritoListener.onRefreshDetalhes(MainActivity.DELETE);
                 }
             }, new Response.ErrorListener() {
                 @Override
@@ -806,7 +771,7 @@ public class SingletonGestorLusitaniaTravel {
     }
 
 
-    public void getAllCarrinhoAPI(CarrinhosListener listener, Context context) {
+    public void getAllCarrinhoAPI(Context context) {
         if (!CarrinhoJsonParser.isConnectionInternet(context)) {
             Toast.makeText(context, "Não tem ligação à Internet", Toast.LENGTH_SHORT).show();
         } else {
@@ -818,8 +783,8 @@ public class SingletonGestorLusitaniaTravel {
                         @Override
                         public void onResponse(JSONObject response) {
                             List<Carrinho> carrinhos = CarrinhoJsonParser.parserJsonCarrinhos(response);
-                            if (listener != null) {
-                                listener.onRefreshListaCarrinho(new ArrayList<>(carrinhos));
+                            if (carrinhosListener != null) {
+                                carrinhosListener.onRefreshListaCarrinho(new ArrayList<>(carrinhos));
                             }
                         }
                     },
@@ -842,7 +807,7 @@ public class SingletonGestorLusitaniaTravel {
         }
     }
 
-    public void adicionarCarrinhoAPI(final Carrinho carrinho, final int fornecedorId, final Context context, final CarrinhoListener listener) {
+    public void adicionarCarrinhoAPI(final Carrinho carrinho, final int fornecedorId, final Context context) {
         if (!CarrinhoJsonParser.isConnectionInternet(context)) {
             Toast.makeText(context, "Não tem ligação à Internet", Toast.LENGTH_SHORT).show();
         } else {
@@ -854,8 +819,8 @@ public class SingletonGestorLusitaniaTravel {
             JsonObjectRequest req = new JsonObjectRequest(Request.Method.POST, urlCompleta, null, new Response.Listener<JSONObject>() {
                 @Override
                 public void onResponse(JSONObject response) {
-                    if (listener != null)
-                        listener.onRefreshDetalhes(MainActivity.ADD);
+                    if (carrinhoListener != null)
+                        carrinhoListener.onRefreshDetalhes(MainActivity.ADD);
                 }
             }, new Response.ErrorListener() {
                 @Override
@@ -876,7 +841,7 @@ public class SingletonGestorLusitaniaTravel {
         }
     }
 
-    public void removerCarrinhoAPI(final Carrinho carrinho, final int fornecedorId, final Context context, final CarrinhoListener listener) {
+    public void removerCarrinhoAPI(final Carrinho carrinho, final int fornecedorId, final Context context) {
         if (!CarrinhoJsonParser.isConnectionInternet(context)) {
             Toast.makeText(context, "Não tem ligação à Internet", Toast.LENGTH_SHORT).show();
         } else {
@@ -888,8 +853,8 @@ public class SingletonGestorLusitaniaTravel {
             JsonObjectRequest req = new JsonObjectRequest(Request.Method.DELETE, urlCompleta, null, new Response.Listener<JSONObject>() {
                 @Override
                 public void onResponse(JSONObject response) {
-                    if (listener != null)
-                        listener.onRefreshDetalhes(MainActivity.DELETE);
+                    if (carrinhoListener != null)
+                        carrinhoListener.onRefreshDetalhes(MainActivity.DELETE);
                 }
             }, new Response.ErrorListener() {
                 @Override
@@ -912,7 +877,7 @@ public class SingletonGestorLusitaniaTravel {
     }
 
     public void verificarReservaAPI(final String checkin, final String checkout, final int numeroClientes, final int numeroQuartos,
-            final String tipoQuarto, final int numeroCamas, final Context context, final int carrinhoId, final ReservaListener listener) {
+            final String tipoQuarto, final int numeroCamas, final Context context, final int carrinhoId) {
         if (!ReservaJsonParser.isConnectionInternet(context)) {
             Toast.makeText(context, "Não tem ligação à Internet", Toast.LENGTH_SHORT).show();
         } else {
@@ -921,8 +886,8 @@ public class SingletonGestorLusitaniaTravel {
                         @Override
                         public void onResponse(String response) {
                             // Notificar o listener com o resultado
-                            if (listener != null) {
-                                listener.onRefreshDetalhes(VerificarDisponibilidadeFragment.ADD);
+                            if (reservaListener != null) {
+                                reservaListener.onRefreshDetalhes(VerificarDisponibilidadeFragment.ADD);
                             }
                         }
                     },
@@ -960,7 +925,7 @@ public class SingletonGestorLusitaniaTravel {
         }
     }
 
-    public void finalizarCarrinhoAPI(int reservaId, Context context, final CarrinhoListener listener) {
+    public void finalizarCarrinhoAPI(int reservaId, Context context) {
         if (!CarrinhoJsonParser.isConnectionInternet(context)) {
             Toast.makeText(context, "Não tem ligação à Internet", Toast.LENGTH_SHORT).show();
         } else {
@@ -972,8 +937,8 @@ public class SingletonGestorLusitaniaTravel {
             JsonObjectRequest req = new JsonObjectRequest(Request.Method.GET, urlCompleta, null, new Response.Listener<JSONObject>() {
                 @Override
                 public void onResponse(JSONObject response) {
-                    if (listener != null)
-                        listener.onRefreshDetalhes(CarrinhoFragment.ADD);
+                    if (carrinhoListener != null)
+                        carrinhoListener.onRefreshDetalhes(CarrinhoFragment.ADD);
                 }
             }, new Response.ErrorListener() {
                 @Override
@@ -994,40 +959,5 @@ public class SingletonGestorLusitaniaTravel {
         }
     }
 
-
-
-    /*public void editarFornecedorAPI(final Fornecedor fornecedor, final Context context){
-    if(!FornecedorJsonParser.isConnectionInternet(context)){
-        Toast.makeText(context,"Não tem ligação à Internet",Toast.LENGTH_SHORT).show();
-    }
-    else{
-        StringRequest req = new StringRequest(Request.Method.PUT, mUrlAPIFornecedores + "/" + fornecedor.getId(), new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                // Editar no BD local
-                editarFornecedorBD(fornecedor);
-                if(fornecedorListener != null)
-                    fornecedorListener.onRefreshDetalhes(MainActivity.EDIT);
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Toast.makeText(context, error.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        }){
-            @Override
-            protected Map<String, String> getParams(){
-                Map<String,String> params = new HashMap<>();
-                params.put("token", TOKEN);
-                params.put("responsavel", fornecedor.getResponsavel());
-                params.put("tipo", fornecedor.getTipo());
-                params.put("nome_alojamento", fornecedor.getNomeAlojamento());
-                params.put("localizacao_alojamento", fornecedor.getLocalizacaoAlojamento());
-                params.put("acomodacoes_alojamento", fornecedor.getAcomodacoesAlojamento());
-                return params;
-            }
-        };
-        volleyQueue.add(req);
-    }*/
         //endregion
-    }
+}

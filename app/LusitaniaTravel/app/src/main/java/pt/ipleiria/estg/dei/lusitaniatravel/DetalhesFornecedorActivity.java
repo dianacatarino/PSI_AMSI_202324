@@ -35,28 +35,11 @@ public class DetalhesFornecedorActivity extends AppCompatActivity implements For
         // Verifique se o ID do fornecedor é válido
         if (fornecedorId != -1) {
             // Chame o método para obter os detalhes do fornecedor
-            SingletonGestorLusitaniaTravel.getInstance(this).getFornecedorAPI(fornecedorId, this, this);
+            SingletonGestorLusitaniaTravel.getInstance(this).getFornecedorAPI(fornecedorId, this);
         }
     }
 
     @Override
-    public void onRefreshDetalhes(Fornecedor fornecedor) {
-        if (fornecedor != null) {
-            tvNomeAlojamento.setText(fornecedor.getNomeAlojamento());
-            tvTipo.setText(fornecedor.getTipo());
-            tvLocalizacao.setText(fornecedor.getLocalizacaoAlojamento());
-            tvAcomodacoes.setText(fornecedor.getAcomodacoesAlojamento());
-            tvPrecoPorNoite.setText(String.valueOf(fornecedor.getPrecoPorNoite()));
-            tvTipoQuartos.setText(fornecedor.getTipoQuartos());
-            tvNumeroQuartos.setText(fornecedor.getNumeroQuartos());
-        /*}
-        if (fornecedor.getNumeroQuartos() != null) {
-            tvNumeroQuartos.setText(fornecedor.getNumeroQuartos());
-        } else {
-            tvNumeroQuartos.setText("N/A");
-        }*/
-    } else {
-         /*Toast.makeText(this, "Erro ao obter detalhes do fornecedor: " + errorMessage, Toast.LENGTH_SHORT).show();*/
-        }
+    public void onRefreshDetalhes(int op) {
     }
 }

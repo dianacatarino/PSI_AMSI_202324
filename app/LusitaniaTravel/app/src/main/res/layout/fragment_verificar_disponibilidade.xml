@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:name="Verificar Disponibilidade"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:name="Verificar Disponibilidade">
+    android:layout_height="match_parent">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -14,51 +14,55 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Check-In e Check-Out"
-            android:textSize="18sp"
-            android:textColor="@android:color/black"/>
+            android:textColor="@android:color/black"
+            android:textSize="18sp" />
 
         <DatePicker
             android:id="@+id/datePickerCheckIn"
             android:layout_width="match_parent"
             android:layout_height="85dp"
             android:calendarViewShown="false"
-            android:datePickerMode="spinner"/>
+            android:datePickerMode="spinner" />
 
         <DatePicker
             android:id="@+id/datePickerCheckOut"
             android:layout_width="match_parent"
             android:layout_height="85dp"
             android:calendarViewShown="false"
-            android:datePickerMode="spinner"/>
+            android:datePickerMode="spinner" />
 
-        <EditText
-            android:id="@+id/etNumeroClientes"
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/txt_verificar_n_de_clientes"
+            android:textColor="@android:color/black"
+            android:textSize="18sp" />
+
+        <Spinner
+            android:id="@+id/spinnerNumeroClientes"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:ems="10"
-            android:hint="@string/txt_verificar_n_de_clientes"
-            android:maxLength="1"
-            android:digits="12345678910"
-            android:inputType="number"
-            android:drawablePadding="8dp"/>
+            android:entries="@array/numero_clientes" />
 
-        <EditText
-            android:id="@+id/etNumeroQuartos"
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/txt_verificar_n_de_quartos"
+            android:textColor="@android:color/black"
+            android:textSize="18sp" />
+
+        <Spinner
+            android:id="@+id/spinnerNumeroQuartos"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:ems="10"
-            android:hint="@string/txt_verificar_n_de_quartos"
-            android:inputType="number"
-            android:maxLength="1"
-            android:digits="123456"
-            android:drawablePadding="8dp"/>
+            android:entries="@array/numero_quartos" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/txt_verificar_tipo_de_quartos"
-            android:textSize="18sp"
-            android:textColor="@android:color/black"/>
+            android:textColor="@android:color/black"
+            android:textSize="18sp" />
 
         <Spinner
             android:id="@+id/spinnerTipoQuartos"
@@ -66,24 +70,26 @@
             android:layout_height="wrap_content"
             android:entries="@array/tipo_quartos" />
 
-        <EditText
-            android:id="@+id/etNumeroCamas"
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/txt_verificar_n_de_camas"
+            android:textColor="@android:color/black"
+            android:textSize="18sp" />
+
+        <Spinner
+            android:id="@+id/spinnerNumeroCamas"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:ems="10"
-            android:hint="@string/txt_verificar_n_de_camas"
-            android:inputType="number"
-            android:maxLength="1"
-            android:digits="123456"
-            android:drawablePadding="8dp"/>
+            android:entries="@array/numero_camas" />
 
         <Button
             android:id="@+id/btnVerificarDisponibilidade"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/txt_carrinho_verificar_disponibilidade"
+            android:backgroundTint="@color/black"
             android:onClick="onClickVerificarDisponibilidade"
-            android:backgroundTint="@color/black"/>
+            android:text="@string/txt_carrinho_verificar_disponibilidade" />
 
 
         <View

@@ -46,13 +46,13 @@ public class DefinicoesFragment extends Fragment implements UserListener {
         View view = inflater.inflate(R.layout.fragment_definicoes, container, false);
 
         // Initialize the singleton if not already initialized
-        SingletonGestorLusitaniaTravel singleton = SingletonGestorLusitaniaTravel.getInstance(requireContext());
+        SingletonGestorLusitaniaTravel singleton = SingletonGestorLusitaniaTravel.getInstance(getContext());
 
         // Set the listener
         singleton.setUserListener(this);
 
         // Now, you can call the getUserDefinicoesAPI method
-        singleton.getUserDefinicoesAPI(requireContext());
+        singleton.getUserDefinicoesAPI(getContext());
 
         return view;
     }

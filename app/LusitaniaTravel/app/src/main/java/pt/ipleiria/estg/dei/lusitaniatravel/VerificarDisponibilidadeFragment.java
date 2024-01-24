@@ -24,9 +24,7 @@ import pt.ipleiria.estg.dei.lusitaniatravel.listeners.ReservaListener;
 import pt.ipleiria.estg.dei.lusitaniatravel.modelos.SingletonGestorLusitaniaTravel;
 
 public class VerificarDisponibilidadeFragment extends Fragment implements ReservaListener {
-
-    private EditText etNumeroClientes, etNumeroQuartos, etNumeroCamas;
-    private Spinner spinnerTipoQuartos;
+    private Spinner spinnerNumeroClientes, spinnerNumeroQuartos, spinnerTipoQuartos, spinnerNumeroCamas;
     private Button btnVerificarDisponibilidade;
     private DatePicker datePickerCheckIn, datePickerCheckOut;
     public static final int ADD = 100, EDIT = 200, DELETE = 300;
@@ -51,9 +49,9 @@ public class VerificarDisponibilidadeFragment extends Fragment implements Reserv
 
         datePickerCheckIn = view.findViewById(R.id.datePickerCheckIn);
         datePickerCheckOut = view.findViewById(R.id.datePickerCheckOut);
-        etNumeroClientes = view.findViewById(R.id.etNumeroClientes);
-        etNumeroQuartos = view.findViewById(R.id.etNumeroQuartos);
-        etNumeroCamas = view.findViewById(R.id.etNumeroCamas);
+        spinnerNumeroClientes = view.findViewById(R.id.spinnerNumeroClientes);
+        spinnerNumeroQuartos = view.findViewById(R.id.spinnerNumeroQuartos);
+        spinnerNumeroCamas = view.findViewById(R.id.spinnerNumeroCamas);
         spinnerTipoQuartos = view.findViewById(R.id.spinnerTipoQuartos);
         btnVerificarDisponibilidade = view.findViewById(R.id.btnVerificarDisponibilidade);
 
@@ -77,14 +75,14 @@ public class VerificarDisponibilidadeFragment extends Fragment implements Reserv
                 String checkin = checkInYear + "/" + checkInMonth + "/" + checkInDay;
                 String checkout = checkOutYear + "/" + checkOutMonth + "/" + checkOutDay;
 
-                int numeroClientes = Integer.parseInt(etNumeroClientes.getText().toString());
-                int numeroQuartos = Integer.parseInt(etNumeroQuartos.getText().toString());
+                int numeroClientes = Integer.parseInt(spinnerNumeroClientes.getSelectedItem().toString());
+                int numeroQuartos = Integer.parseInt(spinnerNumeroQuartos.getSelectedItem().toString());
                 String tipoQuarto = spinnerTipoQuartos.getSelectedItem().toString();
-                int numeroCamas = Integer.parseInt(etNumeroCamas.getText().toString());
+                int numeroCamas = Integer.parseInt(spinnerNumeroCamas.getSelectedItem().toString());
 
                 // Call the singleton to verify the reservation
                 SingletonGestorLusitaniaTravel.getInstance(getContext())
-                        .verificarReservaAPI(checkin, checkout, numeroClientes, numeroQuartos, tipoQuarto, numeroCamas, getContext(), carrinhoId, VerificarDisponibilidadeFragment.this);
+                        .verificarReservaAPI(checkin, checkout, numeroClientes, numeroQuartos, tipoQuarto, numeroCamas, getContext(), carrinhoId);
             }
         });
 

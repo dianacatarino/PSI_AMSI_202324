@@ -45,7 +45,7 @@ public class ListaFaturaFragment extends Fragment implements FaturasListener {
         SingletonGestorLusitaniaTravel.getInstance(getContext()).setFaturasListener(this);
 
         // Carregar a lista inicial de reservas
-        SingletonGestorLusitaniaTravel.getInstance(getContext()).getAllFaturasAPI(this, getContext());
+        SingletonGestorLusitaniaTravel.getInstance(getContext()).getAllFaturasAPI(getContext());
 
         // Configurar o clique em um item da lista
         lvFaturas.setOnItemClickListener(new AdapterView.OnItemClickListener() {
