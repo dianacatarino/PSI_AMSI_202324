@@ -84,32 +84,22 @@ public class ListaFavoritosAdaptador extends BaseAdapter {
             tvPrecoPorNoite = view.findViewById(R.id.tvPrecoPorNoite);
             btnRemoverFavoritos = view.findViewById(R.id.btnRemoverFavoritos);
 
-            /*btnRemoverFavoritos.setOnClickListener(new View.OnClickListener() {
+            btnRemoverFavoritos.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (fornecedores != null && fornecedores.size() > position) {
                         Fornecedor favoritoClicado = fornecedores.get(position);
 
+                        int fornecedorId = favoritoClicado.getId();
+
                         SingletonGestorLusitaniaTravel singleton = SingletonGestorLusitaniaTravel.getInstance(context);
-                        singleton.getAllFornecedoresAPI(new FornecedoresListener() {
-                            @Override
-                            public void onRefreshListaFornecedores(ArrayList<Fornecedor> fornecedores) {
-                                singleton.getAllFavoritosAPI(new FavoritosListener() {
-                                    @Override
-                                    public void onRefreshListaFornecedores(ArrayList<Fornecedor> fornecedores) {
-                                        singleton.removerFavoritoAPI(favoritoClicado.getId(), context, new FavoritoListener() {
-                                            @Override
-                                            public void onRefreshDetalhes(int action) {
-                                                Toast.makeText(context, "Alojamento removido dos favoritos", Toast.LENGTH_SHORT).show();
-                                            }
-                                        });
-                                    }
-                                }, context);
-                            }
-                        }, context);
+
+                        singleton.removerFavoritoAPI(fornecedorId, context);
+
+                        Toast.makeText(context, "Alojamento removido dos favoritos", Toast.LENGTH_SHORT).show();
                     }
                 }
-            });*/
+            });
         }
 
         public void update(Fornecedor fornecedor, Context context) {

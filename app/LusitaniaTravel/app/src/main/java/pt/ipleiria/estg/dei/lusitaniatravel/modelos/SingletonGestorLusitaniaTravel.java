@@ -807,7 +807,7 @@ public class SingletonGestorLusitaniaTravel {
         }
     }
 
-    public void adicionarCarrinhoAPI(final Carrinho carrinho, final int fornecedorId, final Context context) {
+    public void adicionarCarrinhoAPI(final int fornecedorId, final Context context) {
         if (!CarrinhoJsonParser.isConnectionInternet(context)) {
             Toast.makeText(context, "Não tem ligação à Internet", Toast.LENGTH_SHORT).show();
         } else {
@@ -841,7 +841,7 @@ public class SingletonGestorLusitaniaTravel {
         }
     }
 
-    public void removerCarrinhoAPI(final Carrinho carrinho, final int fornecedorId, final Context context) {
+    public void removerCarrinhoAPI(final int fornecedorId, final Context context) {
         if (!CarrinhoJsonParser.isConnectionInternet(context)) {
             Toast.makeText(context, "Não tem ligação à Internet", Toast.LENGTH_SHORT).show();
         } else {

@@ -69,7 +69,7 @@ public class ListaFornecedoresAdaptador extends BaseAdapter {
         // Otimização
         ViewHolderLista viewHolder = (ViewHolderLista) convertView.getTag();
         if (viewHolder == null) {
-            viewHolder = new ViewHolderLista(convertView,position);
+            viewHolder = new ViewHolderLista(convertView, position);
             convertView.setTag(viewHolder);
         }
         viewHolder.update(fornecedores.get(position), context);
@@ -92,70 +92,40 @@ public class ListaFornecedoresAdaptador extends BaseAdapter {
             btnAdicionarCarrinho = view.findViewById(R.id.btnAdicionarCarrinho);
             btnAdicionarFavorito = view.findViewById(R.id.btnAdicionarFavoritos);
 
-            /*btnAdicionarCarrinho.setOnClickListener(new View.OnClickListener() {
+            btnAdicionarCarrinho.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (fornecedores != null && fornecedores.size() > position) {
                         Fornecedor fornecedorClicado = fornecedores.get(position);
 
-                        // Obtendo uma instância válida do Singleton
+                        int fornecedorId = fornecedorClicado.getId();
+
                         SingletonGestorLusitaniaTravel singleton = SingletonGestorLusitaniaTravel.getInstance(context);
 
-                        // Obtendo a lista de carrinhos diretamente do Singleton
-                        singleton.getAllCarrinhoAPI(new CarrinhosListener() {
-                            @Override
-                            public void onRefreshListaCarrinho(ArrayList<Carrinho> carrinhos) {
-                                if (carrinhos.size() > 0) {
-                                    Carrinho carrinho = carrinhos.get(0);
+                        singleton.adicionarCarrinhoAPI(fornecedorId, context);
 
-                                    // Adicionar o fornecedor ao carrinho
-                                    singleton.adicionarCarrinhoAPI(carrinho, fornecedorClicado.getId(), context, new CarrinhoListener() {
-                                        @Override
-                                        public void onRefreshDetalhes(int action) {
-                                            Toast.makeText(context, "Item adicionado ao carrinho", Toast.LENGTH_SHORT).show();
-                                        }
-                                    });
-                                } else {
-                                    // Se o carrinho estiver vazio, criar um novo carrinho
-                                    singleton.adicionarCarrinhoAPI(novoCarrinho, fornecedorClicado.getId(), context, new CarrinhoListener() {
-                                        @Override
-                                        public void onRefreshDetalhes(int action) {
-                                            Toast.makeText(context, "Item adicionado ao carrinho", Toast.LENGTH_SHORT).show();
-                                        }
-                                    });
-                                }
-                            }
-                        }, context);
+                        Toast.makeText(context, "Item adicionado ao carrinho", Toast.LENGTH_SHORT).show();
                     }
                 }
-            });*/
-
+            });
             btnAdicionarFavorito.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (fornecedores != null && fornecedores.size() > position) {
                         Fornecedor fornecedorClicado = fornecedores.get(position);
 
+                        int fornecedorId = fornecedorClicado.getId();
+
                         // Obtendo uma instância válida do Singleton
                         SingletonGestorLusitaniaTravel singleton = SingletonGestorLusitaniaTravel.getInstance(context);
 
-                        // Obtendo a lista de carrinhos diretamente do Singleton
-                        /*singleton.getAllFavoritosAPI(new FavoritosListener() {
-                            @Override
-                            public void onRefreshListaFornecedores(ArrayList<Fornecedor> fornecedores) {
-                                    // Adicionar o fornecedor aos favoritos
-                                    singleton.adicionarFavoritoAPI(fornecedorClicado.getId(), context, new FavoritoListener() {
-                                        @Override
-                                        public void onRefreshDetalhes(int action) {
-                                            Toast.makeText(context, "Alojamento adicionado aos favoritos", Toast.LENGTH_SHORT).show();
-                                            // Referenciar o botão
-                                            ImageButton btnAdicionarFavorito = view.findViewById(R.id.btnAdicionarFavoritos);
+                        singleton.adicionarFavoritoAPI(fornecedorId,context);
 
-                                            btnAdicionarFavorito.setColorFilter(Color.parseColor("#E91E63"));
-                                        }
-                                    });
-                            }
-                        }, context);*/
+                        Toast.makeText(context, "Alojamento adicionado aos favoritos", Toast.LENGTH_SHORT).show();
+
+                        ImageButton btnAdicionarFavorito = view.findViewById(R.id.btnAdicionarFavoritos);
+
+                        btnAdicionarFavorito.setColorFilter(Color.parseColor("#E91E63"));
                     }
                 }
             });

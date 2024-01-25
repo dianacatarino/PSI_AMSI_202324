@@ -18,6 +18,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.List;
 
 import pt.ipleiria.estg.dei.lusitaniatravel.CarrinhoFragment;
 import pt.ipleiria.estg.dei.lusitaniatravel.R;
@@ -72,7 +73,7 @@ public class ListaCarrinhoAdaptador extends BaseAdapter {
         // Otimização
         ViewHolderLista viewHolder = (ViewHolderLista) convertView.getTag();
         if (viewHolder == null) {
-            viewHolder = new ViewHolderLista(convertView,position);
+            viewHolder = new ViewHolderLista(convertView, position);
             convertView.setTag(viewHolder);
         }
         viewHolder.update(carrinhos.get(position), context);
@@ -94,7 +95,7 @@ public class ListaCarrinhoAdaptador extends BaseAdapter {
             btnRemoverCarrinho = view.findViewById(R.id.btnRemoverCarrinho);
             btnVerificarDisponibilidade = view.findViewById(R.id.btnVerificarDisponibilidade);
 
-           /*  btnRemoverCarrinho.setOnClickListener(new View.OnClickListener() {
+            btnRemoverCarrinho.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (carrinhos != null && carrinhos.size() > position) {
@@ -103,43 +104,31 @@ public class ListaCarrinhoAdaptador extends BaseAdapter {
 
                         SingletonGestorLusitaniaTravel singleton = SingletonGestorLusitaniaTravel.getInstance(context);
 
-                        singleton.getAllFornecedoresAPI(new FornecedoresListener() {
+                        singleton.setFornecedoresListener(new FornecedoresListener() {
                             @Override
-                            public void onRefreshListaFornecedores(ArrayList<Fornecedor> fornecedores) {
-                                // Faça algo com a lista de fornecedores
+                            public void onRefreshListaFornecedores(ArrayList<Fornecedor> listaFornecedores) {
+                                // Find the fornecedor with the matching name
+                                Fornecedor fornecedor = findFornecedorByName(listaFornecedores, fornecedorNome);
 
-                                // Percorre a lista de fornecedores para encontrar o ID correspondente ao nome
-                                for (Fornecedor fornecedor : fornecedores) {
-                                    if (fornecedor.getNomeAlojamento().equals(fornecedorNome)) {
-                                        fornecedorId = fornecedor.getId();
-                                        break;
-                                    }
+                                if (fornecedor != null) {
+                                    // Get the fornecedor ID
+                                    int fornecedorId = fornecedor.getId();
+
+                                    // Use the fornecedorId in your removerCarrinhoAPI method
+                                    SingletonGestorLusitaniaTravel.getInstance(context).removerCarrinhoAPI(fornecedorId, context);
+
+                                    Toast.makeText(context, "Item removido ao carrinho", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    Toast.makeText(context, "Fornecedor não encontrado", Toast.LENGTH_SHORT).show();
                                 }
-
-                                // Verifique se o fornecedor foi encontrado
-                                if (fornecedorId != -1) {
-                                    final int idFornecedor = fornecedorId;
-                                }
-
-                                singleton.getAllCarrinhoAPI(new CarrinhosListener() {
-                                    @Override
-                                    public void onRefreshListaCarrinho(ArrayList<Carrinho> carrinhos) {
-                                        Carrinho carrinho = carrinhos.get(0);
-                                        // Remover o fornecedor ao carrinho
-                                        singleton.removerCarrinhoAPI(carrinho, fornecedorId, context, new CarrinhoListener() {
-                                            @Override
-                                            public void onRefreshDetalhes(int action) {
-                                                Toast.makeText(context, "Item removido ao carrinho", Toast.LENGTH_SHORT).show();
-
-                                            }
-                                        });
-                                    }
-                                }, context);
                             }
-                        }, context);
+                        });
+
+                        // Call getAllFornecedoresAPI to trigger the listener
+                        singleton.getAllFornecedoresAPI(context);
                     }
                 }
-            });*/
+            });
             /*btnVerificarDisponibilidade.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -184,6 +173,15 @@ public class ListaCarrinhoAdaptador extends BaseAdapter {
                     }
                 }
             });*/
+        }
+
+        private Fornecedor findFornecedorByName(List<Fornecedor> fornecedores, String fornecedorNome) {
+            for (Fornecedor fornecedor : fornecedores) {
+                if (fornecedor.getNomeAlojamento().equals(fornecedorNome)) {
+                    return fornecedor;
+                }
+            }
+            return null;
         }
 
         public void update(Carrinho carrinho, Context context) {
