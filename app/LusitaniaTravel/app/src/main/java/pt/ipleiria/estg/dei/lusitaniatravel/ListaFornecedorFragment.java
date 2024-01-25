@@ -55,11 +55,21 @@ public class ListaFornecedorFragment extends Fragment implements FornecedoresLis
         lvFornecedores.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-                fornecedorId = (int) id;
-                //Toast.makeText(getContext(),fornecedores.get(position).getFornecedor(),Toast.LENGTH_LONG).show();
-                Intent intent = new Intent(getContext(), DetalhesFornecedorActivity.class);
-                intent.putExtra(DetalhesFornecedorActivity.ID_FORNECEDOR, (int) id);
-                startActivity(intent);
+                /*fornecedorId = (int) id;
+
+                // Create a new instance of DetalhesFornecedorFragment
+                DetalhesFornecedorFragment detalhesFragment = new DetalhesFornecedorFragment();
+
+                // Pass the selected fornecedorId to the fragment using a Bundle
+                Bundle bundle = new Bundle();
+                bundle.putInt(DetalhesFornecedorFragment.ID_FORNECEDOR, (int) id);
+                detalhesFragment.setArguments(bundle);
+
+                // Replace the current fragment with DetalhesFornecedorFragment
+                FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
+                transaction.replace(R.id.fragmentContainer, detalhesFragment);
+                transaction.addToBackStack(null);
+                transaction.commit();*/
             }
         });
 

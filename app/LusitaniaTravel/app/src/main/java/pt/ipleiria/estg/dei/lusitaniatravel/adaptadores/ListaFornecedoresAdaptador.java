@@ -2,15 +2,21 @@ package pt.ipleiria.estg.dei.lusitaniatravel.adaptadores;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -19,7 +25,9 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+import pt.ipleiria.estg.dei.lusitaniatravel.DetalhesFornecedorFragment;
 import pt.ipleiria.estg.dei.lusitaniatravel.R;
+import pt.ipleiria.estg.dei.lusitaniatravel.VerificarDisponibilidadeFragment;
 import pt.ipleiria.estg.dei.lusitaniatravel.listeners.CarrinhoListener;
 import pt.ipleiria.estg.dei.lusitaniatravel.listeners.CarrinhosListener;
 import pt.ipleiria.estg.dei.lusitaniatravel.listeners.FavoritoListener;
@@ -81,6 +89,7 @@ public class ListaFornecedoresAdaptador extends BaseAdapter {
         private ImageView imgFornecedor;
         private TextView tvTipo, tvNomeAlojamento, tvLocalizacao, tvAcomodacoes, tvPrecoPorNoite;
         private ImageButton btnAdicionarCarrinho, btnAdicionarFavorito;
+        private Button btnDetalhes;
 
         public ViewHolderLista(View view, final int position) {
             imgFornecedor = view.findViewById(R.id.imgFornecedor);
@@ -91,6 +100,7 @@ public class ListaFornecedoresAdaptador extends BaseAdapter {
             tvPrecoPorNoite = view.findViewById(R.id.tvPrecoPorNoite);
             btnAdicionarCarrinho = view.findViewById(R.id.btnAdicionarCarrinho);
             btnAdicionarFavorito = view.findViewById(R.id.btnAdicionarFavoritos);
+            btnDetalhes = view.findViewById(R.id.btnDetalhes);
 
             btnAdicionarCarrinho.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -126,6 +136,32 @@ public class ListaFornecedoresAdaptador extends BaseAdapter {
                         ImageButton btnAdicionarFavorito = view.findViewById(R.id.btnAdicionarFavoritos);
 
                         btnAdicionarFavorito.setColorFilter(Color.parseColor("#E91E63"));
+                    }
+                }
+            });
+            btnDetalhes.setOnClickListener(new View.OnClickListener(){
+                @Override
+                public void onClick(View v) {
+                    if (fornecedores != null && fornecedores.size() > position) {
+                        Fornecedor fornecedorClicado = fornecedores.get(position);
+
+                        int fornecedorId = fornecedorClicado.getId();
+
+                        Bundle bundle = new Bundle();
+                        bundle.putInt("fornecedorId", fornecedorId);
+
+                        // Create an instance of VerificarDisponibilidadeFragment
+                        DetalhesFornecedorFragment detalhesFornecedorFragment = new DetalhesFornecedorFragment();
+
+                        // Configuração do carrinhoId
+                        detalhesFornecedorFragment.setFornecedorId(fornecedorId);
+
+                        // Replace ou navegação para o VerificarDisponibilidadeFragment
+                        FragmentManager fragmentManager = ((FragmentActivity) context).getSupportFragmentManager();
+                        FragmentTransaction transaction = fragmentManager.beginTransaction();
+                        transaction.replace(R.id.fragmentContainer, detalhesFornecedorFragment);
+                        transaction.addToBackStack(null);
+                        transaction.commit();
                     }
                 }
             });

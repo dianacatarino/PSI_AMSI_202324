@@ -139,12 +139,15 @@
                 android:focusable="false"/>
 
             <Button
-                android:id="@+id/btnDetalhesItem"
+                android:id="@+id/btnDetalhes"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Detalhes"
-                android:backgroundTint="@color/black"
-                android:onClick="onDetalhesItemClick"/>
+                android:backgroundTint="@color/blue"
+                android:onClick="onDetalhesClick"
+                android:clickable="true"
+                android:visibility="visible"
+                android:focusable="false"/>
         </LinearLayout>
 
     </LinearLayout>

@@ -18,7 +18,7 @@ import pt.ipleiria.estg.dei.lusitaniatravel.R;
 import pt.ipleiria.estg.dei.lusitaniatravel.modelos.Fornecedor;
 import pt.ipleiria.estg.dei.lusitaniatravel.modelos.Imagem;
 
-public class ListaFornecedorAdaptador extends BaseAdapter {
+/*public class ListaFornecedorAdaptador extends BaseAdapter {
 
     private Context context;
     private Fornecedor fornecedor;
@@ -48,7 +48,7 @@ public class ListaFornecedorAdaptador extends BaseAdapter {
         ViewHolderLista viewHolder;
 
         if (convertView == null) {
-            convertView = LayoutInflater.from(context).inflate(R.layout.activity_detalhes_fornecedor, parent, false);
+            convertView = LayoutInflater.from(context).inflate(R.layout.item_detalhes_fornecedor, parent, false);
             viewHolder = new ViewHolderLista(convertView);
             convertView.setTag(viewHolder);
         } else {
@@ -115,4 +115,4 @@ public class ListaFornecedorAdaptador extends BaseAdapter {
             return baseUrl + relativePath;
         }
     }
-}
+}*/
