@@ -129,51 +129,53 @@ public class ListaCarrinhoAdaptador extends BaseAdapter {
                     }
                 }
             });
-            /*btnVerificarDisponibilidade.setOnClickListener(new View.OnClickListener() {
+            btnVerificarDisponibilidade.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (carrinhos != null && carrinhos.size() > position) {
                         Carrinho carrinhoClicado = carrinhos.get(position);
                         int carrinhoId = carrinhoClicado.getId();
 
-                        // Call getAllCarrinhoAPI to fetch details for the selected carrinhoId
-                        SingletonGestorLusitaniaTravel.getInstance(context)
-                                .getAllCarrinhoAPI(new CarrinhosListener() {
-                                    @Override
-                                    public void onRefreshListaCarrinho(ArrayList<Carrinho> carrinhos) {
-                                        Carrinho selectedCarrinho = null;
-                                        for (Carrinho carrinho : carrinhos) {
-                                            if (carrinho.getId() == carrinhoId) {
-                                                selectedCarrinho = carrinho;
-                                                break;
-                                            }
-                                        }
+                        SingletonGestorLusitaniaTravel singleton = SingletonGestorLusitaniaTravel.getInstance(context);
 
-                                        // Now you have the selectedCarrinho, you can use its details as needed
-                                        if (selectedCarrinho != null) {
-                                            // Create a Bundle to pass data to the fragment
-                                            Bundle bundle = new Bundle();
-                                            bundle.putInt("carrinhoId", carrinhoId);
-
-                                            // Create an instance of VerificarDisponibilidadeFragment
-                                            VerificarDisponibilidadeFragment verificarDisponibilidadeFragment = new VerificarDisponibilidadeFragment();
-
-                                            // Configuração do carrinhoId
-                                            verificarDisponibilidadeFragment.setCarrinhoId(carrinhoId);
-
-                                            // Replace ou navegação para o VerificarDisponibilidadeFragment
-                                            FragmentManager fragmentManager = ((FragmentActivity) context).getSupportFragmentManager();
-                                            FragmentTransaction transaction = fragmentManager.beginTransaction();
-                                            transaction.replace(R.id.fragmentContainer, verificarDisponibilidadeFragment);
-                                            transaction.addToBackStack(null);
-                                            transaction.commit();
-                                        }
+                        singleton.setCarrinhosListener(new CarrinhosListener() {
+                            @Override
+                            public void onRefreshListaCarrinho(ArrayList<Carrinho> listaCarrinhos) {
+                                Carrinho selectedCarrinho = null;
+                                for (Carrinho carrinho : carrinhos) {
+                                    if (carrinho.getId() == carrinhoId) {
+                                        selectedCarrinho = carrinho;
+                                        break;
                                     }
-                                }, context);
+                                }
+
+                                if (selectedCarrinho != null) {
+                                    // Create a Bundle to pass data to the fragment
+                                    Bundle bundle = new Bundle();
+                                    bundle.putInt("carrinhoId", carrinhoId);
+
+                                    // Create an instance of VerificarDisponibilidadeFragment
+                                    VerificarDisponibilidadeFragment verificarDisponibilidadeFragment = new VerificarDisponibilidadeFragment();
+
+                                    // Configuração do carrinhoId
+                                    verificarDisponibilidadeFragment.setCarrinhoId(carrinhoId);
+
+                                    // Replace ou navegação para o VerificarDisponibilidadeFragment
+                                    FragmentManager fragmentManager = ((FragmentActivity) context).getSupportFragmentManager();
+                                    FragmentTransaction transaction = fragmentManager.beginTransaction();
+                                    transaction.replace(R.id.fragmentContainer, verificarDisponibilidadeFragment);
+                                    transaction.addToBackStack(null);
+                                    transaction.commit();
+                                }
+                            }
+                        });
+
+                        singleton.getAllCarrinhoAPI(context);
                     }
                 }
-            });*/
+            });
         }
+
 
         private Fornecedor findFornecedorByName(List<Fornecedor> fornecedores, String fornecedorNome) {
             for (Fornecedor fornecedor : fornecedores) {
@@ -183,6 +185,7 @@ public class ListaCarrinhoAdaptador extends BaseAdapter {
             }
             return null;
         }
+
 
         public void update(Carrinho carrinho, Context context) {
             tvQuantidade.setText("" + carrinho.getQuantidade());

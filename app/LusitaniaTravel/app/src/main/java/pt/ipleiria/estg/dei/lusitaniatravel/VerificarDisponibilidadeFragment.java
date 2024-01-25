@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -83,6 +84,16 @@ public class VerificarDisponibilidadeFragment extends Fragment implements Reserv
                 // Call the singleton to verify the reservation
                 SingletonGestorLusitaniaTravel.getInstance(getContext())
                         .verificarReservaAPI(checkin, checkout, numeroClientes, numeroQuartos, tipoQuarto, numeroCamas, getContext(), carrinhoId);
+
+                Toast.makeText(getContext(), "Reserva verificada com sucesso", Toast.LENGTH_SHORT).show();
+
+                CarrinhoFragment carrinhoFragment = new CarrinhoFragment();
+
+                FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
+                FragmentTransaction transaction = fragmentManager.beginTransaction();
+                transaction.replace(R.id.fragmentContainer, carrinhoFragment);
+                transaction.addToBackStack(null);  // Adiciona a transação à pilha de volta
+                transaction.commit();
             }
         });
 
@@ -91,19 +102,6 @@ public class VerificarDisponibilidadeFragment extends Fragment implements Reserv
 
     @Override
     public void onRefreshDetalhes(int op) {
-        // Handle the result of the reservation verification
-        if (op == VerificarDisponibilidadeFragment.ADD) {
-            Toast.makeText(getContext(), "Reserva verificada com sucesso", Toast.LENGTH_SHORT).show();
-            // Redirecionar para o CarrinhoFragment
-            CarrinhoFragment carrinhoFragment = new CarrinhoFragment();
 
-            FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
-            FragmentTransaction transaction = fragmentManager.beginTransaction();
-            transaction.replace(R.id.fragmentContainer, carrinhoFragment);
-            transaction.addToBackStack(null);  // Adiciona a transação à pilha de volta
-            transaction.commit();
-        } else {
-            Toast.makeText(getContext(), "Reserva não foi verificada com sucesso", Toast.LENGTH_SHORT).show();
-        }
     }
 }

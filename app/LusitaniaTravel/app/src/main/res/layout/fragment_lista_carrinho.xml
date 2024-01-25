@@ -22,6 +22,7 @@
             android:layout_height="wrap_content"
             android:text="Finalizar Carrinho"
             android:backgroundTint="@color/blue"
+            android:onClick="onClickFinalizar"
             android:layout_gravity="right"
             android:clickable="true"
             android:visibility="visible"

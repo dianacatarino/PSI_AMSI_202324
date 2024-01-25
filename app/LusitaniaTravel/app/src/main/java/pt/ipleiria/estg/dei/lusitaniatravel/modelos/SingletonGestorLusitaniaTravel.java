@@ -68,7 +68,7 @@ public class SingletonGestorLusitaniaTravel {
     private static final String mUrlAPILogin = BASE_URL + "/user/login/%s/%s";
     private static final String mUrlAPIRegister = BASE_URL + "/user/register";
     private static final String mUrlAPIFornecedores = BASE_URL + "/fornecedor/alojamentos";
-    private static final String mUrlAPIFornecedor = BASE_URL + "/fornecedor/alojamento/%d";
+    private static final String mUrlAPIFornecedor = BASE_URL + "/fornecedor/%d";
     private static final String mUrlAPILocalizacao = BASE_URL + "/fornecedor/localizacao/%s";
     private static final String mUrlAPIDefinicoes = BASE_URL + "/user/mostrar/%s";
     private static final String mUrlAPIReservas = BASE_URL + "/reserva/mostrar/%s";
