@@ -147,6 +147,35 @@
                 android:layout_height="wrap_content" />
         </LinearLayout>
 
+        <View
+            android:id="@+id/view1"
+            android:layout_width="200dp"
+            android:layout_height="20dp" />
+
+        <TextView
+            android:id="@+id/tvTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Comentários"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:padding="16dp"/>
+
+        <Button
+            android:id="@+id/btnAdicionarComentario"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/txt_detalhes_adicionar_comentario"
+            android:backgroundTint="@color/blue"/>
+
+        <ListView
+        android:id="@+id/listViewComentarios"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:divider="@android:color/darker_gray"
+        android:dividerHeight="1dp"/>
+
     </LinearLayout>
 
 </RelativeLayout>

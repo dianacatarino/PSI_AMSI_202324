@@ -49,14 +49,27 @@ public class DetalhesFornecedorFragment extends Fragment implements FornecedorLi
 
         View view = inflater.inflate(R.layout.fragment_detalhes_fornecedor, container, false);
 
+        tvTipo = view.findViewById(R.id.tvTipo);
+        tvNomeAlojamento = view.findViewById(R.id.tvNomeAlojamento);
+        tvLocalizacao = view.findViewById(R.id.tvLocalizacao);
+        tvAcomodacoes = view.findViewById(R.id.tvAcomodacoes);
+        tvPrecoPorNoite = view.findViewById(R.id.tvPrecoPorNoite);
+        tvTipoQuartos = view.findViewById(R.id.tvTipoQuartos);
+        tvNumeroQuartos = view.findViewById(R.id.tvNumeroQuartos);
+        imgFornecedor = view.findViewById(R.id.imgFornecedor);
+
+        SingletonGestorLusitaniaTravel.getInstance(getContext()).setFornecedorListener(this);
+
         fornecedorId = getFornecedorId();
 
+        // Make the API call
         SingletonGestorLusitaniaTravel.getInstance(getContext()).getFornecedorAPI(fornecedorId, getContext());
 
         return view;
     }
 
     public void onRefreshDetalhes(Fornecedor fornecedor){
+        Log.d("DetalhesFornecedor", "onRefreshDetalhes called");
         if (getView() != null && fornecedor != null) {
             tvTipo.setText(fornecedor.getTipo());
             tvNomeAlojamento.setText(fornecedor.getNomeAlojamento());
@@ -68,7 +81,7 @@ public class DetalhesFornecedorFragment extends Fragment implements FornecedorLi
             String precoFormatado = decimalFormat.format(fornecedor.getPrecoPorNoite());
             tvPrecoPorNoite.setText(precoFormatado + "€");
             tvTipoQuartos.setText(fornecedor.getTipoQuartos());
-            tvNumeroQuartos.setText(fornecedor.getNumeroQuartos());
+            tvNumeroQuartos.setText(String.valueOf(fornecedor.getNumeroQuartos()));
 
             // Obtendo a primeira imagem do fornecedor
             Imagem primeiraImagem = fornecedor.getImagens().size() > 0 ? fornecedor.getImagens().get(0) : null;

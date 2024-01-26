@@ -68,11 +68,13 @@ public class SingletonGestorLusitaniaTravel {
     private static final String mUrlAPILogin = BASE_URL + "/user/login/%s/%s";
     private static final String mUrlAPIRegister = BASE_URL + "/user/register";
     private static final String mUrlAPIFornecedores = BASE_URL + "/fornecedor/alojamentos";
-    private static final String mUrlAPIFornecedor = BASE_URL + "/fornecedor/alojamento/%d";
+    private static final String mUrlAPIFornecedor = BASE_URL + "/fornecedor/alojamento/";
     private static final String mUrlAPILocalizacao = BASE_URL + "/fornecedor/localizacao/%s";
     private static final String mUrlAPIDefinicoes = BASE_URL + "/user/mostrar/%s";
     private static final String mUrlAPIReservas = BASE_URL + "/reserva/mostrar/%s";
+    private static final String mUrlAPIReserva = BASE_URL + "/reserva/detalhes/";
     private static final String mUrlAPIFaturas = BASE_URL + "/fatura/ver/%s";
+    private static final String mUrlAPIFatura = BASE_URL + "/fatura/detalhes/";
     private static final String mUrlAPIFavoritos = BASE_URL + "/fornecedor/favoritos";
     private static final String mUrlAPIAdicionarFavorito = BASE_URL + "/fornecedor/adicionarfavorito/";
     private static final String mUrlAPIRemoverFavorito = BASE_URL + "/fornecedor/removerfavorito/";
@@ -420,10 +422,9 @@ public class SingletonGestorLusitaniaTravel {
             String username = SingletonGestorLusitaniaTravel.getInstance(context).getUsername();
             String password = SingletonGestorLusitaniaTravel.getInstance(context).getPassword();
 
-            // Ajuste da URL com o ID do fornecedor
-            String url = String.format(Locale.getDefault(), mUrlAPIFornecedor, id);
+            String urlCompleta = mUrlAPIFornecedor + id;
 
-            JsonObjectRequest req = new JsonObjectRequest(Request.Method.GET, url, null,
+            JsonObjectRequest req = new JsonObjectRequest(Request.Method.GET, urlCompleta, null,
                     new Response.Listener<JSONObject>() {
                         @Override
                         public void onResponse(JSONObject response) {
@@ -502,6 +503,53 @@ public class SingletonGestorLusitaniaTravel {
                         @Override
                         public void onErrorResponse(VolleyError error) {
                             Toast.makeText(context, error.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    }) {
+                @Override
+                public Map<String, String> getHeaders() {
+                    Map<String, String> headers = new HashMap<>();
+                    String credentials = username + ":" + password;
+                    String auth = "Basic " + Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
+                    headers.put("Authorization", auth);
+                    return headers;
+                }
+            };
+            volleyQueue.add(req);
+        }
+    }
+
+    public void getReservaAPI(int id, final Context context) {
+        if (!ReservaJsonParser.isConnectionInternet(context)) {
+            Toast.makeText(context, "Não tem ligação à Internet", Toast.LENGTH_SHORT).show();
+        } else {
+            String username = SingletonGestorLusitaniaTravel.getInstance(context).getUsername();
+            String password = SingletonGestorLusitaniaTravel.getInstance(context).getPassword();
+
+            String urlCompleta = mUrlAPIFornecedor + id;
+
+            JsonObjectRequest req = new JsonObjectRequest(Request.Method.GET, urlCompleta, null,
+                    new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Fornecedor fornecedor = FornecedorJsonParser.parserJsonFornecedor(response);
+                                    if (fornecedorListener != null)
+                                        fornecedorListener.onRefreshDetalhes(fornecedor);
+                                }
+                            });
+                        }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Toast.makeText(context, error.getMessage(), Toast.LENGTH_SHORT).show();
+                                }
+                            });
                         }
                     }) {
                 @Override
