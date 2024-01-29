@@ -6,7 +6,6 @@
     <string name="txt_main_quartos">Quartos</string>
     <string name="txt_main_pessoas">Pessoas</string>
     <string name="txt_main_pesquisar">Pesquisar</string>
-    <string name="txt_detalhes">Detalhes</string>
     <string name="txt_username">Username</string>
     <string name="txt_passwordSignUp">Password</string>
     <string name="txt_repeatPassword">Repeat Password</string>
@@ -93,6 +92,9 @@
     <string name="txt_detalhes_fatura">Detalhes da Fatura</string>
     <string name="txt_detalhes_reserva">Detalhes da Reserva</string>
     <string name="txt_reserva_estado">Estado:</string>
+    <string name="txt_comentario_alojamento">Alojamento:</string>
+    <string name="txt_comentario">Comentário:</string>
+    <string name="txt_comentario_avaliacao">Avaliação:</string>
     <string-array name="tipo_quartos">
         <item>Quarto Individual</item>
         <item>Quarto Duplo</item>

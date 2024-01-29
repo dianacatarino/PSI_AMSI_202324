@@ -1,19 +1,28 @@
 package pt.ipleiria.estg.dei.lusitaniatravel.adaptadores;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.TextView;
+
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Locale;
 
+import pt.ipleiria.estg.dei.lusitaniatravel.DetalhesFaturaFragment;
+import pt.ipleiria.estg.dei.lusitaniatravel.DetalhesReservaFragment;
 import pt.ipleiria.estg.dei.lusitaniatravel.R;
 import pt.ipleiria.estg.dei.lusitaniatravel.modelos.Fatura;
+import pt.ipleiria.estg.dei.lusitaniatravel.modelos.Reserva;
 
 public class ListaFaturasAdaptador extends BaseAdapter {
 
@@ -51,7 +60,7 @@ public class ListaFaturasAdaptador extends BaseAdapter {
         // Otimização
         ViewHolderLista viewHolder = (ViewHolderLista) convertView.getTag();
         if (viewHolder == null) {
-            viewHolder = new ViewHolderLista(convertView);
+            viewHolder = new ViewHolderLista(convertView,position);
             convertView.setTag(viewHolder);
         }
         viewHolder.update(faturas.get(position), context);
@@ -59,15 +68,41 @@ public class ListaFaturasAdaptador extends BaseAdapter {
         return convertView;
     }
 
-    private static class ViewHolderLista {
+    private class ViewHolderLista {
         private TextView tvTotalFatura, tvTotalSI, tvIva, tvReserva, tvData;
+        private Button btnDetalhes;
 
-        public ViewHolderLista(View view) {
+        public ViewHolderLista(View view, final int position) {
             tvTotalFatura = view.findViewById(R.id.tvTotalFatura);
             tvTotalSI = view.findViewById(R.id.tvTotalSI);
             tvIva = view.findViewById(R.id.tvIva);
             tvReserva = view.findViewById(R.id.tvReserva);
             tvData = view.findViewById(R.id.tvData);
+            btnDetalhes = view.findViewById(R.id.btnDetalhes);
+
+            btnDetalhes.setOnClickListener(new View.OnClickListener(){
+                @Override
+                public void onClick(View v) {
+                    if (faturas != null && faturas.size() > position) {
+                        Fatura faturaClicada = faturas.get(position);
+
+                        int faturaId = faturaClicada.getId();
+
+                        Bundle bundle = new Bundle();
+                        bundle.putInt("faturaId", faturaId);
+
+                        DetalhesFaturaFragment detalhesFaturaFragment = new DetalhesFaturaFragment();
+
+                        detalhesFaturaFragment.setFaturaId(faturaId);
+
+                        FragmentManager fragmentManager = ((FragmentActivity) context).getSupportFragmentManager();
+                        FragmentTransaction transaction = fragmentManager.beginTransaction();
+                        transaction.replace(R.id.fragmentContainer, detalhesFaturaFragment);
+                        transaction.addToBackStack(null);
+                        transaction.commit();
+                    }
+                }
+            });
         }
 
         public void update(Fatura fatura, Context context) {

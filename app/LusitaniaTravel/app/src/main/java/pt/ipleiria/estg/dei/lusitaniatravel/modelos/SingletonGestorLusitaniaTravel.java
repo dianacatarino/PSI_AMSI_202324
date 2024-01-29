@@ -33,6 +33,8 @@ import pt.ipleiria.estg.dei.lusitaniatravel.MainActivity;
 import pt.ipleiria.estg.dei.lusitaniatravel.VerificarDisponibilidadeFragment;
 import pt.ipleiria.estg.dei.lusitaniatravel.listeners.CarrinhoListener;
 import pt.ipleiria.estg.dei.lusitaniatravel.listeners.CarrinhosListener;
+import pt.ipleiria.estg.dei.lusitaniatravel.listeners.ComentarioListener;
+import pt.ipleiria.estg.dei.lusitaniatravel.listeners.ComentariosListener;
 import pt.ipleiria.estg.dei.lusitaniatravel.listeners.FaturaListener;
 import pt.ipleiria.estg.dei.lusitaniatravel.listeners.FaturasListener;
 import pt.ipleiria.estg.dei.lusitaniatravel.listeners.FavoritoListener;
@@ -45,6 +47,7 @@ import pt.ipleiria.estg.dei.lusitaniatravel.listeners.ReservasListener;
 import pt.ipleiria.estg.dei.lusitaniatravel.listeners.SignUpListener;
 import pt.ipleiria.estg.dei.lusitaniatravel.listeners.UserListener;
 import pt.ipleiria.estg.dei.lusitaniatravel.listeners.VerificarListener;
+import pt.ipleiria.estg.dei.lusitaniatravel.utils.ComentarioJsonParser;
 import pt.ipleiria.estg.dei.lusitaniatravel.utils.FaturaJsonParser;
 import pt.ipleiria.estg.dei.lusitaniatravel.utils.FavoritoJsonParser;
 import pt.ipleiria.estg.dei.lusitaniatravel.utils.FornecedorJsonParser;
@@ -59,6 +62,7 @@ public class SingletonGestorLusitaniaTravel {
     private ArrayList<Fornecedor> fornecedores;
     private ArrayList<Reserva> reservas;
     private ArrayList<Profile> profiles;
+    private ArrayList<Comentario> comentarios;
     private static SingletonGestorLusitaniaTravel instance = null;
     private LusitaniaTravelBDHelper lusitaniaTravelBDHelper = null;
     private String username;
@@ -84,6 +88,8 @@ public class SingletonGestorLusitaniaTravel {
     private static final String mUrlAPIRemoverCarrinho = BASE_URL + "/carrinho/removercarrinho/";
     private static final String mUrlAPIVerificarReserva = BASE_URL + "/reserva/verificar/";
     private static final String mUrlAPIFinalizarCarrinho = BASE_URL + "/carrinho/finalizarcarrinho/";
+    private static final String mUrlAPIComentarios = BASE_URL + "/fornecedor/comentarios";
+    private static final String mUrlAPIComentario = BASE_URL + "/fornecedor/comentario/";
     private FornecedoresListener fornecedoresListener;
     private FornecedorListener fornecedorListener;
     private ReservasListener reservasListener;
@@ -97,8 +103,9 @@ public class SingletonGestorLusitaniaTravel {
     private FavoritoListener favoritoListener;
     private CarrinhosListener carrinhosListener;
     private CarrinhoListener carrinhoListener;
-
     private VerificarListener verificarListener;
+    private ComentariosListener comentariosListener;
+    private ComentarioListener comentarioListener;
 
     // Método que garante apenas uma instância do Singleton
     public static synchronized SingletonGestorLusitaniaTravel getInstance(Context context) {
@@ -189,6 +196,14 @@ public class SingletonGestorLusitaniaTravel {
 
     public void setVerificarListener(VerificarListener verificarListener) {
         this.verificarListener = verificarListener;
+    }
+
+    public void setComentariosListener(ComentariosListener comentariosListener) {
+        this.comentariosListener = comentariosListener;
+    }
+
+    public void setComentarioListener(ComentarioListener comentarioListener) {
+        this.comentarioListener = comentarioListener;
     }
 
     //endregion
@@ -588,11 +603,6 @@ public class SingletonGestorLusitaniaTravel {
                             try {
                                 JSONArray faturasArray = response.getJSONArray("faturas");
                                 ArrayList<Fatura> faturas = FaturaJsonParser.parserJsonFaturas(faturasArray);
-
-                                // Log the parsed Faturas
-                                for (Fatura fatura : faturas) {
-                                    Log.d("FaturasAPI", "Parsed Fatura: " + fatura.toString());
-                                }
 
                                 // Notificar o listener de faturas
                                 if (faturasListener != null) {
@@ -1057,6 +1067,49 @@ public class SingletonGestorLusitaniaTravel {
                     Toast.makeText(context, error.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             }) {
+                @Override
+                public Map<String, String> getHeaders() {
+                    Map<String, String> headers = new HashMap<>();
+                    String credentials = username + ":" + password;
+                    String auth = "Basic " + Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
+                    headers.put("Authorization", auth);
+                    return headers;
+                }
+            };
+            volleyQueue.add(req);
+        }
+    }
+
+    public void getAllComentariosAPI(final Context context) {
+        if (!ComentarioJsonParser.isConnectionInternet(context)) {
+            Toast.makeText(context, "Não tem ligação à Internet", Toast.LENGTH_SHORT).show();
+        } else {
+            String username = SingletonGestorLusitaniaTravel.getInstance(context).getUsername();
+            String password = SingletonGestorLusitaniaTravel.getInstance(context).getPassword();
+
+            JsonObjectRequest req = new JsonObjectRequest(Request.Method.GET, mUrlAPIComentarios, null,
+                    new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            try {
+                                JSONArray comentariosArray = response.getJSONArray("comentarios");
+                                comentarios = ComentarioJsonParser.parserJsonComentarios(comentariosArray);
+
+                                if (comentariosListener != null)
+                                    comentariosListener.onRefreshListaComentarios(comentarios);
+
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                                Toast.makeText(context, "Error parsing JSON: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            Toast.makeText(context, error.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    }) {
                 @Override
                 public Map<String, String> getHeaders() {
                     Map<String, String> headers = new HashMap<>();

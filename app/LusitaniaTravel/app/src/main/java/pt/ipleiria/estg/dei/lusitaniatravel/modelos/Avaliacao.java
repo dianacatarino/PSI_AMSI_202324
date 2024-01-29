@@ -5,11 +5,10 @@ import java.util.Date;
 public class Avaliacao {
     private int id;
     private int classificacao;
-    private Date dataAvaliacao;
-    private String nomeFornecedor;
+    private String dataAvaliacao, nomeFornecedor;
 
 
-    public Avaliacao(int id, int classificacao, Date dataAvaliacao, String nomeFornecedor) {
+    public Avaliacao(int id, int classificacao, String dataAvaliacao, String nomeFornecedor) {
         this.id = id;
         this.classificacao = classificacao;
         this.dataAvaliacao = dataAvaliacao;
@@ -32,11 +31,11 @@ public class Avaliacao {
         this.classificacao = classificacao;
     }
 
-    public Date getDataAvaliacao() {
+    public String getDataAvaliacao() {
         return dataAvaliacao;
     }
 
-    public void setDataAvaliacao(Date dataAvaliacao) {
+    public void setDataAvaliacao(String dataAvaliacao) {
         this.dataAvaliacao = dataAvaliacao;
     }
 

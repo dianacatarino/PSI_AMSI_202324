@@ -7,58 +7,78 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
+
+import java.text.DecimalFormat;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import pt.ipleiria.estg.dei.lusitaniatravel.listeners.FaturaListener;
+import pt.ipleiria.estg.dei.lusitaniatravel.modelos.Fatura;
+import pt.ipleiria.estg.dei.lusitaniatravel.modelos.LinhaReserva;
+import pt.ipleiria.estg.dei.lusitaniatravel.modelos.Reserva;
+import pt.ipleiria.estg.dei.lusitaniatravel.modelos.SingletonGestorLusitaniaTravel;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link DetalhesFaturaFragment#newInstance} factory method to
+ * Use the {@link DetalhesFaturaFragment#} factory method to
  * create an instance of this fragment.
  */
-public class DetalhesFaturaFragment extends Fragment {
+public class DetalhesFaturaFragment extends Fragment implements FaturaListener {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-    public DetalhesFaturaFragment() {
-        // Required empty public constructor
+    public static final int ADD = 100, EDIT = 200, DELETE = 300;
+    public static final String OP_CODE = "op_detalhes";
+    TextView tvFaturaId, tvTotalFatura, tvTotalSI, tvIva, tvData, tvReserva, tvQuantidade, tvPrecoUnitario, tvSubtotal;
+    private int faturaId;
+    public void setFaturaId(int faturaId) {
+        this.faturaId = faturaId;
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment DetalhesFaturaFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static DetalhesFaturaFragment newInstance(String param1, String param2) {
-        DetalhesFaturaFragment fragment = new DetalhesFaturaFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+    public int getFaturaId() {
+        return faturaId;
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_detalhes_fatura, container, false);
+
+        View view = inflater.inflate(R.layout.fragment_detalhes_fatura, container, false);
+
+        tvFaturaId = view.findViewById(R.id.tvFaturaId);
+        tvTotalFatura = view.findViewById(R.id.tvTotalFatura);
+        tvTotalSI = view.findViewById(R.id.tvTotalSI);
+        tvIva = view.findViewById(R.id.tvIva);
+        tvData = view.findViewById(R.id.tvData);
+        tvReserva = view.findViewById(R.id.tvReserva);
+        tvQuantidade = view.findViewById(R.id.tvQuantidade);
+        tvPrecoUnitario = view.findViewById(R.id.tvPrecoUnitario);
+        tvSubtotal = view.findViewById(R.id.tvSubtotal);
+
+        SingletonGestorLusitaniaTravel.getInstance(getContext()).setFaturaListener(this);
+
+        faturaId = getFaturaId();
+
+        // Make the API call
+        SingletonGestorLusitaniaTravel.getInstance(getContext()).getFaturaAPI(faturaId, getContext());
+
+        return view;
+    }
+
+    public void onRefreshDetalhes(Fatura fatura){
+        if (getView() != null && fatura != null) {
+            tvFaturaId.setText(String.valueOf(fatura.getId()));
+
+            DecimalFormat decimalFormat = new DecimalFormat("#.00");
+            String totalFaturaFormatado = decimalFormat.format(fatura.getTotalF());
+            tvTotalFatura.setText("" + totalFaturaFormatado  + "€");
+
+            String totalSIFormatado = decimalFormat.format(fatura.getTotalSI());
+            tvTotalSI.setText("" + totalSIFormatado  + "€");
+
+            tvIva.setText(String.valueOf(fatura.getIva()));
+            tvData.setText(fatura.getData());
+            tvReserva.setText(String.valueOf(fatura.getReservaId()));
+        }
     }
 }

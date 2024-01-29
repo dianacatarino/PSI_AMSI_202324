@@ -80,7 +80,9 @@ public class DetalhesReservaFragment extends Fragment implements ReservaListener
             tvCheckout.setText(reserva.getCheckout());
             tvNumeroQuartos.setText(String.valueOf(reserva.getNumeroQuartos()));
             tvNumeroClientes.setText(String.valueOf(reserva.getNumeroClientes()));
-            tvValor.setText(String.valueOf(reserva.getValor()));
+            DecimalFormat decimalFormat = new DecimalFormat("#.00");
+            String valorFormatado = decimalFormat.format(reserva.getValor());
+            tvValor.setText("" + valorFormatado  + "€");
             tvFornecedor.setText(reserva.getNomeFornecedor());
             int numeroNoites = 0;
             int numeroCamas = 0;

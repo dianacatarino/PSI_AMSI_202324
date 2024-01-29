@@ -1,20 +1,21 @@
 package pt.ipleiria.estg.dei.lusitaniatravel.modelos;
 
 import java.util.Date;
+import java.util.List;
 
 public class Comentario {
     private int id;
     private String titulo;
     private String descricao;
-    private Date dataComentario;
-    private String nomeFornecedor;
-
-    public Comentario(int id, String titulo, String descricao, Date dataComentario, String nomeFornecedor) {
+    private String dataComentario, nomeFornecedor;
+    private List<Avaliacao> avaliacao;
+    public Comentario(int id, String titulo, String descricao, String dataComentario, String nomeFornecedor, List<Avaliacao> avaliacao) {
         this.id = id;
         this.titulo = titulo;
         this.descricao = descricao;
         this.dataComentario = dataComentario;
         this.nomeFornecedor = nomeFornecedor;
+        this.avaliacao = avaliacao;
     }
 
     public int getId() {
@@ -41,11 +42,11 @@ public class Comentario {
         this.descricao = descricao;
     }
 
-    public Date getDataComentario() {
+    public String getDataComentario() {
         return dataComentario;
     }
 
-    public void setDataComentario(Date dataComentario) {
+    public void setDataComentario(String dataComentario) {
         this.dataComentario = dataComentario;
     }
 
@@ -55,5 +56,13 @@ public class Comentario {
 
     public void setNomeFornecedor(String nomeFornecedor) {
         this.nomeFornecedor = nomeFornecedor;
+    }
+
+    public List<Avaliacao> getAvaliacao() {
+        return avaliacao;
+    }
+
+    public void setAvaliacao(List<Avaliacao> avaliacao) {
+        this.avaliacao = avaliacao;
     }
 }
