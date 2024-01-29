@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="5dp"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    tools:context=".DetalhesFaturaFragment">
 
 
     <LinearLayout
@@ -14,12 +15,14 @@
         android:layout_marginStart="5dp"
         android:orientation="vertical">
 
-        <ImageView
-            android:id="@+id/imgFornecedor"
+        <TextView
+            android:id="@+id/tvTitle"
             android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:scaleType="centerCrop"
-            android:src="@drawable/hotel7" />
+            android:layout_height="wrap_content"
+            android:text="@string/txt_detalhes_fatura"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:padding="16dp"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -27,14 +30,14 @@
             android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/textViewNomeAlojamento"
+                android:id="@+id/textViewFaturaId"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/txt_item_nome"
+                android:text="@string/txt_fatura_id"
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/tvNomeAlojamento"
+                android:id="@+id/tvFaturaId"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
         </LinearLayout>
@@ -45,14 +48,14 @@
             android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/textViewTipo"
+                android:id="@+id/textViewTotalFatura"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/txt_item_tipo"
+                android:text="@string/txt_fatura_total_fatura"
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/tvTipo"
+                android:id="@+id/tvTotalFatura"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
         </LinearLayout>
@@ -63,14 +66,14 @@
             android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/textViewLocalizacao"
+                android:id="@+id/textViewTotalSI"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/txt_item_localizacao"
+                android:text="@string/txt_fatura_total_s_iva"
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/tvLocalizacao"
+                android:id="@+id/tvTotalSI"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
         </LinearLayout>
@@ -81,14 +84,14 @@
             android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/textViewAcomodacoes"
+                android:id="@+id/textViewIva"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/txt_item_acomodacoes"
+                android:text="@string/txt_fatura_iva"
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/tvAcomodacoes"
+                android:id="@+id/tvIva"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
         </LinearLayout>
@@ -99,14 +102,14 @@
             android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/textViewPrecoPorNoite"
+                android:id="@+id/textViewData"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/txt_item_preco_por_noite"
+                android:text="@string/txt_fatura_data"
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/tvPrecoPorNoite"
+                android:id="@+id/tvData"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
         </LinearLayout>
@@ -117,14 +120,14 @@
             android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/textViewTipoQuartos"
+                android:id="@+id/textViewReserva"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/txt_detalhes_tipo_quartos"
+                android:text="@string/txt_fatura_reserva"
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/tvTipoQuartos"
+                android:id="@+id/tvReserva"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
         </LinearLayout>
@@ -135,18 +138,56 @@
             android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/textViewNumeroQuartos"
+                android:id="@+id/textViewQuantidade"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/txt_detalhes_n_quartos_disponiveis"
+                android:text="@string/txt_fatura_quantidade"
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/tvNumeroQuartos"
+                android:id="@+id/tvQuantidade"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/textViewPrecoUnitario"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/txt_fatura_preco"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvPrecoUnitario"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/textViewSubtotal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/txt_fatura_subtotal"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvSubtotal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
         </LinearLayout>
 
     </LinearLayout>
 
-</LinearLayout>
+
+
+</RelativeLayout>

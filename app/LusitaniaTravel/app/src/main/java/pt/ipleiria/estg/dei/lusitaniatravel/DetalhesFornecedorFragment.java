@@ -32,7 +32,6 @@ public class DetalhesFornecedorFragment extends Fragment implements FornecedorLi
     public static final String OP_CODE = "op_detalhes";
     TextView tvTipo, tvNomeAlojamento, tvLocalizacao, tvAcomodacoes, tvPrecoPorNoite, tvTipoQuartos, tvNumeroQuartos;
     ImageView imgFornecedor;
-    FragmentManager fragmentManager;
     private int fornecedorId;
 
     public void setFornecedorId(int fornecedorId) {
@@ -69,7 +68,6 @@ public class DetalhesFornecedorFragment extends Fragment implements FornecedorLi
     }
 
     public void onRefreshDetalhes(Fornecedor fornecedor){
-        Log.d("DetalhesFornecedor", "onRefreshDetalhes called");
         if (getView() != null && fornecedor != null) {
             tvTipo.setText(fornecedor.getTipo());
             tvNomeAlojamento.setText(fornecedor.getNomeAlojamento());

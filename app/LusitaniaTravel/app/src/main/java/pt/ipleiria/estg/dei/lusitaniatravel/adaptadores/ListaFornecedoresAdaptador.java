@@ -150,13 +150,10 @@ public class ListaFornecedoresAdaptador extends BaseAdapter {
                         Bundle bundle = new Bundle();
                         bundle.putInt("fornecedorId", fornecedorId);
 
-                        // Create an instance of VerificarDisponibilidadeFragment
                         DetalhesFornecedorFragment detalhesFornecedorFragment = new DetalhesFornecedorFragment();
 
-                        // Configuração do carrinhoId
                         detalhesFornecedorFragment.setFornecedorId(fornecedorId);
 
-                        // Replace ou navegação para o VerificarDisponibilidadeFragment
                         FragmentManager fragmentManager = ((FragmentActivity) context).getSupportFragmentManager();
                         FragmentTransaction transaction = fragmentManager.beginTransaction();
                         transaction.replace(R.id.fragmentContainer, detalhesFornecedorFragment);

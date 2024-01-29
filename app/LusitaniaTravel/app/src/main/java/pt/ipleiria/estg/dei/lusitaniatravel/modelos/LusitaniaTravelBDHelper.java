@@ -12,7 +12,7 @@ import androidx.annotation.Nullable;
 import java.util.ArrayList;
 
 public class LusitaniaTravelBDHelper extends SQLiteOpenHelper {
-    private static final int DB_VERSION = 1;
+    private static final int DB_VERSION = 2;
     private static final String DB_NAME = "LusitaniaTravelDB";
 
     // Tabela Reserva
@@ -27,6 +27,7 @@ public class LusitaniaTravelBDHelper extends SQLiteOpenHelper {
     private static final String RESERVA_CLIENTE_ID = "cliente_id";
     private static final String RESERVA_FUNCIONARIO_ID = "funcionario_id";
     private static final String RESERVA_FORNECEDOR_ID = "fornecedor_id";
+    private static final String RESERVA_ESTADO = "estado";
 
     // Tabela User
     private static final String TABLE_USER = "User";
@@ -67,7 +68,8 @@ public class LusitaniaTravelBDHelper extends SQLiteOpenHelper {
                 RESERVA_VALOR + " DECIMAL(10, 2) NOT NULL, " +
                 RESERVA_CLIENTE_ID + " INT NOT NULL, " +
                 RESERVA_FUNCIONARIO_ID + " INT NOT NULL, " +
-                RESERVA_FORNECEDOR_ID + " INT NOT NULL);";
+                RESERVA_FORNECEDOR_ID + " INT NOT NULL, " +
+                RESERVA_ESTADO + " TEXT);";
         sqLiteDatabase.execSQL(sqlCreateReservaTable);
 
         String sqlCreateUserTable = "CREATE TABLE " + TABLE_USER +
@@ -110,6 +112,7 @@ public class LusitaniaTravelBDHelper extends SQLiteOpenHelper {
         values.put(RESERVA_CLIENTE_ID, reserva.getNomeCliente());
         values.put(RESERVA_FUNCIONARIO_ID, reserva.getNomeFuncionario());
         values.put(RESERVA_FORNECEDOR_ID, reserva.getNomeFornecedor());
+        values.put(RESERVA_ESTADO, reserva.getEstado());
 
         long result = this.db.insert(TABLE_RESERVA, null, values);
 
@@ -129,6 +132,7 @@ public class LusitaniaTravelBDHelper extends SQLiteOpenHelper {
         values.put(RESERVA_CLIENTE_ID, reserva.getNomeCliente());
         values.put(RESERVA_FUNCIONARIO_ID, reserva.getNomeFuncionario());
         values.put(RESERVA_FORNECEDOR_ID, reserva.getNomeFornecedor());
+        values.put(RESERVA_ESTADO, reserva.getEstado());
 
         int nLinhasUpdate = this.db.update(TABLE_RESERVA, values, RESERVA_ID + "=?", new String[]{String.valueOf(reserva.getId())});
         return nLinhasUpdate > 0;
@@ -142,7 +146,7 @@ public class LusitaniaTravelBDHelper extends SQLiteOpenHelper {
     public ArrayList<Reserva> getAllReservasBD() {
         ArrayList<Reserva> reservas = new ArrayList<>();
 
-        Cursor cursor = this.db.query(TABLE_RESERVA, new String[]{RESERVA_ID, RESERVA_TIPO, RESERVA_CHECKIN, RESERVA_CHECKOUT, RESERVA_NUMERO_QUARTOS, RESERVA_NUMERO_CLIENTES, RESERVA_VALOR, RESERVA_CLIENTE_ID, RESERVA_FUNCIONARIO_ID, RESERVA_FORNECEDOR_ID}, null, null, null, null, null);
+        Cursor cursor = this.db.query(TABLE_RESERVA, new String[]{RESERVA_ID, RESERVA_TIPO, RESERVA_CHECKIN, RESERVA_CHECKOUT, RESERVA_NUMERO_QUARTOS, RESERVA_NUMERO_CLIENTES, RESERVA_VALOR, RESERVA_CLIENTE_ID, RESERVA_FUNCIONARIO_ID, RESERVA_FORNECEDOR_ID, RESERVA_ESTADO}, null, null, null, null, null);
         if (cursor.moveToFirst()) {
             do {
                 Reserva reserva = new Reserva(
@@ -155,7 +159,8 @@ public class LusitaniaTravelBDHelper extends SQLiteOpenHelper {
                         cursor.getDouble(6),
                         cursor.getString(7),
                         cursor.getString(8),
-                        cursor.getString(9)
+                        cursor.getString(9),
+                        cursor.getString(10)
                 );
                 reservas.add(reserva);
             } while (cursor.moveToNext());

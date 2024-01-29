@@ -44,6 +44,7 @@ import pt.ipleiria.estg.dei.lusitaniatravel.listeners.ReservaListener;
 import pt.ipleiria.estg.dei.lusitaniatravel.listeners.ReservasListener;
 import pt.ipleiria.estg.dei.lusitaniatravel.listeners.SignUpListener;
 import pt.ipleiria.estg.dei.lusitaniatravel.listeners.UserListener;
+import pt.ipleiria.estg.dei.lusitaniatravel.listeners.VerificarListener;
 import pt.ipleiria.estg.dei.lusitaniatravel.utils.FaturaJsonParser;
 import pt.ipleiria.estg.dei.lusitaniatravel.utils.FavoritoJsonParser;
 import pt.ipleiria.estg.dei.lusitaniatravel.utils.FornecedorJsonParser;
@@ -96,6 +97,8 @@ public class SingletonGestorLusitaniaTravel {
     private FavoritoListener favoritoListener;
     private CarrinhosListener carrinhosListener;
     private CarrinhoListener carrinhoListener;
+
+    private VerificarListener verificarListener;
 
     // Método que garante apenas uma instância do Singleton
     public static synchronized SingletonGestorLusitaniaTravel getInstance(Context context) {
@@ -182,6 +185,10 @@ public class SingletonGestorLusitaniaTravel {
 
     public void setCarrinhoListener(CarrinhoListener carrinhoListener) {
         this.carrinhoListener = carrinhoListener;
+    }
+
+    public void setVerificarListener(VerificarListener verificarListener) {
+        this.verificarListener = verificarListener;
     }
 
     //endregion
@@ -525,7 +532,7 @@ public class SingletonGestorLusitaniaTravel {
             String username = SingletonGestorLusitaniaTravel.getInstance(context).getUsername();
             String password = SingletonGestorLusitaniaTravel.getInstance(context).getPassword();
 
-            String urlCompleta = mUrlAPIFornecedor + id;
+            String urlCompleta = mUrlAPIReserva + id;
 
             JsonObjectRequest req = new JsonObjectRequest(Request.Method.GET, urlCompleta, null,
                     new Response.Listener<JSONObject>() {
@@ -534,9 +541,9 @@ public class SingletonGestorLusitaniaTravel {
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    Fornecedor fornecedor = FornecedorJsonParser.parserJsonFornecedor(response);
-                                    if (fornecedorListener != null)
-                                        fornecedorListener.onRefreshDetalhes(fornecedor);
+                                    Reserva reserva = ReservaJsonParser.parserJsonReserva(response);
+                                    if (reservaListener != null)
+                                        reservaListener.onRefreshDetalhes(reserva);
                                 }
                             });
                         }
@@ -600,6 +607,53 @@ public class SingletonGestorLusitaniaTravel {
                         @Override
                         public void onErrorResponse(VolleyError error) {
                             Toast.makeText(context, error.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    }) {
+                @Override
+                public Map<String, String> getHeaders() {
+                    Map<String, String> headers = new HashMap<>();
+                    String credentials = username + ":" + password;
+                    String auth = "Basic " + Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
+                    headers.put("Authorization", auth);
+                    return headers;
+                }
+            };
+            volleyQueue.add(req);
+        }
+    }
+
+    public void getFaturaAPI(int id, final Context context) {
+        if (!FaturaJsonParser.isConnectionInternet(context)) {
+            Toast.makeText(context, "Não tem ligação à Internet", Toast.LENGTH_SHORT).show();
+        } else {
+            String username = SingletonGestorLusitaniaTravel.getInstance(context).getUsername();
+            String password = SingletonGestorLusitaniaTravel.getInstance(context).getPassword();
+
+            String urlCompleta = mUrlAPIFatura + id;
+
+            JsonObjectRequest req = new JsonObjectRequest(Request.Method.GET, urlCompleta, null,
+                    new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Fatura fatura = FaturaJsonParser.parserJsonFatura(response);
+                                    if (faturaListener != null)
+                                        faturaListener.onRefreshDetalhes(fatura);
+                                }
+                            });
+                        }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Toast.makeText(context, error.getMessage(), Toast.LENGTH_SHORT).show();
+                                }
+                            });
                         }
                     }) {
                 @Override
@@ -943,8 +997,8 @@ public class SingletonGestorLusitaniaTravel {
                         @Override
                         public void onResponse(String response) {
                             // Notificar o listener com o resultado
-                            if (reservaListener != null) {
-                                reservaListener.onRefreshDetalhes(VerificarDisponibilidadeFragment.ADD);
+                            if (verificarListener != null) {
+                                verificarListener.onRefreshDetalhes(VerificarDisponibilidadeFragment.ADD);
                             }
                         }
                     },

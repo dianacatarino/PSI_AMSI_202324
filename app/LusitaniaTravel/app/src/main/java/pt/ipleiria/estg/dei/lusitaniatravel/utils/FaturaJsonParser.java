@@ -44,6 +44,30 @@ public class FaturaJsonParser {
         return faturas;
     }
 
+    public static Fatura parserJsonFatura(JSONObject response) {
+        Fatura fatura = null;
+        try {
+            JSONObject faturaJson = response.getJSONObject("fatura");
+            int id = faturaJson.optInt("id");
+            double totalf = faturaJson.getDouble("totalf");
+            double totalsi = faturaJson.getDouble("totalsi");
+            double iva = faturaJson.getDouble("iva");
+            int empresaId = faturaJson.optInt("empresa_id");
+            int reservaId = faturaJson.getInt("reserva_id");
+            String dataStr = faturaJson.getString("data");
+
+            // Parse da data diretamente no método
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+            Date data = dateFormat.parse(dataStr);
+
+            fatura = new Fatura(id, totalf, totalsi, iva, empresaId, reservaId, formatDateToString(data));
+
+        } catch (JSONException | ParseException e) {
+            e.printStackTrace();
+        }
+        return fatura;
+    }
+
     private static String formatDateToString(Date date) {
         if (date == null) {
             return null;

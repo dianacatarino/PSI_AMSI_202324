@@ -1,16 +1,25 @@
 package pt.ipleiria.estg.dei.lusitaniatravel.adaptadores;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.TextView;
+
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
+import pt.ipleiria.estg.dei.lusitaniatravel.DetalhesFornecedorFragment;
+import pt.ipleiria.estg.dei.lusitaniatravel.DetalhesReservaFragment;
 import pt.ipleiria.estg.dei.lusitaniatravel.R;
+import pt.ipleiria.estg.dei.lusitaniatravel.modelos.Fornecedor;
 import pt.ipleiria.estg.dei.lusitaniatravel.modelos.Reserva;
 
 public class ListaReservasAdaptador extends BaseAdapter {
@@ -49,7 +58,7 @@ public class ListaReservasAdaptador extends BaseAdapter {
         // Otimização
         ViewHolderLista viewHolder = (ViewHolderLista) convertView.getTag();
         if (viewHolder == null) {
-            viewHolder = new ViewHolderLista(convertView);
+            viewHolder = new ViewHolderLista(convertView,position);
             convertView.setTag(viewHolder);
         }
         viewHolder.update(reservas.get(position), context);
@@ -57,33 +66,55 @@ public class ListaReservasAdaptador extends BaseAdapter {
         return convertView;
     }
 
-    private static class ViewHolderLista {
-        private TextView tvReservaId, tvTipoReserva, tvCheckin, tvCheckout, tvNumeroQuartos, tvNumeroClientes, tvValor, tvFornecedor;
+    private class ViewHolderLista {
+        private TextView tvReservaId, tvCheckin, tvCheckout, tvValor, tvFornecedor, tvEstado;
+        private Button btnDetalhes;
 
-        public ViewHolderLista(View view) {
+        public ViewHolderLista(View view, final int position) {
             tvReservaId = view.findViewById(R.id.tvReservaId);
-            tvTipoReserva = view.findViewById(R.id.tvTipoReserva);
             tvCheckin = view.findViewById(R.id.tvCheckin);
             tvCheckout = view.findViewById(R.id.tvCheckout);
-            tvNumeroQuartos = view.findViewById(R.id.tvNumeroQuartos);
-            tvNumeroClientes = view.findViewById(R.id.tvNumeroClientes);
             tvValor = view.findViewById(R.id.tvValor);
             tvFornecedor = view.findViewById(R.id.tvFornecedor);
+            tvEstado = view.findViewById(R.id.tvEstado);
+            btnDetalhes = view.findViewById(R.id.btnDetalhes);
+
+            btnDetalhes.setOnClickListener(new View.OnClickListener(){
+                @Override
+                public void onClick(View v) {
+                    if (reservas != null && reservas.size() > position) {
+                        Reserva reservaClicada = reservas.get(position);
+
+                        int reservaId = reservaClicada.getId();
+
+                        Bundle bundle = new Bundle();
+                        bundle.putInt("reservaId", reservaId);
+
+                        DetalhesReservaFragment detalhesReservaFragment = new DetalhesReservaFragment();
+
+                        detalhesReservaFragment.setReservaId(reservaId);
+
+                        FragmentManager fragmentManager = ((FragmentActivity) context).getSupportFragmentManager();
+                        FragmentTransaction transaction = fragmentManager.beginTransaction();
+                        transaction.replace(R.id.fragmentContainer, detalhesReservaFragment);
+                        transaction.addToBackStack(null);
+                        transaction.commit();
+                    }
+                }
+            });
         }
 
         public void update(Reserva reserva, Context context) {
             tvReservaId.setText("" + reserva.getId());
-            tvTipoReserva.setText("" + reserva.getTipo());
             tvCheckin.setText("" + reserva.getCheckin());
             tvCheckout.setText("" + reserva.getCheckout());
-            tvNumeroQuartos.setText("" + reserva.getNumeroQuartos());
-            tvNumeroClientes.setText("" + reserva.getNumeroClientes());
 
             // Formatando o valor da reserva
             DecimalFormat decimalFormat = new DecimalFormat("#.00");
             String valorFormatado = decimalFormat.format(reserva.getValor());
             tvValor.setText("" + valorFormatado  + "€");
             tvFornecedor.setText("" + reserva.getNomeFornecedor());
+            tvEstado.setText("" + reserva.getEstado());
         }
     }
 }

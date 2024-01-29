@@ -22,9 +22,11 @@ import java.util.Date;
 
 import pt.ipleiria.estg.dei.lusitaniatravel.R;
 import pt.ipleiria.estg.dei.lusitaniatravel.listeners.ReservaListener;
+import pt.ipleiria.estg.dei.lusitaniatravel.listeners.VerificarListener;
+import pt.ipleiria.estg.dei.lusitaniatravel.modelos.Reserva;
 import pt.ipleiria.estg.dei.lusitaniatravel.modelos.SingletonGestorLusitaniaTravel;
 
-public class VerificarDisponibilidadeFragment extends Fragment implements ReservaListener {
+public class VerificarDisponibilidadeFragment extends Fragment implements VerificarListener {
     private Spinner spinnerNumeroClientes, spinnerNumeroQuartos, spinnerTipoQuartos, spinnerNumeroCamas;
     private Button btnVerificarDisponibilidade;
     private DatePicker datePickerCheckIn, datePickerCheckOut;
