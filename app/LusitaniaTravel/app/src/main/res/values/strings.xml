@@ -95,6 +95,11 @@
     <string name="txt_comentario_alojamento">Alojamento:</string>
     <string name="txt_comentario">Comentário:</string>
     <string name="txt_comentario_avaliacao">Avaliação:</string>
+    <string name="txt_detalhes_comentarios">Detalhes do Comentário</string>
+    <string name="txt_comentario_titulo">Título:</string>
+    <string name="txt_comentario_descricao">Descrição:</string>
+    <string name="txt_comentario_data">Data Comentário:</string>
+    <string name="txt_comentario_data_avaliacao">Data Avaliação:</string>
     <string-array name="tipo_quartos">
         <item>Quarto Individual</item>
         <item>Quarto Duplo</item>

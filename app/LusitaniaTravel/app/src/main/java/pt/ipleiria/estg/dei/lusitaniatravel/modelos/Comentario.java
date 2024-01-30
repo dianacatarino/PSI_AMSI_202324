@@ -8,14 +8,14 @@ public class Comentario {
     private String titulo;
     private String descricao;
     private String dataComentario, nomeFornecedor;
-    private List<Avaliacao> avaliacao;
-    public Comentario(int id, String titulo, String descricao, String dataComentario, String nomeFornecedor, List<Avaliacao> avaliacao) {
+    private List<Avaliacao> avaliacoes;
+    public Comentario(int id, String titulo, String descricao, String dataComentario, String nomeFornecedor, List<Avaliacao> avaliacoes) {
         this.id = id;
         this.titulo = titulo;
         this.descricao = descricao;
         this.dataComentario = dataComentario;
         this.nomeFornecedor = nomeFornecedor;
-        this.avaliacao = avaliacao;
+        this.avaliacoes = avaliacoes;
     }
 
     public int getId() {
@@ -58,11 +58,11 @@ public class Comentario {
         this.nomeFornecedor = nomeFornecedor;
     }
 
-    public List<Avaliacao> getAvaliacao() {
-        return avaliacao;
+    public List<Avaliacao> getAvaliacoes() {
+        return avaliacoes;
     }
 
-    public void setAvaliacao(List<Avaliacao> avaliacao) {
-        this.avaliacao = avaliacao;
+    public void setAvaliacoes(List<Avaliacao> avaliacoes) {
+        this.avaliacoes = avaliacoes;
     }
 }

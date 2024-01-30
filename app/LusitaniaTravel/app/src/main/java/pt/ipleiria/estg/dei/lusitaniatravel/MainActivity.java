@@ -6,6 +6,8 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.fragment.app.Fragment;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -97,10 +99,36 @@ public class MainActivity extends AppCompatActivity {
         logoutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Ao clicar no botão de logout, direcione para o LoginActivity
-                Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-                startActivity(intent);
-                finish();
+                // Criar uma caixa de diálogo de confirmação
+                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                builder.setMessage("Tem a certeza que deseja sair?");
+                builder.setCancelable(true);
+
+                // Adicionar um botão "Sim" para confirmar o logout
+                builder.setPositiveButton(
+                        "Sim",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                // Ao clicar em "Sim", direcione para o LoginActivity
+                                Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                                startActivity(intent);
+                                finish();
+                            }
+                        });
+
+                // Adicionar um botão "Não" para cancelar o logout
+                builder.setNegativeButton(
+                        "Não",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                // Cancelar a caixa de diálogo e não fazer nada
+                                dialog.cancel();
+                            }
+                        });
+
+                // Criar e exibir a caixa de diálogo
+                AlertDialog alertDialog = builder.create();
+                alertDialog.show();
             }
         });
 

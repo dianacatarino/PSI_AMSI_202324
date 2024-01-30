@@ -7,58 +7,87 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
+
+import java.text.DecimalFormat;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import pt.ipleiria.estg.dei.lusitaniatravel.listeners.ComentarioListener;
+import pt.ipleiria.estg.dei.lusitaniatravel.modelos.Avaliacao;
+import pt.ipleiria.estg.dei.lusitaniatravel.modelos.Comentario;
+import pt.ipleiria.estg.dei.lusitaniatravel.modelos.LinhaReserva;
+import pt.ipleiria.estg.dei.lusitaniatravel.modelos.Reserva;
+import pt.ipleiria.estg.dei.lusitaniatravel.modelos.SingletonGestorLusitaniaTravel;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link DetalhesComentarioFragment#newInstance} factory method to
+ * Use the {@link DetalhesComentarioFragment} factory method to
  * create an instance of this fragment.
  */
-public class DetalhesComentarioFragment extends Fragment {
+public class DetalhesComentarioFragment extends Fragment implements ComentarioListener {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    public static final int ADD = 100, EDIT = 200, DELETE = 300;
+    public static final String OP_CODE = "op_detalhes";
+    TextView tvComentarioId, tvFornecedor, tvTitulo, tvDescricao, tvData, tvAvaliacao, tvDataAvaliacao;
+    private int comentarioId;
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-    public DetalhesComentarioFragment() {
-        // Required empty public constructor
+    public void setComentarioId(int comentarioId) {
+        this.comentarioId = comentarioId;
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment DetalhesComentarioFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static DetalhesComentarioFragment newInstance(String param1, String param2) {
-        DetalhesComentarioFragment fragment = new DetalhesComentarioFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+    public int getComentarioId() {
+        return comentarioId;
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_detalhes_comentario, container, false);
+
+        View view = inflater.inflate(R.layout.fragment_detalhes_comentario, container, false);
+
+        tvComentarioId = view.findViewById(R.id.tvComentarioId);
+        tvFornecedor = view.findViewById(R.id.tvFornecedor);
+        tvTitulo = view.findViewById(R.id.tvTitulo);
+        tvDescricao = view.findViewById(R.id.tvDescricao);
+        tvData = view.findViewById(R.id.tvData);
+        tvAvaliacao = view.findViewById(R.id.tvAvaliacao);
+        tvDataAvaliacao = view.findViewById(R.id.tvDataAvaliacao);
+
+        SingletonGestorLusitaniaTravel.getInstance(getContext()).setComentarioListener(this);
+
+        comentarioId = getComentarioId();
+
+        // Make the API call
+        SingletonGestorLusitaniaTravel.getInstance(getContext()).getComentarioAPI(comentarioId, getContext());
+
+        return view;
+    }
+
+    public void onRefreshDetalhes(Comentario comentario){
+        if (getView() != null && comentario != null) {
+            tvComentarioId.setText(String.valueOf(comentario.getId()));
+            tvFornecedor.setText(comentario.getNomeFornecedor());
+            tvTitulo.setText(comentario.getTitulo());
+            tvDescricao.setText(comentario.getDescricao());
+            tvData.setText(comentario.getDataComentario());
+
+            // Criar strings para armazenar as classificações e datas das avaliações
+            StringBuilder classificacoes = new StringBuilder();
+            StringBuilder datasAvaliacoes = new StringBuilder();
+
+            // Iterar sobre a lista de avaliações
+            List<Avaliacao> avaliacoes = comentario.getAvaliacoes();
+            for (Avaliacao avaliacao : avaliacoes) {
+                // Adicionar a classificação e a data da avaliação às strings
+                classificacoes.append(avaliacao.getClassificacao()).append("");
+                datasAvaliacoes.append(avaliacao.getDataAvaliacao()).append("");
+            }
+
+            // Exibir as classificações e datas das avaliações nos TextViews correspondentes
+            tvAvaliacao.setText(classificacoes.toString());
+            tvDataAvaliacao.setText(datasAvaliacoes.toString());
+        }
     }
 }

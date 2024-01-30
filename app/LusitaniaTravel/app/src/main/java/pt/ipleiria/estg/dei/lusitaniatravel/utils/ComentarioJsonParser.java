@@ -15,63 +15,65 @@ import pt.ipleiria.estg.dei.lusitaniatravel.modelos.Avaliacao;
 import pt.ipleiria.estg.dei.lusitaniatravel.modelos.Comentario;
 
 public class ComentarioJsonParser {
-    public static ArrayList<Comentario> parserJsonComentarios(JSONArray response) {
+    public static ArrayList<Comentario> parserJsonComentarios(JSONArray comentariosArray) {
         ArrayList<Comentario> comentarios = new ArrayList<>();
         try {
-            for (int i = 0; i < response.length(); i++) {
-                JSONObject comentarioJson = response.getJSONObject(i);
-                int id = comentarioJson.getInt("id");
+            for (int i = 0; i < comentariosArray.length(); i++) {
+                JSONObject item = comentariosArray.getJSONObject(i);
+                JSONObject comentarioJson = item.getJSONObject("comentario");
+                JSONArray avaliacoesArray = item.getJSONArray("avaliacoes");
+
+                int id = comentarioJson.optInt("id");
                 String titulo = comentarioJson.getString("titulo");
                 String descricao = comentarioJson.getString("descricao");
-                String data_comentario = comentarioJson.getString("data_comentario");
-                String fornecedor = comentarioJson.getString("fornecedor_id");
+                String dataComentario = comentarioJson.getString("data_comentario");
+                String nomeFornecedor = comentarioJson.getString("fornecedor_nome");
 
-                // Parse das avaliações
-                JSONArray avaliacoesJsonArray = comentarioJson.getJSONArray("avaliacoes");
                 List<Avaliacao> avaliacoes = new ArrayList<>();
-                for (int j = 0; j < avaliacoesJsonArray.length(); j++) {
-                    JSONObject avaliacaoJson = avaliacoesJsonArray.getJSONObject(j);
+                for (int j = 0; j < avaliacoesArray.length(); j++) {
+                    JSONObject avaliacaoJson = avaliacoesArray.getJSONObject(j);
+                    int id_avaliacao = avaliacaoJson.optInt("id");
                     int classificacao = avaliacaoJson.getInt("classificacao");
-                    String data_avaliacao = avaliacaoJson.getString("filename");
-                    String fornecedorNome = avaliacaoJson.getString("fornecedor_id");
-
-                    Avaliacao avaliacao = new Avaliacao(id,classificacao, data_avaliacao, fornecedorNome);
+                    String dataAvaliacao = avaliacaoJson.getString("data_avaliacao");
+                    Avaliacao avaliacao = new Avaliacao(id_avaliacao,classificacao, dataAvaliacao, nomeFornecedor);
                     avaliacoes.add(avaliacao);
                 }
 
-                Comentario comentario = new Comentario(id, titulo, descricao, data_comentario, fornecedor, avaliacoes);
+                Comentario comentario = new Comentario(id, titulo, descricao, dataComentario, nomeFornecedor, avaliacoes);
                 comentarios.add(comentario);
             }
         } catch (JSONException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace(); // Trate ou lance a exceção de acordo com a necessidade
         }
         return comentarios;
     }
 
+
     public static Comentario parserJsonComentario(JSONObject response) {
         Comentario comentario = null;
         try {
-            int id = response.getInt("id");
-            String titulo = response.getString("titulo");
-            String descricao = response.getString("descricao");
-            String data_comentario = response.getString("data_comentario");
-            String fornecedor = response.getString("fornecedor_id");
+            JSONObject comentarioJson = response.getJSONObject("comentario");
+            JSONArray avaliacoesArray = response.getJSONArray("avaliacoes");
 
-            JSONArray avaliacoesJsonArray = response.getJSONArray("avaliacoes");
+            int id = comentarioJson.optInt("id");
+            String titulo = comentarioJson.getString("titulo");
+            String descricao = comentarioJson.getString("descricao");
+            String dataComentario = comentarioJson.getString("data_comentario");
+            String nomeFornecedor = comentarioJson.getString("fornecedor_nome");
+
             List<Avaliacao> avaliacoes = new ArrayList<>();
-            for (int j = 0; j < avaliacoesJsonArray.length(); j++) {
-                JSONObject avaliacaoJson = avaliacoesJsonArray.getJSONObject(j);
+            for (int j = 0; j < avaliacoesArray.length(); j++) {
+                JSONObject avaliacaoJson = avaliacoesArray.getJSONObject(j);
+                int id_avaliacao = avaliacaoJson.optInt("id");
                 int classificacao = avaliacaoJson.getInt("classificacao");
-                String data_avaliacao = avaliacaoJson.getString("filename");
-                String fornecedorNome = avaliacaoJson.getString("fornecedor_id");
-
-                Avaliacao avaliacao = new Avaliacao(id,classificacao, data_avaliacao, fornecedorNome);
+                String dataAvaliacao = avaliacaoJson.getString("data_avaliacao");
+                Avaliacao avaliacao = new Avaliacao(id_avaliacao, classificacao, dataAvaliacao, nomeFornecedor);
                 avaliacoes.add(avaliacao);
             }
 
-            comentario = new Comentario(id, titulo, descricao, data_comentario, fornecedor, avaliacoes);
+            comentario = new Comentario(id, titulo, descricao, dataComentario, nomeFornecedor, avaliacoes);
         } catch (JSONException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace(); // Trate ou lance a exceção de acordo com a necessidade
         }
         return comentario;
     }

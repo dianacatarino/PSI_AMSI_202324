@@ -14,6 +14,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import pt.ipleiria.estg.dei.lusitaniatravel.DetalhesComentarioFragment;
 import pt.ipleiria.estg.dei.lusitaniatravel.R;
@@ -55,7 +56,7 @@ public class ListaComentariosAdaptador extends BaseAdapter {
 
         ViewHolderLista viewHolder = (ViewHolderLista) convertView.getTag();
         if (viewHolder == null) {
-            viewHolder = new ViewHolderLista(convertView);
+            viewHolder = new ViewHolderLista(convertView,position);
             convertView.setTag(viewHolder);
         }
         viewHolder.update(comentarios.get(position), context);
@@ -67,7 +68,7 @@ public class ListaComentariosAdaptador extends BaseAdapter {
         private TextView tvFornecedor, tvComentario, tvAvaliacao;
         private Button btnDetalhes;
 
-        public ViewHolderLista(View view) {
+        public ViewHolderLista(View view, final int position) {
             tvFornecedor = view.findViewById(R.id.tvFornecedor);
             tvComentario = view.findViewById(R.id.tvComentario);
             tvAvaliacao = view.findViewById(R.id.tvAvaliacao);
@@ -76,22 +77,23 @@ public class ListaComentariosAdaptador extends BaseAdapter {
             btnDetalhes.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    int position = (int) v.getTag();
-                    Comentario comentarioClicado = comentarios.get(position);
+                    if (comentarios != null && comentarios.size() > position) {
+                        Comentario comentarioClicado = comentarios.get(position);
 
-                    int comentarioId = comentarioClicado.getId();
+                        int comentarioId = comentarioClicado.getId();
 
-                    Bundle bundle = new Bundle();
-                    bundle.putInt("comentarioId", comentarioId);
+                        Bundle bundle = new Bundle();
+                        bundle.putInt("comentarioId", comentarioId);
 
-                    DetalhesComentarioFragment detalhesComentarioFragment = new DetalhesComentarioFragment();
-                    detalhesComentarioFragment.setArguments(bundle);
+                        DetalhesComentarioFragment detalhesComentarioFragment = new DetalhesComentarioFragment();
+                        detalhesComentarioFragment.setComentarioId(comentarioId);
 
-                    FragmentManager fragmentManager = ((FragmentActivity) context).getSupportFragmentManager();
-                    FragmentTransaction transaction = fragmentManager.beginTransaction();
-                    transaction.replace(R.id.fragmentContainer, detalhesComentarioFragment);
-                    transaction.addToBackStack(null);
-                    transaction.commit();
+                        FragmentManager fragmentManager = ((FragmentActivity) context).getSupportFragmentManager();
+                        FragmentTransaction transaction = fragmentManager.beginTransaction();
+                        transaction.replace(R.id.fragmentContainer, detalhesComentarioFragment);
+                        transaction.addToBackStack(null);
+                        transaction.commit();
+                    }
                 }
             });
         }
@@ -99,7 +101,18 @@ public class ListaComentariosAdaptador extends BaseAdapter {
         public void update(Comentario comentario, Context context) {
             tvFornecedor.setText(comentario.getNomeFornecedor());
             tvComentario.setText(comentario.getDescricao());
-            tvAvaliacao.setText(String.valueOf(comentario.getAvaliacao()));
+
+            List<Avaliacao> avaliacoes = comentario.getAvaliacoes();
+            if (!avaliacoes.isEmpty()) {
+                // Assume que estamos mostrando apenas a primeira avaliação associada ao comentário
+                Avaliacao primeiraAvaliacao = avaliacoes.get(0);
+                int classificacao = primeiraAvaliacao.getClassificacao();
+                // Define o texto da TextView para a classificação da avaliação
+                tvAvaliacao.setText(String.valueOf(classificacao));
+            } else {
+                // Se não houver avaliações associadas ao comentário, define o texto como vazio
+                tvAvaliacao.setText("");
+            }
         }
     }
 }

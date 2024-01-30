@@ -1092,7 +1092,7 @@ public class SingletonGestorLusitaniaTravel {
                         @Override
                         public void onResponse(JSONObject response) {
                             try {
-                                JSONArray comentariosArray = response.getJSONArray("comentarios");
+                                JSONArray comentariosArray = response.getJSONArray("comentarios_avaliacoes");
                                 comentarios = ComentarioJsonParser.parserJsonComentarios(comentariosArray);
 
                                 if (comentariosListener != null)
@@ -1108,6 +1108,53 @@ public class SingletonGestorLusitaniaTravel {
                         @Override
                         public void onErrorResponse(VolleyError error) {
                             Toast.makeText(context, error.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    }) {
+                @Override
+                public Map<String, String> getHeaders() {
+                    Map<String, String> headers = new HashMap<>();
+                    String credentials = username + ":" + password;
+                    String auth = "Basic " + Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
+                    headers.put("Authorization", auth);
+                    return headers;
+                }
+            };
+            volleyQueue.add(req);
+        }
+    }
+
+    public void getComentarioAPI(int id, final Context context) {
+        if (!ComentarioJsonParser.isConnectionInternet(context)) {
+            Toast.makeText(context, "Não tem ligação à Internet", Toast.LENGTH_SHORT).show();
+        } else {
+            String username = SingletonGestorLusitaniaTravel.getInstance(context).getUsername();
+            String password = SingletonGestorLusitaniaTravel.getInstance(context).getPassword();
+
+            String urlCompleta = mUrlAPIComentario + id;
+
+            JsonObjectRequest req = new JsonObjectRequest(Request.Method.GET, urlCompleta, null,
+                    new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Comentario comentario = ComentarioJsonParser.parserJsonComentario(response);
+                                    if (comentarioListener != null)
+                                        comentarioListener.onRefreshDetalhes(comentario);
+                                }
+                            });
+                        }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Toast.makeText(context, error.getMessage(), Toast.LENGTH_SHORT).show();
+                                }
+                            });
                         }
                     }) {
                 @Override
