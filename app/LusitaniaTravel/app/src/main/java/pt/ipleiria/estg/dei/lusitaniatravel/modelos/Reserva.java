@@ -11,7 +11,8 @@ public class Reserva {
     private String nomeCliente, nomeFuncionario, nomeFornecedor, estado;
     private List<LinhaReserva> linhasReservas;
 
-    public Reserva(int id, String tipo, String checkin, String checkout, int numeroQuartos, int numeroClientes, double valor, String nomeCliente, String nomeFuncionario, String nomeFornecedor, String estado) {
+    public Reserva(int id, String tipo, String checkin, String checkout, int numeroQuartos, int numeroClientes, double valor,
+                   String nomeCliente, String nomeFuncionario, String nomeFornecedor, String estado,List<LinhaReserva> linhasReservas) {
         this.id = id;
         this.tipo = tipo;
         this.checkin = checkin;
@@ -23,6 +24,7 @@ public class Reserva {
         this.nomeFuncionario = nomeFuncionario;
         this.nomeFornecedor = nomeFornecedor;
         this.estado = estado;
+        this.linhasReservas = linhasReservas;
     }
 
     public int getId() {

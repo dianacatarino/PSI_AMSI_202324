@@ -100,7 +100,7 @@ public class DetalhesReservaFragment extends Fragment implements ReservaListener
             // Exibindo os tipos de quartos em linhas separadas
             StringBuilder tiposQuartosText = new StringBuilder();
             for (String tipoQuarto : tiposQuartos) {
-                tiposQuartosText.append("- ").append(tipoQuarto).append("\n");
+                tiposQuartosText.append("").append(tipoQuarto).append("\n");
             }
             tvTipoQuartos.setText(tiposQuartosText.toString().trim());
         }

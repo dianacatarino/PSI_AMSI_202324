@@ -147,14 +147,17 @@ public class ListaFornecedoresAdaptador extends BaseAdapter {
 
                         int fornecedorId = fornecedorClicado.getId();
 
-                        Bundle bundle = new Bundle();
-                        bundle.putInt("fornecedorId", fornecedorId);
-
                         DetalhesFornecedorFragment detalhesFornecedorFragment = new DetalhesFornecedorFragment();
-
                         detalhesFornecedorFragment.setFornecedorId(fornecedorId);
 
-                        FragmentManager fragmentManager = ((FragmentActivity) context).getSupportFragmentManager();
+                        // Acesso à Activity pai para atualizar o título da Action Bar
+                        FragmentActivity activity = (FragmentActivity) context;
+                        if (activity != null) {
+                            activity.setTitle("Detalhes Alojamento");
+                        }
+
+                        // Inicia a transação para substituir o Fragment
+                        FragmentManager fragmentManager = activity.getSupportFragmentManager();
                         FragmentTransaction transaction = fragmentManager.beginTransaction();
                         transaction.replace(R.id.fragmentContainer, detalhesFornecedorFragment);
                         transaction.addToBackStack(null);

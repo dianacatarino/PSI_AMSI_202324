@@ -90,7 +90,8 @@ public class MainActivity extends AppCompatActivity {
                 // Ao clicar no carrinho, direcione para o CarrinhoFragment
                 CarrinhoFragment carrinhoFragment = new CarrinhoFragment();
 
-                setTitle("Carrinho");fragmentManager.beginTransaction().replace(R.id.fragmentContainer, carrinhoFragment).commit();
+                setTitle("Carrinho");
+                fragmentManager.beginTransaction().replace(R.id.fragmentContainer, carrinhoFragment).commit();
             }
         });
 
@@ -133,6 +134,4 @@ public class MainActivity extends AppCompatActivity {
         });
 
     }
-
-
 }

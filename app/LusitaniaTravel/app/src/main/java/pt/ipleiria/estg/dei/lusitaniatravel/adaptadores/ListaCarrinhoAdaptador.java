@@ -160,8 +160,13 @@ public class ListaCarrinhoAdaptador extends BaseAdapter {
                                     // Configuração do carrinhoId
                                     verificarDisponibilidadeFragment.setCarrinhoId(carrinhoId);
 
-                                    // Replace ou navegação para o VerificarDisponibilidadeFragment
-                                    FragmentManager fragmentManager = ((FragmentActivity) context).getSupportFragmentManager();
+                                    FragmentActivity activity = (FragmentActivity) context;
+                                    if (activity != null) {
+                                        activity.setTitle("Verificar");
+                                    }
+
+                                    // Inicia a transação para substituir o Fragment
+                                    FragmentManager fragmentManager = activity.getSupportFragmentManager();
                                     FragmentTransaction transaction = fragmentManager.beginTransaction();
                                     transaction.replace(R.id.fragmentContainer, verificarDisponibilidadeFragment);
                                     transaction.addToBackStack(null);

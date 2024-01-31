@@ -56,6 +56,9 @@ public class UserFragment extends Fragment implements UserListener {
                 Fragment fragment = new ComentariosFragment();
                 FragmentManager fragmentManager = getParentFragmentManager();
                 fragmentManager.beginTransaction().replace(R.id.fragmentContainer, fragment).commit();
+
+                // Define o título da Action Bar
+                getActivity().setTitle("Comentários");
             }
         });
 
@@ -66,6 +69,9 @@ public class UserFragment extends Fragment implements UserListener {
                 Fragment fragment = new DefinicoesFragment();
                 FragmentManager fragmentManager = getParentFragmentManager();
                 fragmentManager.beginTransaction().replace(R.id.fragmentContainer, fragment).commit();
+
+                // Define o título da Action Bar
+                getActivity().setTitle("Definições");
             }
         });
 
@@ -76,6 +82,9 @@ public class UserFragment extends Fragment implements UserListener {
                 Fragment fragment = new FaturaFragment();
                 FragmentManager fragmentManager = getParentFragmentManager();
                 fragmentManager.beginTransaction().replace(R.id.fragmentContainer, fragment).commit();
+
+                // Define o título da Action Bar
+                getActivity().setTitle("Faturas");
             }
         });
 

@@ -3,11 +3,13 @@ package pt.ipleiria.estg.dei.lusitaniatravel;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
@@ -33,6 +35,7 @@ public class DetalhesFornecedorFragment extends Fragment implements FornecedorLi
     TextView tvTipo, tvNomeAlojamento, tvLocalizacao, tvAcomodacoes, tvPrecoPorNoite, tvTipoQuartos, tvNumeroQuartos;
     ImageView imgFornecedor;
     private int fornecedorId;
+    FragmentManager fragmentManager;
 
     public void setFornecedorId(int fornecedorId) {
         this.fornecedorId = fornecedorId;
@@ -41,6 +44,16 @@ public class DetalhesFornecedorFragment extends Fragment implements FornecedorLi
     public int getFornecedorId() {
         return fornecedorId;
     }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+
+        fragmentManager = getChildFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.fragmentContainer, new ListaComentariosAlojamentoFragment()).commit();
+    }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -108,4 +121,5 @@ public class DetalhesFornecedorFragment extends Fragment implements FornecedorLi
         String baseUrl = "http://172.22.21.204";
         return baseUrl + relativePath;
     }
+
 }

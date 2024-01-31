@@ -90,6 +90,7 @@ public class SingletonGestorLusitaniaTravel {
     private static final String mUrlAPIFinalizarCarrinho = BASE_URL + "/carrinho/finalizarcarrinho/";
     private static final String mUrlAPIComentarios = BASE_URL + "/fornecedor/comentarios";
     private static final String mUrlAPIComentario = BASE_URL + "/fornecedor/comentario/";
+    private static final String mUrlAPIComentariosAlojamento = BASE_URL + "/fornecedor/comentariosalojamento/";
     private FornecedoresListener fornecedoresListener;
     private FornecedorListener fornecedorListener;
     private ReservasListener reservasListener;
@@ -1155,6 +1156,55 @@ public class SingletonGestorLusitaniaTravel {
                                     Toast.makeText(context, error.getMessage(), Toast.LENGTH_SHORT).show();
                                 }
                             });
+                        }
+                    }) {
+                @Override
+                public Map<String, String> getHeaders() {
+                    Map<String, String> headers = new HashMap<>();
+                    String credentials = username + ":" + password;
+                    String auth = "Basic " + Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
+                    headers.put("Authorization", auth);
+                    return headers;
+                }
+            };
+            volleyQueue.add(req);
+        }
+    }
+
+    public void getAllComentariosAlojamentoAPI(int fornecedorId, final Context context) {
+        if (!ComentarioJsonParser.isConnectionInternet(context)) {
+            Toast.makeText(context, "Não tem ligação à Internet", Toast.LENGTH_SHORT).show();
+        } else {
+            String username = SingletonGestorLusitaniaTravel.getInstance(context).getUsername();
+            String password = SingletonGestorLusitaniaTravel.getInstance(context).getPassword();
+
+            String urlCompleta = mUrlAPIComentariosAlojamento + fornecedorId;
+
+            JsonObjectRequest req = new JsonObjectRequest(Request.Method.GET, urlCompleta, null,
+                    new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            try {
+                                JSONArray comentariosArray = response.getJSONArray("comentarios_avaliacoes");
+                                comentarios = ComentarioJsonParser.parserJsonComentarios(comentariosArray);
+
+                                if (comentariosListener != null)
+                                    comentariosListener.onRefreshListaComentarios(comentarios);
+
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                                Toast.makeText(context, "Error parsing JSON: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            if (error.getMessage() != null) {
+                                Toast.makeText(context, error.getMessage(), Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(context, "Erro desconhecido", Toast.LENGTH_SHORT).show();
+                            }
                         }
                     }) {
                 @Override

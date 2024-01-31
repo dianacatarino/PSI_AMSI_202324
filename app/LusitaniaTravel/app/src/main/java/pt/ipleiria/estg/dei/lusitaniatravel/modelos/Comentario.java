@@ -7,14 +7,15 @@ public class Comentario {
     private int id;
     private String titulo;
     private String descricao;
-    private String dataComentario, nomeFornecedor;
+    private String dataComentario, nomeFornecedor, nomeCliente;
     private List<Avaliacao> avaliacoes;
-    public Comentario(int id, String titulo, String descricao, String dataComentario, String nomeFornecedor, List<Avaliacao> avaliacoes) {
+    public Comentario(int id, String titulo, String descricao, String dataComentario, String nomeFornecedor, String nomeCliente, List<Avaliacao> avaliacoes) {
         this.id = id;
         this.titulo = titulo;
         this.descricao = descricao;
         this.dataComentario = dataComentario;
         this.nomeFornecedor = nomeFornecedor;
+        this.nomeCliente = nomeCliente;
         this.avaliacoes = avaliacoes;
     }
 
@@ -56,6 +57,14 @@ public class Comentario {
 
     public void setNomeFornecedor(String nomeFornecedor) {
         this.nomeFornecedor = nomeFornecedor;
+    }
+
+    public String getNomeCliente() {
+        return nomeCliente;
+    }
+
+    public void setNomeCliente(String nomeCliente) {
+        this.nomeCliente = nomeCliente;
     }
 
     public List<Avaliacao> getAvaliacoes() {

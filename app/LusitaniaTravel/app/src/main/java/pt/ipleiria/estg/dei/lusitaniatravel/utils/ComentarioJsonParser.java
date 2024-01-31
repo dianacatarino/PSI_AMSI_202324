@@ -28,6 +28,7 @@ public class ComentarioJsonParser {
                 String descricao = comentarioJson.getString("descricao");
                 String dataComentario = comentarioJson.getString("data_comentario");
                 String nomeFornecedor = comentarioJson.getString("fornecedor_nome");
+                String nomeCliente = comentarioJson.getString("cliente_nome");
 
                 List<Avaliacao> avaliacoes = new ArrayList<>();
                 for (int j = 0; j < avaliacoesArray.length(); j++) {
@@ -39,7 +40,7 @@ public class ComentarioJsonParser {
                     avaliacoes.add(avaliacao);
                 }
 
-                Comentario comentario = new Comentario(id, titulo, descricao, dataComentario, nomeFornecedor, avaliacoes);
+                Comentario comentario = new Comentario(id, titulo, descricao, dataComentario, nomeFornecedor, nomeCliente, avaliacoes);
                 comentarios.add(comentario);
             }
         } catch (JSONException e) {
@@ -60,6 +61,7 @@ public class ComentarioJsonParser {
             String descricao = comentarioJson.getString("descricao");
             String dataComentario = comentarioJson.getString("data_comentario");
             String nomeFornecedor = comentarioJson.getString("fornecedor_nome");
+            String nomeCliente = comentarioJson.getString("cliente_nome");
 
             List<Avaliacao> avaliacoes = new ArrayList<>();
             for (int j = 0; j < avaliacoesArray.length(); j++) {
@@ -71,7 +73,7 @@ public class ComentarioJsonParser {
                 avaliacoes.add(avaliacao);
             }
 
-            comentario = new Comentario(id, titulo, descricao, dataComentario, nomeFornecedor, avaliacoes);
+            comentario = new Comentario(id, titulo, descricao, dataComentario, nomeFornecedor, nomeCliente, avaliacoes);
         } catch (JSONException e) {
             e.printStackTrace(); // Trate ou lance a exceção de acordo com a necessidade
         }
