@@ -515,15 +515,24 @@ public class SingletonGestorLusitaniaTravel {
                         public void onResponse(JSONObject response) {
                             try {
                                 JSONArray reservasArray = response.getJSONArray("reservas");
-                                reservas = ReservaJsonParser.parserJsonReservas(reservasArray);
 
-                                // Notificar o listener de reservas
-                                if (reservasListener != null) {
-                                    reservasListener.onRefreshListaReservas(reservas);
+                                // Verificar se não há reservas
+                                if (reservasArray.length() == 0) {
+                                    // Exibir a mensagem do servidor em um toast
+                                    String mensagem = response.getString("message");
+                                    Toast.makeText(context, mensagem, Toast.LENGTH_SHORT).show();
+                                } else {
+                                    // Se houver reservas, processar normalmente
+                                    reservas = ReservaJsonParser.parserJsonReservas(reservasArray);
+
+                                    // Notificar o listener de reservas
+                                    if (reservasListener != null) {
+                                        reservasListener.onRefreshListaReservas(reservas);
+                                    }
+
+                                    // Adicionar reservas à BD local
+                                    adicionarAllReservasBD(reservas);
                                 }
-
-                                // Adicionar reservas à BD local
-                                adicionarAllReservasBD(reservas);
 
                             } catch (JSONException e) {
                                 Toast.makeText(context, "Erro ao processar resposta do servidor", Toast.LENGTH_SHORT).show();
@@ -611,11 +620,20 @@ public class SingletonGestorLusitaniaTravel {
                         public void onResponse(JSONObject response) {
                             try {
                                 JSONArray faturasArray = response.getJSONArray("faturas");
-                                ArrayList<Fatura> faturas = FaturaJsonParser.parserJsonFaturas(faturasArray);
 
-                                // Notificar o listener de faturas
-                                if (faturasListener != null) {
-                                    faturasListener.onRefreshListaFaturas(faturas);
+                                // Verificar se não há faturas
+                                if (faturasArray.length() == 0) {
+                                    // Exibir a mensagem do servidor em um Toast
+                                    String mensagem = response.getString("message");
+                                    Toast.makeText(context, mensagem, Toast.LENGTH_SHORT).show();
+                                } else {
+                                    // Se houver faturas, processar normalmente
+                                    ArrayList<Fatura> faturas = FaturaJsonParser.parserJsonFaturas(faturasArray);
+
+                                    // Notificar o listener de faturas
+                                    if (faturasListener != null) {
+                                        faturasListener.onRefreshListaFaturas(faturas);
+                                    }
                                 }
                             } catch (JSONException e) {
                                 Toast.makeText(context, "Erro ao processar resposta do servidor", Toast.LENGTH_SHORT).show();
@@ -800,10 +818,18 @@ public class SingletonGestorLusitaniaTravel {
                         @Override
                         public void onResponse(JSONObject response) {
                             try {
-                                JSONArray favoritosArray = response.getJSONArray("favoritos");
-                                fornecedores = FavoritoJsonParser.parserJsonFavoritos(favoritosArray);
-                                if (favoritosListener != null) {
-                                    favoritosListener.onRefreshListaFornecedores(fornecedores);
+                                // Verificar se a resposta contém dados de favoritos
+                                if (!response.isNull("favoritos")) {
+                                    // Se houver dados de favoritos, processar normalmente
+                                    JSONArray favoritosArray = response.getJSONArray("favoritos");
+                                    fornecedores = FavoritoJsonParser.parserJsonFavoritos(favoritosArray);
+                                    if (favoritosListener != null) {
+                                        favoritosListener.onRefreshListaFornecedores(fornecedores);
+                                    }
+                                } else {
+                                    // Se não houver dados de favoritos, mostrar mensagem do servidor
+                                    String mensagem = response.getString("message");
+                                    Toast.makeText(context, mensagem, Toast.LENGTH_SHORT).show();
                                 }
                             } catch (JSONException e) {
                                 Toast.makeText(context, "Erro ao processar resposta do servidor", Toast.LENGTH_SHORT).show();
@@ -912,9 +938,22 @@ public class SingletonGestorLusitaniaTravel {
                     new Response.Listener<JSONObject>() {
                         @Override
                         public void onResponse(JSONObject response) {
-                            List<Carrinho> carrinhos = CarrinhoJsonParser.parserJsonCarrinhos(response);
-                            if (carrinhosListener != null) {
-                                carrinhosListener.onRefreshListaCarrinho(new ArrayList<>(carrinhos));
+                            try {
+                                // Verificar se a resposta contém dados de carrinho
+                                if (!response.isNull("carrinhos")) {
+                                    // Se houver dados de carrinho, processar normalmente
+                                    List<Carrinho> carrinhos = CarrinhoJsonParser.parserJsonCarrinhos(response);
+                                    if (carrinhosListener != null) {
+                                        carrinhosListener.onRefreshListaCarrinho(new ArrayList<>(carrinhos));
+                                    }
+                                } else {
+                                    // Se não houver dados de carrinho, mostrar mensagem do servidor
+                                    String mensagem = response.getString("message");
+                                    Toast.makeText(context, mensagem, Toast.LENGTH_SHORT).show();
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                                Toast.makeText(context, "Erro ao processar resposta do servidor", Toast.LENGTH_SHORT).show();
                             }
                         }
                     },
@@ -1101,15 +1140,24 @@ public class SingletonGestorLusitaniaTravel {
                         @Override
                         public void onResponse(JSONObject response) {
                             try {
-                                JSONArray comentariosArray = response.getJSONArray("comentarios_avaliacoes");
-                                comentarios = ComentarioJsonParser.parserJsonComentarios(comentariosArray);
+                                // Verificar se a resposta contém a mensagem de ausência de comentários
+                                if (!response.isNull("message")) {
+                                    String mensagem = response.getString("message");
+                                    // Exibir a mensagem do servidor em um Toast
+                                    Toast.makeText(context, mensagem, Toast.LENGTH_SHORT).show();
+                                } else {
+                                    // Se houver comentários, processar normalmente
+                                    JSONArray comentariosArray = response.getJSONArray("comentarios_avaliacoes");
+                                    comentarios = ComentarioJsonParser.parserJsonComentarios(comentariosArray);
 
-                                if (comentariosListener != null)
-                                    comentariosListener.onRefreshListaComentarios(comentarios);
-
+                                    // Notificar o listener de comentários
+                                    if (comentariosListener != null) {
+                                        comentariosListener.onRefreshListaComentarios(comentarios);
+                                    }
+                                }
                             } catch (JSONException e) {
                                 e.printStackTrace();
-                                Toast.makeText(context, "Error parsing JSON: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                Toast.makeText(context, "Erro ao processar resposta do servidor", Toast.LENGTH_SHORT).show();
                             }
                         }
                     },
