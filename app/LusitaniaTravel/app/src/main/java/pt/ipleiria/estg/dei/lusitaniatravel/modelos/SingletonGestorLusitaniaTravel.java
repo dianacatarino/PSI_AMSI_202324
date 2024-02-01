@@ -341,16 +341,25 @@ public class SingletonGestorLusitaniaTravel {
             Toast.makeText(context, "Não tem ligação à Internet", Toast.LENGTH_SHORT).show();
         } else {
             // Construir o corpo da solicitação POST
+            JSONObject userObject = new JSONObject();
+            JSONObject profileObject = new JSONObject();
             JSONObject jsonBody = new JSONObject();
             try {
-                jsonBody.put("username", username);
-                jsonBody.put("password", password);
-                jsonBody.put("email", email);
-                jsonBody.put("name", name);
-                jsonBody.put("mobile", mobile);
-                jsonBody.put("street", street);
-                jsonBody.put("locale", locale);
-                jsonBody.put("postalCode", postalCode);
+                // User object
+                userObject.put("username", username);
+                userObject.put("email", email);
+                userObject.put("password", password);
+
+                // Profile object
+                profileObject.put("name", name);
+                profileObject.put("mobile", mobile);
+                profileObject.put("street", street);
+                profileObject.put("locale", locale);
+                profileObject.put("postalCode", postalCode);
+
+                // Combine user and profile objects into main jsonBody
+                jsonBody.put("user", userObject);
+                jsonBody.put("profile", profileObject);
 
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -366,7 +375,6 @@ public class SingletonGestorLusitaniaTravel {
                                 public void run() {
                                     // Analisar a resposta usando SignUpJsonParser
                                     User user = SignUpJsonParser.parserJsonRegister(response.toString());
-                                    Log.d("SignUpResponse", "Raw Response: " + response);
 
                                     // Notificar o ouvinte de registro
                                     if (signUpListener != null) {
@@ -383,7 +391,6 @@ public class SingletonGestorLusitaniaTravel {
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    Log.e("RegisterError", "Error: " + error.getMessage());
                                     Toast.makeText(context, "Error: " + error.getMessage(), Toast.LENGTH_SHORT).show();
                                 }
                             });
@@ -402,6 +409,7 @@ public class SingletonGestorLusitaniaTravel {
             volleyQueue.add(req);
         }
     }
+
 
     public void getAllFornecedoresAPI(final Context context) {
         if (!FornecedorJsonParser.isConnectionInternet(context)) {

@@ -2,11 +2,11 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:name="Sign Up"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context=".SignUpActivity"
-    android:name="Sign Up">
+    tools:context=".SignUpActivity">
 
     <include layout="@layout/app_bar_main" />
 
@@ -18,11 +18,9 @@
         <ImageView
             android:id="@+id/imageView3"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="0.04"
-            android:src="@drawable/logo_horizontal"
-            android:layout_marginTop="55dp" />
-
+            android:layout_height="50dp"
+            android:layout_marginTop="65dp"
+            android:src="@drawable/logo_horizontal" />
 
         <EditText
             android:id="@+id/etUsername"
@@ -54,8 +52,7 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:hint="@string/txt_nome"
-            android:inputType="text"
-            />
+            android:inputType="text" />
 
         <EditText
             android:id="@+id/etEmail"
@@ -79,8 +76,7 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:hint="@string/txt_rua"
-            android:inputType="text"
-            />
+            android:inputType="text" />
 
         <EditText
             android:id="@+id/etLocalidade"
@@ -88,8 +84,7 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:hint="@string/txt_localidade"
-            android:inputType="text"
-            />
+            android:inputType="text" />
 
         <EditText
             android:id="@+id/etCodPostal"
@@ -102,11 +97,10 @@
         <Button
             android:id="@+id/btnSignUp"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="0.01"
-            android:text="@string/btnSignUp"
+            android:layout_height="wrap_content"
+            android:backgroundTint="#3c9cd4"
             android:onClick="onClickSignUp"
-            android:backgroundTint="#3c9cd4"/>
+            android:text="@string/btnSignUp" />
 
     </LinearLayout>
 

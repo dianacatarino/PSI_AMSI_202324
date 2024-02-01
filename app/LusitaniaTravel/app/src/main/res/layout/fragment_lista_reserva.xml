@@ -5,6 +5,13 @@
     android:layout_height="match_parent"
     tools:context=".ListaReservaFragment">
 
+    <TextView
+        android:id="@+id/tvSemReservas"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Sem reservas criadas no momento"
+        android:visibility="gone" />
+
     <ListView
         android:id="@+id/lvreservas"
         android:layout_width="match_parent"
