@@ -6,13 +6,12 @@ import java.util.List;
 public class Reserva {
     private int id;
     private String tipo,checkin, checkout;
-    private int numeroQuartos, numeroClientes;
+    private int numeroQuartos, numeroClientes, numeroNoites, numeroCamas;
     private double valor;
-    private String nomeCliente, nomeFuncionario, nomeFornecedor, estado;
-    private List<LinhaReserva> linhasReservas;
-
+    private String nomeCliente, nomeFuncionario, nomeFornecedor, estado, tipoQuarto;
     public Reserva(int id, String tipo, String checkin, String checkout, int numeroQuartos, int numeroClientes, double valor,
-                   String nomeCliente, String nomeFuncionario, String nomeFornecedor, String estado,List<LinhaReserva> linhasReservas) {
+                   String nomeCliente, String nomeFuncionario, String nomeFornecedor, String estado, String tipoQuarto,
+                   int numeroNoites, int numeroCamas) {
         this.id = id;
         this.tipo = tipo;
         this.checkin = checkin;
@@ -24,7 +23,9 @@ public class Reserva {
         this.nomeFuncionario = nomeFuncionario;
         this.nomeFornecedor = nomeFornecedor;
         this.estado = estado;
-        this.linhasReservas = linhasReservas;
+        this.tipoQuarto = tipoQuarto;
+        this.numeroNoites = numeroNoites;
+        this.numeroCamas = numeroCamas;
     }
 
     public int getId() {
@@ -107,19 +108,35 @@ public class Reserva {
         this.nomeFornecedor = nomeFornecedor;
     }
 
-    public List<LinhaReserva> getLinhasReservas() {
-        return linhasReservas;
-    }
-
-    public void setLinhasReservas(List<LinhaReserva> linhasReservas) {
-        this.linhasReservas = linhasReservas;
-    }
-
     public String getEstado() {
         return estado;
     }
 
     public void setEstado(String estado) {
         this.estado = estado;
+    }
+
+    public int getNumeroNoites() {
+        return numeroNoites;
+    }
+
+    public void setNumeroNoites(int numeroNoites) {
+        this.numeroNoites = numeroNoites;
+    }
+
+    public int getNumeroCamas() {
+        return numeroCamas;
+    }
+
+    public void setNumeroCamas(int numeroCamas) {
+        this.numeroCamas = numeroCamas;
+    }
+
+    public String getTipoQuarto() {
+        return tipoQuarto;
+    }
+
+    public void setTipoQuarto(String tipoQuarto) {
+        this.tipoQuarto = tipoQuarto;
     }
 }

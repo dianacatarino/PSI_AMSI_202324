@@ -1,5 +1,7 @@
 package pt.ipleiria.estg.dei.lusitaniatravel.modelos;
 
+import java.util.List;
+
 public class Fatura {
     private int id;
     private double totalF;
@@ -9,7 +11,9 @@ public class Fatura {
 
     private String data;
 
-    public Fatura(int id, double totalF, double totalSI, double iva, int empresaId, int reservaId, String data) {
+    private List<LinhaFatura> linhasfatura;
+
+    public Fatura(int id, double totalF, double totalSI, double iva, int empresaId, int reservaId, String data, List<LinhaFatura> linhasfatura) {
         this.id = id;
         this.totalF = totalF;
         this.totalSI = totalSI;
@@ -17,6 +21,7 @@ public class Fatura {
         this.empresaId = empresaId;
         this.reservaId = reservaId;
         this.data = data;
+        this.linhasfatura = linhasfatura;
     }
 
     public int getId() {
@@ -73,5 +78,13 @@ public class Fatura {
 
     public void setData(String data) {
         this.data = data;
+    }
+
+    public List<LinhaFatura> getLinhasfatura() {
+        return linhasfatura;
+    }
+
+    public void setLinhasfatura(List<LinhaFatura> linhasfatura) {
+        this.linhasfatura = linhasfatura;
     }
 }

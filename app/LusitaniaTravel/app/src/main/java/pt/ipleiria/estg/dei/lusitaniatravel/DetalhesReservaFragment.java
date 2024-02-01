@@ -84,25 +84,9 @@ public class DetalhesReservaFragment extends Fragment implements ReservaListener
             String valorFormatado = decimalFormat.format(reserva.getValor());
             tvValor.setText("" + valorFormatado  + "€");
             tvFornecedor.setText(reserva.getNomeFornecedor());
-            int numeroNoites = 0;
-            int numeroCamas = 0;
-            Set<String> tiposQuartos = new HashSet<>();
-            List<LinhaReserva> linhasReservas = reserva.getLinhasReservas();
-            if (linhasReservas != null) {
-                for (LinhaReserva linhaReserva : linhasReservas) {
-                    numeroNoites += linhaReserva.getNumeroNoites();
-                    numeroCamas += linhaReserva.getNumeroCamas();
-                    tiposQuartos.add(linhaReserva.getTipoQuarto());
-                }
-            }
-            tvNumeroNoites.setText(String.valueOf(numeroNoites));
-            tvNumeroCamas.setText(String.valueOf(numeroCamas));
-            // Exibindo os tipos de quartos em linhas separadas
-            StringBuilder tiposQuartosText = new StringBuilder();
-            for (String tipoQuarto : tiposQuartos) {
-                tiposQuartosText.append("").append(tipoQuarto).append("\n");
-            }
-            tvTipoQuartos.setText(tiposQuartosText.toString().trim());
+            tvTipoQuartos.setText(reserva.getTipoQuarto());
+            tvNumeroNoites.setText(String.valueOf(reserva.getNumeroNoites()));
+            tvNumeroCamas.setText(String.valueOf(reserva.getNumeroCamas()));
         }
     }
 }

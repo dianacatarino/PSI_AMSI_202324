@@ -15,7 +15,9 @@ import java.util.List;
 import java.util.Set;
 
 import pt.ipleiria.estg.dei.lusitaniatravel.listeners.FaturaListener;
+import pt.ipleiria.estg.dei.lusitaniatravel.modelos.Avaliacao;
 import pt.ipleiria.estg.dei.lusitaniatravel.modelos.Fatura;
+import pt.ipleiria.estg.dei.lusitaniatravel.modelos.LinhaFatura;
 import pt.ipleiria.estg.dei.lusitaniatravel.modelos.LinhaReserva;
 import pt.ipleiria.estg.dei.lusitaniatravel.modelos.Reserva;
 import pt.ipleiria.estg.dei.lusitaniatravel.modelos.SingletonGestorLusitaniaTravel;
@@ -29,8 +31,9 @@ public class DetalhesFaturaFragment extends Fragment implements FaturaListener {
 
     public static final int ADD = 100, EDIT = 200, DELETE = 300;
     public static final String OP_CODE = "op_detalhes";
-    TextView tvFaturaId, tvTotalFatura, tvTotalSI, tvIva, tvData, tvReserva, tvQuantidade, tvPrecoUnitario, tvSubtotal;
+    TextView tvFaturaId, tvTotalFatura, tvTotalSI, tvIva, tvData, tvReserva, tvQuantidade, tvPrecoUnitario;
     private int faturaId;
+
     public void setFaturaId(int faturaId) {
         this.faturaId = faturaId;
     }
@@ -53,7 +56,6 @@ public class DetalhesFaturaFragment extends Fragment implements FaturaListener {
         tvReserva = view.findViewById(R.id.tvReserva);
         tvQuantidade = view.findViewById(R.id.tvQuantidade);
         tvPrecoUnitario = view.findViewById(R.id.tvPrecoUnitario);
-        tvSubtotal = view.findViewById(R.id.tvSubtotal);
 
         SingletonGestorLusitaniaTravel.getInstance(getContext()).setFaturaListener(this);
 
@@ -65,20 +67,37 @@ public class DetalhesFaturaFragment extends Fragment implements FaturaListener {
         return view;
     }
 
-    public void onRefreshDetalhes(Fatura fatura){
-        if (getView() != null && fatura != null) {
+    public void onRefreshDetalhes(Fatura fatura) {
+        if (isAdded() && getContext() != null && fatura != null) {
             tvFaturaId.setText(String.valueOf(fatura.getId()));
 
             DecimalFormat decimalFormat = new DecimalFormat("#.00");
             String totalFaturaFormatado = decimalFormat.format(fatura.getTotalF());
-            tvTotalFatura.setText("" + totalFaturaFormatado  + "€");
+            tvTotalFatura.setText("" + totalFaturaFormatado + "€");
 
             String totalSIFormatado = decimalFormat.format(fatura.getTotalSI());
-            tvTotalSI.setText("" + totalSIFormatado  + "€");
+            tvTotalSI.setText("" + totalSIFormatado + "€");
 
-            tvIva.setText(String.valueOf(fatura.getIva()));
+            DecimalFormat ivaFormat = new DecimalFormat(".00");
+            String ivaFormatado = ivaFormat.format(fatura.getIva());
+            tvIva.setText("" + ivaFormatado + "%");
+
             tvData.setText(fatura.getData());
             tvReserva.setText(String.valueOf(fatura.getReservaId()));
+
+            StringBuilder quantidade = new StringBuilder();
+            StringBuilder precounitario = new StringBuilder();
+
+            // Iterar sobre a lista de linhas de fatura
+            List<LinhaFatura> linhasFatura = fatura.getLinhasfatura();
+            for (LinhaFatura linhaFatura : linhasFatura) {
+                // Adicionar quantidade, preço unitário e subtotal à string
+                quantidade.append(linhaFatura.getQuantidade()).append("");
+                precounitario.append(decimalFormat.format(linhaFatura.getPrecoUnitario())).append("€");
+            }
+
+            tvQuantidade.setText(quantidade.toString());
+            tvPrecoUnitario.setText(precounitario.toString());
         }
     }
 }

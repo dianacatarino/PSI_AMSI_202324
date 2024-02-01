@@ -28,42 +28,28 @@ public class ReservaJsonParser {
             for (int i = 0; i < response.length(); i++) {
                 JSONObject reservaJson = response.getJSONObject(i);
                 int id = reservaJson.optInt("id");
-                String tipo = reservaJson.getString("tipo");
-                String checkinStr = reservaJson.getString("checkin");
-                String checkoutStr = reservaJson.getString("checkout");
-                int numeroQuartos = reservaJson.getInt("numeroquartos");
-                int numeroClientes = reservaJson.getInt("numeroclientes");
-                double valor = reservaJson.getDouble("valor");
+                String tipo = reservaJson.optString("tipo");
+                String checkinStr = reservaJson.optString("checkin");
+                String checkoutStr = reservaJson.optString("checkout");
+                int numeroQuartos = reservaJson.optInt("numeroquartos");
+                int numeroClientes = reservaJson.optInt("numeroclientes");
+                double valor = reservaJson.optDouble("valor");
                 String nomeCliente = reservaJson.optString("cliente_id");
                 String nomeFuncionario = reservaJson.optString("funcionario_id");
-                String nomeFornecedor = reservaJson.getString("fornecedor_id");
+                String nomeFornecedor = reservaJson.optString("fornecedor_id");
+                String estado = reservaJson.optString("estado");
 
-                // Parse das datas diretamente no método
+                // Parse dates
                 SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
                 Date checkin = dateFormat.parse(checkinStr);
                 Date checkout = dateFormat.parse(checkoutStr);
 
-                String estado = reservaJson.optString("estado");
+                String tipoQuarto = reservaJson.optString("tipoQuarto");
+                int numeroNoites = reservaJson.optInt("numeronoites");
+                int numeroCamas = reservaJson.optInt("numerocamas");
 
-                // Processar as linhas de reserva
-                JSONArray linhasReservaArray = reservaJson.optJSONArray("linha_reserva");
-                List<LinhaReserva> linhasReserva = new ArrayList<>();
-                if (linhasReservaArray != null) {
-                    for (int j = 0; j < linhasReservaArray.length(); j++) {
-                        JSONObject linhaReservaJson = linhasReservaArray.optJSONObject(j);
-                        int linhaReservaId = linhaReservaJson.optInt("id");
-                        String tipoQuarto = linhaReservaJson.optString("tipoquarto");
-                        int numeroNoites = linhaReservaJson.optInt("numeronoites");
-                        int numeroCamas = linhaReservaJson.optInt("numerocamas");
-                        double subtotal = linhaReservaJson.optDouble("subtotal");
-                        int reservaId = linhaReservaJson.optInt("reservas_id");
-                        LinhaReserva linhaReserva = new LinhaReserva(linhaReservaId, tipoQuarto, numeroNoites, numeroCamas, subtotal, reservaId);
-                        linhasReserva.add(linhaReserva);
-                    }
-                }
-
-                // Criar a reserva com as linhas de reserva
-                Reserva reserva = new Reserva(id, tipo, formatDateToString(checkin), formatDateToString(checkout), numeroQuartos, numeroClientes, valor, nomeCliente, nomeFuncionario, nomeFornecedor, estado, linhasReserva);
+                // Create reserva object
+                Reserva reserva = new Reserva(id, tipo, checkinStr, checkoutStr, numeroQuartos, numeroClientes, valor, nomeCliente, nomeFuncionario, nomeFornecedor, estado, tipoQuarto, numeroNoites, numeroCamas);
                 reservas.add(reserva);
             }
         } catch (JSONException | ParseException e) {
@@ -86,10 +72,10 @@ public class ReservaJsonParser {
             String nomeCliente = reservaJson.optString("cliente_id");
             String nomeFuncionario = reservaJson.optString("funcionario_id");
             String nomeFornecedor = reservaJson.getString("fornecedor_id");
-            String estado = ""; // Adicione um campo de estado para reserva e inicialize com uma string vazia
 
             // Obtenha o objeto de confirmação, se existir
             JSONObject confirmacaoJson = response.optJSONObject("confirmacao");
+            String estado = "";
             if (confirmacaoJson != null) {
                 estado = confirmacaoJson.optString("estado");
             }
@@ -101,28 +87,21 @@ public class ReservaJsonParser {
             // Obtenha o objeto JSON "linha_reserva"
             JSONObject linhaReservaJson = response.optJSONObject("linha_reserva");
 
-            // Crie uma lista de linhas de reserva, mesmo que vazia
-            List<LinhaReserva> linhasReserva = new ArrayList<>();
+            // Crie variáveis para os campos da linha de reserva
+            String tipoQuarto = null;
+            int numeroNoites = 0;
+            int numeroCamas = 0;
 
             // Verifique se o objeto linha_reserva existe
             if (linhaReservaJson != null) {
                 // Extraia os dados da linha de reserva
-                int linhaReservaId = linhaReservaJson.optInt("id");
-                String tipoQuarto = linhaReservaJson.getString("tipoquarto");
-                int numeroNoites = linhaReservaJson.getInt("numeronoites");
-                int numeroCamas = linhaReservaJson.getInt("numerocamas");
-                double subtotal = linhaReservaJson.getDouble("subtotal");
-                int reservaId = linhaReservaJson.getInt("reservas_id");
-
-                // Crie uma instância de LinhaReserva com os dados extraídos
-                LinhaReserva linhaReserva = new LinhaReserva(linhaReservaId, tipoQuarto, numeroNoites, numeroCamas, subtotal, reservaId);
-
-                // Adicione a linha de reserva à lista de linhas de reserva
-                linhasReserva.add(linhaReserva);
+                tipoQuarto = linhaReservaJson.optString("tipoquarto");
+                numeroNoites = linhaReservaJson.optInt("numeronoites");
+                numeroCamas = linhaReservaJson.optInt("numerocamas");
             }
 
-            // Crie a reserva com as linhas de reserva, mesmo que a lista esteja vazia
-            reserva = new Reserva(id, tipo, formatDateToString(checkin), formatDateToString(checkout), numeroQuartos, numeroClientes, valor, nomeCliente, nomeFuncionario, nomeFornecedor, estado, linhasReserva);
+            // Crie a reserva com as informações extraídas
+            reserva = new Reserva(id, tipo, checkinStr, checkoutStr, numeroQuartos, numeroClientes, valor, nomeCliente, nomeFuncionario, nomeFornecedor, estado, tipoQuarto, numeroNoites, numeroCamas);
 
         } catch (JSONException | ParseException e) {
             e.printStackTrace();
