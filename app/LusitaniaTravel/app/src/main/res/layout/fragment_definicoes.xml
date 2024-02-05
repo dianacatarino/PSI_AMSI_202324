@@ -80,7 +80,17 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
+        android:clickable="true"
+        android:focusable="false"
+        android:visibility="visible"
         android:layout_margin="16dp"
         android:src="@drawable/ic_definicoes_editar"
-        android:backgroundTint="@color/blue" />
+        android:backgroundTint="@color/blue"
+        android:onClick="onEditarClick"/>
+
+    <FrameLayout
+        android:id="@+id/fragment_container"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
 </LinearLayout>

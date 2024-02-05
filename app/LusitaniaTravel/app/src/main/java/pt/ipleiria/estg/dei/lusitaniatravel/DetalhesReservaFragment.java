@@ -8,21 +8,25 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import pt.ipleiria.estg.dei.lusitaniatravel.adaptadores.ListaReservasAdaptador;
 import pt.ipleiria.estg.dei.lusitaniatravel.listeners.ReservaListener;
 import pt.ipleiria.estg.dei.lusitaniatravel.modelos.Fornecedor;
 import pt.ipleiria.estg.dei.lusitaniatravel.modelos.Imagem;
 import pt.ipleiria.estg.dei.lusitaniatravel.modelos.LinhaReserva;
 import pt.ipleiria.estg.dei.lusitaniatravel.modelos.Reserva;
 import pt.ipleiria.estg.dei.lusitaniatravel.modelos.SingletonGestorLusitaniaTravel;
+import pt.ipleiria.estg.dei.lusitaniatravel.utils.ReservaJsonParser;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -66,8 +70,28 @@ public class DetalhesReservaFragment extends Fragment implements ReservaListener
 
         reservaId = getReservaId();
 
-        // Make the API call
-        SingletonGestorLusitaniaTravel.getInstance(getContext()).getReservaAPI(reservaId, getContext());
+        // Verificar se há conexão com a internet
+        if (ReservaJsonParser.isConnectionInternet(getContext())) {
+            // Se há conexão com a internet, buscar as reservas da API
+            SingletonGestorLusitaniaTravel.getInstance(getContext()).getReservaAPI(reservaId, getContext());
+        } else {
+            // Se não há conexão com a internet, carregar as reservas da BD local
+            Reserva reservaBD = SingletonGestorLusitaniaTravel.getInstance(getContext()).getReserva(reservaId);
+            tvReservaId.setText(String.valueOf(reservaBD.getId()));
+            tvTipoReserva.setText(reservaBD.getTipo());
+            tvCheckin.setText(reservaBD.getCheckin());
+            tvCheckout.setText(reservaBD.getCheckout());
+            tvNumeroQuartos.setText(String.valueOf(reservaBD.getNumeroQuartos()));
+            tvNumeroClientes.setText(String.valueOf(reservaBD.getNumeroClientes()));
+            DecimalFormat decimalFormat = new DecimalFormat("#.00");
+            String valorFormatado = decimalFormat.format(reservaBD.getValor());
+            tvValor.setText("" + valorFormatado  + "€");
+            tvFornecedor.setText(reservaBD.getNomeFornecedor());
+            tvTipoQuartos.setText(reservaBD.getTipoQuarto());
+            tvNumeroNoites.setText(String.valueOf(reservaBD.getNumeroNoites()));
+            tvNumeroCamas.setText(String.valueOf(reservaBD.getNumeroCamas()));
+        }
+
 
         return view;
     }

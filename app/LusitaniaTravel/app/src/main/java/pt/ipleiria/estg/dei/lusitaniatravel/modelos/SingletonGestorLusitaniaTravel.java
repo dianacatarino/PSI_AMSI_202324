@@ -68,6 +68,7 @@ public class SingletonGestorLusitaniaTravel {
     private String username;
     private String password;
     private EditText editTextSearch;
+    private User user;
     private static RequestQueue volleyQueue = null;
     private static final String BASE_URL = "http://172.22.21.204/LusitaniaTravelAPI/backend/web/api";
     private static final String mUrlAPILogin = BASE_URL + "/user/login/%s/%s";
@@ -76,6 +77,7 @@ public class SingletonGestorLusitaniaTravel {
     private static final String mUrlAPIFornecedor = BASE_URL + "/fornecedor/alojamento/";
     private static final String mUrlAPILocalizacao = BASE_URL + "/fornecedor/localizacao/%s";
     private static final String mUrlAPIDefinicoes = BASE_URL + "/user/mostrar/%s";
+    private static final String mUrlAPIAlterarUser = BASE_URL + "/user/atualizar";
     private static final String mUrlAPIReservas = BASE_URL + "/reserva/mostrar/%s";
     private static final String mUrlAPIReserva = BASE_URL + "/reserva/detalhes/";
     private static final String mUrlAPIFaturas = BASE_URL + "/fatura/ver/%s";
@@ -205,6 +207,14 @@ public class SingletonGestorLusitaniaTravel {
 
     public void setComentarioListener(ComentarioListener comentarioListener) {
         this.comentarioListener = comentarioListener;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     //endregion
@@ -561,6 +571,12 @@ public class SingletonGestorLusitaniaTravel {
     public void getReservaAPI(int id, final Context context) {
         if (!ReservaJsonParser.isConnectionInternet(context)) {
             Toast.makeText(context, "Não tem ligação à Internet", Toast.LENGTH_SHORT).show();
+
+            Reserva reservaBD = getReserva(id);
+
+            if (reservaListener != null) {
+                reservaListener.onRefreshDetalhes(reservaBD);
+            }
         } else {
             String username = SingletonGestorLusitaniaTravel.getInstance(context).getUsername();
             String password = SingletonGestorLusitaniaTravel.getInstance(context).getPassword();
@@ -575,8 +591,10 @@ public class SingletonGestorLusitaniaTravel {
                                 @Override
                                 public void run() {
                                     Reserva reserva = ReservaJsonParser.parserJsonReserva(response);
-                                    if (reservaListener != null)
+                                    if (reservaListener != null) {
                                         reservaListener.onRefreshDetalhes(reserva);
+                                    }
+
                                 }
                             });
                         }
@@ -720,13 +738,17 @@ public class SingletonGestorLusitaniaTravel {
                             // Convert JSONObject to String
                             String jsonResponse = response.toString();
 
+                            // Parse do JSON para obter as definições do user
+                            User user = UserJsonParser.parserJsonUser(jsonResponse);
+
+                            // Definir o usuário atual no singleton
+                            SingletonGestorLusitaniaTravel singleton = SingletonGestorLusitaniaTravel.getInstance(context);
+                            singleton.setUser(user);
+
                             // Executar no thread principal
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    // Parse do JSON para obter as definições do user
-                                    User user = UserJsonParser.parserJsonUser(jsonResponse);
-
                                     // Chamada ao método onUpdateDefinicoes com o objeto UserDefinicoes
                                     if (userListener != null) {
                                         userListener.onRefreshDetalhes(user);
@@ -742,7 +764,6 @@ public class SingletonGestorLusitaniaTravel {
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    Log.e("DefinicoesError", "Error: " + error.getMessage());
                                     Toast.makeText(context, "Error: " + error.getMessage(), Toast.LENGTH_SHORT).show();
                                 }
                             });
@@ -754,6 +775,59 @@ public class SingletonGestorLusitaniaTravel {
                     String credentials = getUsername() + ":" + getPassword();
                     String auth = "Basic " + Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
                     headers.put("Authorization", auth);
+                    return headers;
+                }
+            };
+
+            volleyQueue.add(req);
+        }
+    }
+
+    public void alterarUserAPI(final User user, final Context context) {
+        if (!LoginJsonParser.isConnectionInternet(context)) {
+            Toast.makeText(context, "Não tem ligação à Internet", Toast.LENGTH_SHORT).show();
+        } else {
+            // Construir o objeto JSON com os dados do usuário e do perfil
+            JSONObject requestBody = new JSONObject();
+            JSONObject userData = new JSONObject();
+            JSONObject profileData = new JSONObject();
+            try {
+                userData.put("username", user.getUsername());
+                userData.put("email", user.getEmail());
+
+                profileData.put("name", user.getProfile().getName());
+                profileData.put("mobile", user.getProfile().getMobile());
+                profileData.put("street", user.getProfile().getStreet());
+                profileData.put("locale", user.getProfile().getLocale());
+                profileData.put("postalCode", user.getProfile().getPostalCode());
+
+                requestBody.put("User", userData);
+                requestBody.put("Profile", profileData);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            JsonObjectRequest req = new JsonObjectRequest(Request.Method.PUT, mUrlAPIAlterarUser, requestBody,
+                    new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            // Processar a resposta, se necessário
+                            Toast.makeText(context, "Alterações salvas com sucesso", Toast.LENGTH_SHORT).show();
+                        }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            Toast.makeText(context, "Erro ao alterar usuário: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    }) {
+                @Override
+                public Map<String, String> getHeaders() {
+                    Map<String, String> headers = new HashMap<>();
+                    String credentials = getUsername() + ":" + getPassword();
+                    String auth = "Basic " + Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
+                    headers.put("Authorization", auth);
+                    headers.put("Content-Type", "application/json");
                     return headers;
                 }
             };
