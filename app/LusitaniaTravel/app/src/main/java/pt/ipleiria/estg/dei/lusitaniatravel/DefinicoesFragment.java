@@ -5,12 +5,14 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,6 +32,8 @@ public class DefinicoesFragment extends Fragment implements UserListener {
 
     public static final int ADD = 100, EDIT = 200, DELETE = 300;
     public static final String OP_CODE = "op_detalhes";
+    FragmentManager fragmentManager;
+
     FloatingActionButton fabEdit;
 
     public DefinicoesFragment() {
@@ -44,7 +48,9 @@ public class DefinicoesFragment extends Fragment implements UserListener {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
+
     }
 
     @Override
@@ -60,21 +66,15 @@ public class DefinicoesFragment extends Fragment implements UserListener {
         // Now, you can call the getUserDefinicoesAPI method
         singleton.getUserDefinicoesAPI(getContext());
 
-        // Find the FloatingActionButton
-        fabEdit = view.findViewById(R.id.fabEdit);
-
-        // Set a click listener for the FloatingActionButton
-        fabEdit.setOnClickListener(new View.OnClickListener() {
+        ImageButton editarButton = view.findViewById(R.id.imageButtonEdit); // Aqui está a correção
+        editarButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Create an instance of the AlterarUserFragment
+                // Ao clicar no botão de edição, direcione para o fragmento AlterarUserFragment
                 AlterarUserFragment alterarUserFragment = new AlterarUserFragment();
 
-                // Replace the current fragment with the AlterarUserFragment
-                getParentFragmentManager().beginTransaction()
-                        .replace(R.id.fragment_container, alterarUserFragment)
-                        .addToBackStack(null) // Add the transaction to the back stack
-                        .commit();
+                // Use o FragmentManager do Fragment para iniciar a transação
+                getParentFragmentManager().beginTransaction().replace(R.id.fragmentContainer, alterarUserFragment).commit();
             }
         });
 

@@ -99,6 +99,8 @@
     <string name="txt_comentario_descricao">Descrição:</string>
     <string name="txt_comentario_data">Data Comentário:</string>
     <string name="txt_comentario_data_avaliacao">Data Avaliação:</string>
+    <string name="txt_definicoes_salvar">Salvar</string>
+    <string name="txt_definicoes_cancelar">Cancelar</string>
     <string-array name="tipo_quartos">
         <item>Quarto Individual</item>
         <item>Quarto Duplo</item>

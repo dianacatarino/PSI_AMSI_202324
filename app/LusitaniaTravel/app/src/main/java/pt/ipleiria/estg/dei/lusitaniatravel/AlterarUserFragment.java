@@ -3,10 +3,12 @@ package pt.ipleiria.estg.dei.lusitaniatravel;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -53,6 +55,39 @@ public class AlterarUserFragment extends Fragment implements UserListener {
         editTextFieldCodPostal = view.findViewById(R.id.editTextFieldCodPostal);
 
         singleton.getUserDefinicoesAPI(getContext());
+
+        Button btnSalvar = view.findViewById(R.id.btnSalvar);
+        btnSalvar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Coloque aqui a lógica para salvar as alterações
+                // Por exemplo, você pode obter os valores dos EditTexts
+                /*String novoNome = editTextFieldNome.getText().toString();
+                String novoTelemovel = editTextFieldTelemovel.getText().toString();*/
+                // E então, você pode atualizar o perfil do usuário com os novos valores
+                // updateProfile(user, novoNome, novoTelemovel, ...);
+            }
+        });
+
+        // Configurar o evento de clique para o botão "Cancelar"
+        Button btnCancelar = view.findViewById(R.id.btnCancelar);
+        btnCancelar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Obtém o FragmentManager
+                FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
+
+                // Cria uma instância do DefinicoesFragment
+                DefinicoesFragment definicoesFragment = new DefinicoesFragment();
+
+                // Inicia uma transação para substituir o fragmento atual pelo DefinicoesFragment
+                fragmentManager.beginTransaction()
+                        .replace(R.id.fragment_container, definicoesFragment)
+                        .addToBackStack(null) // Adiciona a transação à pilha de retrocesso para que o usuário possa voltar ao fragmento anterior
+                        .commit();
+
+            }
+        });
 
         return view;
     }

@@ -8,7 +8,6 @@
     android:gravity="center"
     tools:context=".DefinicoesFragment">
 
-    <!-- User Details -->
     <ImageView
         android:layout_width="100dp"
         android:layout_height="100dp"
@@ -33,7 +32,6 @@
         android:gravity="center"
         android:textSize="18sp"/>
 
-    <!-- Profile Details -->
     <TextView
         android:id="@+id/textViewProfileName"
         android:layout_width="wrap_content"
@@ -74,8 +72,8 @@
         android:gravity="center"
         android:textSize="18sp"/>
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fabEdit"
+    <ImageButton
+        android:id="@+id/imageButtonEdit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -84,9 +82,9 @@
         android:focusable="false"
         android:visibility="visible"
         android:layout_margin="16dp"
+        android:background="@drawable/custom_button_background"
         android:src="@drawable/ic_definicoes_editar"
-        android:backgroundTint="@color/blue"
-        android:onClick="onEditarClick"/>
+        android:onClick="onEditarClick" />
 
     <FrameLayout
         android:id="@+id/fragment_container"
