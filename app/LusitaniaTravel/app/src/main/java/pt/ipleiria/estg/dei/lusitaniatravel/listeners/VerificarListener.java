@@ -1,5 +1,7 @@
 package pt.ipleiria.estg.dei.lusitaniatravel.listeners;
 
+import pt.ipleiria.estg.dei.lusitaniatravel.modelos.Reserva;
+
 public interface VerificarListener {
-    void onRefreshDetalhes(int op);
+    void onRefreshDetalhes(Reserva reserva);
 }

@@ -32,18 +32,18 @@ public class VerificarDisponibilidadeFragment extends Fragment implements Verifi
     private DatePicker datePickerCheckIn, datePickerCheckOut;
     public static final int ADD = 100, EDIT = 200, DELETE = 300;
     public static final String OP_CODE = "op_detalhes";
-    private int carrinhoId;
+    private int reservaId;
 
     public VerificarDisponibilidadeFragment() {
         // Required empty public constructor
     }
 
-    public void setCarrinhoId(int carrinhoId) {
-        this.carrinhoId = carrinhoId;
+    public void setReservaId(int reservaId) {
+        this.reservaId = reservaId;
     }
 
-    public int getCarrinhoId() {
-        return carrinhoId;
+    public int getReservaId() {
+        return reservaId;
     }
 
     @Override
@@ -62,8 +62,7 @@ public class VerificarDisponibilidadeFragment extends Fragment implements Verifi
         btnVerificarDisponibilidade.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                carrinhoId = getCarrinhoId();
-                Log.d("CarrinhoId", "CarrinhoId: " + carrinhoId);
+                reservaId = getReservaId();
 
                 // Obter as datas selecionadas do DatePicker
                 int checkInDay = datePickerCheckIn.getDayOfMonth();
@@ -85,7 +84,7 @@ public class VerificarDisponibilidadeFragment extends Fragment implements Verifi
 
                 // Call the singleton to verify the reservation
                 SingletonGestorLusitaniaTravel.getInstance(getContext())
-                        .verificarReservaAPI(checkin, checkout, numeroClientes, numeroQuartos, tipoQuarto, numeroCamas, getContext(), carrinhoId);
+                        .verificarReservaAPI(checkin, checkout, numeroClientes, numeroQuartos, tipoQuarto, numeroCamas, getContext(), reservaId);
 
                 Toast.makeText(getContext(), "Reserva verificada com sucesso", Toast.LENGTH_SHORT).show();
 
@@ -103,7 +102,7 @@ public class VerificarDisponibilidadeFragment extends Fragment implements Verifi
     }
 
     @Override
-    public void onRefreshDetalhes(int op) {
+    public void onRefreshDetalhes(Reserva reserva) {
 
     }
 }

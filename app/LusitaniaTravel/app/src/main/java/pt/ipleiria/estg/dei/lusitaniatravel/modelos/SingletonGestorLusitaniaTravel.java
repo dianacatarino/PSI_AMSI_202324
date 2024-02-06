@@ -1014,7 +1014,7 @@ public class SingletonGestorLusitaniaTravel {
                         public void onResponse(JSONObject response) {
                             try {
                                 // Verificar se a resposta contém dados de carrinho
-                                if (!response.isNull("carrinhos")) {
+                                if (!response.isNull("carrinho")) {
                                     // Se houver dados de carrinho, processar normalmente
                                     List<Carrinho> carrinhos = CarrinhoJsonParser.parserJsonCarrinhos(response);
                                     if (carrinhosListener != null) {
@@ -1119,45 +1119,78 @@ public class SingletonGestorLusitaniaTravel {
         }
     }
 
-    public void verificarReservaAPI(final String checkin, final String checkout, final int numeroClientes, final int numeroQuartos,
-                                    final String tipoQuarto, final int numeroCamas, final Context context, final int carrinhoId) {
+    public void verificarReservaAPI(String checkin, String checkout, int numeroClientes, int numeroQuartos,
+                                    String tipoQuarto, int numeroCamas, Context context, int reservaId) {
         if (!ReservaJsonParser.isConnectionInternet(context)) {
             Toast.makeText(context, "Não tem ligação à Internet", Toast.LENGTH_SHORT).show();
         } else {
-            StringRequest req = new StringRequest(Request.Method.POST, mUrlAPIVerificarReserva + carrinhoId,
-                    new Response.Listener<String>() {
+            String username = SingletonGestorLusitaniaTravel.getInstance(context).getUsername();
+            String password = SingletonGestorLusitaniaTravel.getInstance(context).getPassword();
+
+            String urlCompleta = mUrlAPIVerificarReserva + reservaId;
+
+            // Construir o corpo da solicitação POST
+            JSONObject jsonBody = new JSONObject();
+            try {
+                // Adicionar os campos ao jsonBody
+                jsonBody.put("checkin", checkin);
+                jsonBody.put("checkout", checkout);
+                jsonBody.put("numeroclientes", numeroClientes);
+                jsonBody.put("numeroquartos", numeroQuartos);
+
+                // Construir o JSONArray para linhasreservas
+                JSONArray linhasReservasArray = new JSONArray();
+                JSONObject linhaReserva = new JSONObject();
+                linhaReserva.put("tipoquarto", tipoQuarto);
+                linhaReserva.put("numerocamas", numeroCamas);
+                linhasReservasArray.put(linhaReserva);
+
+                // Adicionar linhasreservas ao jsonBody
+                jsonBody.put("linhasreservas", linhasReservasArray);
+
+                // Log dos valores antes de fazer a solicitação
+                Log.d("API_REQUEST", "Checkin: " + checkin);
+                Log.d("API_REQUEST", "Checkout: " + checkout);
+                Log.d("API_REQUEST", "NumeroClientes: " + numeroClientes);
+                Log.d("API_REQUEST", "NumeroQuartos: " + numeroQuartos);
+                Log.d("API_REQUEST", "TipoQuarto: " + tipoQuarto);
+                Log.d("API_REQUEST", "NumeroCamas: " + numeroCamas);
+                Log.d("API_REQUEST", "URL: " + urlCompleta);
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            JsonObjectRequest req = new JsonObjectRequest(Request.Method.POST, urlCompleta,jsonBody,
+                    new Response.Listener<JSONObject>() {
                         @Override
-                        public void onResponse(String response) {
-                            // Notificar o listener com o resultado
-                            if (verificarListener != null) {
-                                verificarListener.onRefreshDetalhes(VerificarDisponibilidadeFragment.ADD);
-                            }
+                        public void onResponse(JSONObject response) {
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    // Analisar a resposta usando o parser de reserva específico
+                                    Reserva reserva = ReservaJsonParser.parserJsonVerificar(response);
+
+                                    // Notificar o listener com o resultado
+                                    if (verificarListener != null) {
+                                        verificarListener.onRefreshDetalhes(reserva);
+                                    }
+                                }
+                            });
                         }
                     },
                     new Response.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError error) {
+                            Log.e("API_REQUEST", "Erro na solicitação HTTP: " + error.getMessage());
                             Toast.makeText(context, "Erro na solicitação HTTP", Toast.LENGTH_SHORT).show();
                         }
                     }) {
                 @Override
-                protected Map<String, String> getParams() {
-                    Map<String, String> params = new HashMap<>();
-                    params.put("checkin", checkin);
-                    params.put("checkout", checkout);
-                    params.put("numeroclientes", String.valueOf(numeroClientes));
-                    params.put("numeroquartos", String.valueOf(numeroQuartos));
-                    params.put("tipoquarto", tipoQuarto);
-                    params.put("numerocamas", String.valueOf(numeroCamas));
-
-                    return params;
-                }
-
-                @Override
                 public Map<String, String> getHeaders() {
                     Map<String, String> headers = new HashMap<>();
-                    String credentials = SingletonGestorLusitaniaTravel.getInstance(context).getUsername() +
-                            ":" + SingletonGestorLusitaniaTravel.getInstance(context).getPassword();
+                    String credentials = username +
+                            ":" + password;
                     String auth = "Basic " + Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
                     headers.put("Authorization", auth);
                     return headers;

@@ -74,17 +74,6 @@ public class AlterarUserFragment extends Fragment implements UserListener {
         btnCancelar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Obtém o FragmentManager
-                FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
-
-                // Cria uma instância do DefinicoesFragment
-                DefinicoesFragment definicoesFragment = new DefinicoesFragment();
-
-                // Inicia uma transação para substituir o fragmento atual pelo DefinicoesFragment
-                fragmentManager.beginTransaction()
-                        .replace(R.id.fragment_container, definicoesFragment)
-                        .addToBackStack(null) // Adiciona a transação à pilha de retrocesso para que o usuário possa voltar ao fragmento anterior
-                        .commit();
 
             }
         });

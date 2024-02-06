@@ -134,7 +134,7 @@ public class ListaCarrinhoAdaptador extends BaseAdapter {
                 public void onClick(View v) {
                     if (carrinhos != null && carrinhos.size() > position) {
                         Carrinho carrinhoClicado = carrinhos.get(position);
-                        int carrinhoId = carrinhoClicado.getId();
+                        int reservaId = carrinhoClicado.getReservaId();
 
                         SingletonGestorLusitaniaTravel singleton = SingletonGestorLusitaniaTravel.getInstance(context);
 
@@ -143,7 +143,7 @@ public class ListaCarrinhoAdaptador extends BaseAdapter {
                             public void onRefreshListaCarrinho(ArrayList<Carrinho> listaCarrinhos) {
                                 Carrinho selectedCarrinho = null;
                                 for (Carrinho carrinho : carrinhos) {
-                                    if (carrinho.getId() == carrinhoId) {
+                                    if (carrinho.getReservaId() == reservaId) {
                                         selectedCarrinho = carrinho;
                                         break;
                                     }
@@ -152,13 +152,13 @@ public class ListaCarrinhoAdaptador extends BaseAdapter {
                                 if (selectedCarrinho != null) {
                                     // Create a Bundle to pass data to the fragment
                                     Bundle bundle = new Bundle();
-                                    bundle.putInt("carrinhoId", carrinhoId);
+                                    bundle.putInt("reservaId", reservaId);
 
                                     // Create an instance of VerificarDisponibilidadeFragment
                                     VerificarDisponibilidadeFragment verificarDisponibilidadeFragment = new VerificarDisponibilidadeFragment();
 
                                     // Configuração do carrinhoId
-                                    verificarDisponibilidadeFragment.setCarrinhoId(carrinhoId);
+                                    verificarDisponibilidadeFragment.setReservaId(reservaId);
 
                                     FragmentActivity activity = (FragmentActivity) context;
                                     if (activity != null) {
