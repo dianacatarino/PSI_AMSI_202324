@@ -5,10 +5,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -16,6 +21,8 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
+import pt.ipleiria.estg.dei.lusitaniatravel.DetalhesFavoritoFragment;
+import pt.ipleiria.estg.dei.lusitaniatravel.DetalhesFornecedorFragment;
 import pt.ipleiria.estg.dei.lusitaniatravel.R;
 import pt.ipleiria.estg.dei.lusitaniatravel.listeners.CarrinhoListener;
 import pt.ipleiria.estg.dei.lusitaniatravel.listeners.CarrinhosListener;
@@ -74,6 +81,7 @@ public class ListaFavoritosAdaptador extends BaseAdapter {
         private ImageView imgFornecedor;
         private TextView tvTipo, tvNomeAlojamento, tvLocalizacao, tvAcomodacoes, tvPrecoPorNoite;
         private ImageButton btnRemoverFavoritos;
+        private Button btnDetalhes;
 
         public ViewHolderLista(View view, final int position) {
             imgFornecedor = view.findViewById(R.id.imgFornecedor);
@@ -83,6 +91,7 @@ public class ListaFavoritosAdaptador extends BaseAdapter {
             tvAcomodacoes = view.findViewById(R.id.tvAcomodacoes);
             tvPrecoPorNoite = view.findViewById(R.id.tvPrecoPorNoite);
             btnRemoverFavoritos = view.findViewById(R.id.btnRemoverFavoritos);
+            btnDetalhes = view.findViewById(R.id.btnDetalhes);
 
             btnRemoverFavoritos.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -97,6 +106,32 @@ public class ListaFavoritosAdaptador extends BaseAdapter {
                         singleton.removerFavoritoAPI(fornecedorId, context);
 
                         Toast.makeText(context, "Alojamento removido dos favoritos", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+            btnDetalhes.setOnClickListener(new View.OnClickListener(){
+                @Override
+                public void onClick(View v) {
+                    if (fornecedores != null && fornecedores.size() > position) {
+                        Fornecedor fornecedorClicado = fornecedores.get(position);
+
+                        int fornecedorId = fornecedorClicado.getId();
+
+                        DetalhesFavoritoFragment detalhesFavoritoFragment = new DetalhesFavoritoFragment();
+                        detalhesFavoritoFragment.setFornecedorId(fornecedorId);
+
+                        // Acesso à Activity pai para atualizar o título da Action Bar
+                        FragmentActivity activity = (FragmentActivity) context;
+                        if (activity != null) {
+                            activity.setTitle("Detalhes Favorito");
+                        }
+
+                        // Inicia a transação para substituir o Fragment
+                        FragmentManager fragmentManager = activity.getSupportFragmentManager();
+                        FragmentTransaction transaction = fragmentManager.beginTransaction();
+                        transaction.replace(R.id.fragmentContainer, detalhesFavoritoFragment);
+                        transaction.addToBackStack(null);
+                        transaction.commit();
                     }
                 }
             });

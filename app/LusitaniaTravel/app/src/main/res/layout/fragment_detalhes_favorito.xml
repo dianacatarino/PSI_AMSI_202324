@@ -1,16 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="5dp"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    tools:context=".DetalhesFavoritoFragment">
 
-    <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="5dp"
-        android:layout_weight="0.7"
-        android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/imgFornecedor"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/hotel7" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -18,14 +27,14 @@
             android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/textViewReservaId"
+                android:id="@+id/textViewNomeAlojamento"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/txt_reserva_id"
+                android:text="@string/txt_item_nome"
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/tvReservaId"
+                android:id="@+id/tvNomeAlojamento"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
         </LinearLayout>
@@ -36,14 +45,14 @@
             android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/textViewCheckin"
+                android:id="@+id/textViewTipo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/txt_reserva_checkin"
+                android:text="@string/txt_item_tipo"
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/tvCheckin"
+                android:id="@+id/tvTipo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
         </LinearLayout>
@@ -54,14 +63,14 @@
             android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/textViewCheckout"
+                android:id="@+id/textViewLocalizacao"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/txt_reserva_checkout"
+                android:text="@string/txt_item_localizacao"
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/tvCheckout"
+                android:id="@+id/tvLocalizacao"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
         </LinearLayout>
@@ -72,14 +81,14 @@
             android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/textViewValor"
+                android:id="@+id/textViewAcomodacoes"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/txt_reserva_valor"
+                android:text="@string/txt_item_acomodacoes"
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/tvValor"
+                android:id="@+id/tvAcomodacoes"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
         </LinearLayout>
@@ -90,14 +99,14 @@
             android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/textViewEstado"
+                android:id="@+id/textViewPrecoPorNoite"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/txt_reserva_estado"
+                android:text="@string/txt_item_preco_por_noite"
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/tvEstado"
+                android:id="@+id/tvPrecoPorNoite"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
         </LinearLayout>
@@ -108,37 +117,36 @@
             android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/textViewFornecedor"
+                android:id="@+id/textViewTipoQuartos"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/txt_reserva_alojamento"
+                android:text="@string/txt_detalhes_tipo_quartos"
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/tvFornecedor"
+                android:id="@+id/tvTipoQuartos"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
         </LinearLayout>
 
-
-    </LinearLayout>
-
-    <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center">
-
-        <Button
-            android:id="@+id/btnDetalhes"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:backgroundTint="@color/blue"
-            android:clickable="true"
-            android:focusable="false"
-            android:onClick="onDetalhesReservaClick"
-            android:text="@string/txt_reserva_detalhes"
-            android:visibility="visible" />
+            android:orientation="horizontal">
 
-    </RelativeLayout>
+            <TextView
+                android:id="@+id/textViewNumeroQuartos"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/txt_detalhes_n_quartos_disponiveis"
+                android:textStyle="bold" />
 
-</LinearLayout>
+            <TextView
+                android:id="@+id/tvNumeroQuartos"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+        </LinearLayout>
+
+</RelativeLayout>

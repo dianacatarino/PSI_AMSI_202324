@@ -9,6 +9,7 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -87,12 +88,11 @@ public class ListaReservasAdaptador extends BaseAdapter {
 
                         int reservaId = reservaClicada.getId();
 
-                        Bundle bundle = new Bundle();
-                        bundle.putInt("reservaId", reservaId);
-
                         DetalhesReservaFragment detalhesReservaFragment = new DetalhesReservaFragment();
+                        detalhesReservaFragment.setReservaId(reservaId); // Define os argumentos do fragmento
 
-                        detalhesReservaFragment.setReservaId(reservaId);
+                        // Define o título da Action Bar
+                        ((AppCompatActivity) context).getSupportActionBar().setTitle("Detalhes da Reserva");
 
                         FragmentManager fragmentManager = ((FragmentActivity) context).getSupportFragmentManager();
                         FragmentTransaction transaction = fragmentManager.beginTransaction();

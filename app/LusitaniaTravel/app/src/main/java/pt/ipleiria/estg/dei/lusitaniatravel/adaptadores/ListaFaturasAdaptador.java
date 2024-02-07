@@ -9,6 +9,7 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -89,12 +90,11 @@ public class ListaFaturasAdaptador extends BaseAdapter {
 
                         int faturaId = faturaClicada.getId();
 
-                        Bundle bundle = new Bundle();
-                        bundle.putInt("faturaId", faturaId);
-
                         DetalhesFaturaFragment detalhesFaturaFragment = new DetalhesFaturaFragment();
+                        detalhesFaturaFragment.setFaturaId(faturaId); // Define os argumentos do fragmento
 
-                        detalhesFaturaFragment.setFaturaId(faturaId);
+                        // Define o título da Action Bar
+                        ((AppCompatActivity) context).getSupportActionBar().setTitle("Detalhes da Fatura");
 
                         FragmentManager fragmentManager = ((FragmentActivity) context).getSupportFragmentManager();
                         FragmentTransaction transaction = fragmentManager.beginTransaction();

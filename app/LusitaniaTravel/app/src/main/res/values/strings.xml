@@ -88,8 +88,6 @@
     <string name="txt_fatura_id">Fatura:</string>
     <string name="txt_fatura_quantidade">Quantidade:</string>
     <string name="txt_fatura_preco">Preço Unitário:</string>
-    <string name="txt_detalhes_fatura">Detalhes da Fatura</string>
-    <string name="txt_detalhes_reserva">Detalhes da Reserva</string>
     <string name="txt_reserva_estado">Estado:</string>
     <string name="txt_comentario_alojamento">Alojamento:</string>
     <string name="txt_comentario">Comentário:</string>
@@ -101,6 +99,7 @@
     <string name="txt_comentario_data_avaliacao">Data Avaliação:</string>
     <string name="txt_definicoes_salvar">Salvar</string>
     <string name="txt_definicoes_cancelar">Cancelar</string>
+    <string name="txt_fornecedor_detalhes">Detalhes</string>
     <string-array name="tipo_quartos">
         <item>Quarto Individual</item>
         <item>Quarto Duplo</item>

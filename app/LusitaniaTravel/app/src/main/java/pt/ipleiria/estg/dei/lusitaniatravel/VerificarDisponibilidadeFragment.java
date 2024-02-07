@@ -77,6 +77,9 @@ public class VerificarDisponibilidadeFragment extends Fragment implements Verifi
                 String checkin = checkInYear + "/" + checkInMonth + "/" + checkInDay;
                 String checkout = checkOutYear + "/" + checkOutMonth + "/" + checkOutDay;
 
+                Log.d("VerificarDisponibilidade", "Checkin: " + checkin);
+                Log.d("VerificarDisponibilidade", "Checkout: " + checkout);
+
                 int numeroClientes = Integer.parseInt(spinnerNumeroClientes.getSelectedItem().toString());
                 int numeroQuartos = Integer.parseInt(spinnerNumeroQuartos.getSelectedItem().toString());
                 String tipoQuarto = spinnerTipoQuartos.getSelectedItem().toString();

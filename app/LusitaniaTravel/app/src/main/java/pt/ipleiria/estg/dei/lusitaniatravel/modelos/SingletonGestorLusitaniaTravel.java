@@ -85,6 +85,7 @@ public class SingletonGestorLusitaniaTravel {
     private static final String mUrlAPIFavoritos = BASE_URL + "/fornecedor/favoritos";
     private static final String mUrlAPIAdicionarFavorito = BASE_URL + "/fornecedor/adicionarfavorito/";
     private static final String mUrlAPIRemoverFavorito = BASE_URL + "/fornecedor/removerfavorito/";
+    private static final String mUrlAPIDetalhesFavorito = BASE_URL + "/fornecedor/detalhesfavorito/";
     private static final String mUrlAPICarrinho = BASE_URL + "/carrinho/mostrar";
     private static final String mUrlAPIAdicionarCarrinho = BASE_URL + "/carrinho/adicionarcarrinho/";
     private static final String mUrlAPIRemoverCarrinho = BASE_URL + "/carrinho/removercarrinho/";
@@ -1000,6 +1001,53 @@ public class SingletonGestorLusitaniaTravel {
         }
     }
 
+    public void getFavoritoAPI(int fornecedorId, Context context) {
+        if (!FavoritoJsonParser.isConnectionInternet(context)) {
+            Toast.makeText(context, "Não tem ligação à Internet", Toast.LENGTH_SHORT).show();
+        } else {
+            String username = SingletonGestorLusitaniaTravel.getInstance(context).getUsername();
+            String password = SingletonGestorLusitaniaTravel.getInstance(context).getPassword();
+
+            String urlCompleta = mUrlAPIDetalhesFavorito + fornecedorId;
+
+            JsonObjectRequest req = new JsonObjectRequest(Request.Method.GET, urlCompleta, null,
+                    new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Fornecedor fornecedor = FavoritoJsonParser.parserJsonFavorito(response.optJSONObject("fornecedor"));
+                                    if (fornecedorListener != null)
+                                        fornecedorListener.onRefreshDetalhes(fornecedor);
+                                }
+                            });
+                        }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Toast.makeText(context, error.getMessage(), Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                        }
+                    }) {
+                @Override
+                public Map<String, String> getHeaders() {
+                    Map<String, String> headers = new HashMap<>();
+                    String credentials = username + ":" + password;
+                    String auth = "Basic " + Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
+                    headers.put("Authorization", auth);
+                    return headers;
+                }
+            };
+            volleyQueue.add(req);
+        }
+    }
+
 
     public void getAllCarrinhoAPI(Context context) {
         if (!CarrinhoJsonParser.isConnectionInternet(context)) {
@@ -1148,15 +1196,6 @@ public class SingletonGestorLusitaniaTravel {
                 // Adicionar linhasreservas ao jsonBody
                 jsonBody.put("linhasreservas", linhasReservasArray);
 
-                // Log dos valores antes de fazer a solicitação
-                Log.d("API_REQUEST", "Checkin: " + checkin);
-                Log.d("API_REQUEST", "Checkout: " + checkout);
-                Log.d("API_REQUEST", "NumeroClientes: " + numeroClientes);
-                Log.d("API_REQUEST", "NumeroQuartos: " + numeroQuartos);
-                Log.d("API_REQUEST", "TipoQuarto: " + tipoQuarto);
-                Log.d("API_REQUEST", "NumeroCamas: " + numeroCamas);
-                Log.d("API_REQUEST", "URL: " + urlCompleta);
-
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -1182,7 +1221,6 @@ public class SingletonGestorLusitaniaTravel {
                     new Response.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError error) {
-                            Log.e("API_REQUEST", "Erro na solicitação HTTP: " + error.getMessage());
                             Toast.makeText(context, "Erro na solicitação HTTP", Toast.LENGTH_SHORT).show();
                         }
                     }) {
