@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -36,6 +37,7 @@ public class DetalhesFornecedorFragment extends Fragment implements FornecedorLi
     ImageView imgFornecedor;
     private int fornecedorId;
     FragmentManager fragmentManager;
+    Button btnAdicionarComentario;
 
     public void setFornecedorId(int fornecedorId) {
         this.fornecedorId = fornecedorId;
@@ -45,13 +47,35 @@ public class DetalhesFornecedorFragment extends Fragment implements FornecedorLi
         return fornecedorId;
     }
 
+    public static DetalhesFornecedorFragment newInstance(int fornecedorId) {
+        DetalhesFornecedorFragment fragment = new DetalhesFornecedorFragment();
+        Bundle args = new Bundle();
+        args.putInt("fornecedorId", fornecedorId);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
 
+        // Inicializar o fragmentManager
         fragmentManager = getChildFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.fragmentContainer, new ListaComentariosAlojamentoFragment()).commit();
+
+        // Obter o fornecedorId a partir dos argumentos do Fragment, se houver
+        if (getArguments() != null) {
+            fornecedorId = getArguments().getInt("fornecedorId", -1);
+        }
+
+        // Criar uma instância do ListaComentariosAlojamentoFragment
+        ListaComentariosAlojamentoFragment listaComentariosFragment = new ListaComentariosAlojamentoFragment();
+
+        // Definir o fornecedorId na instância do fragmento
+        listaComentariosFragment.setFornecedorId(fornecedorId);
+
+        // Iniciar uma transação para substituir o conteúdo do fragmentContainer pelo ListaComentariosAlojamentoFragment
+        fragmentManager.beginTransaction().replace(R.id.fragmentContainer, listaComentariosFragment).commit();
     }
 
 
@@ -60,6 +84,8 @@ public class DetalhesFornecedorFragment extends Fragment implements FornecedorLi
                              Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_detalhes_fornecedor, container, false);
+
+
 
         tvTipo = view.findViewById(R.id.tvTipo);
         tvNomeAlojamento = view.findViewById(R.id.tvNomeAlojamento);
@@ -76,6 +102,16 @@ public class DetalhesFornecedorFragment extends Fragment implements FornecedorLi
 
         // Make the API call
         SingletonGestorLusitaniaTravel.getInstance(getContext()).getFornecedorAPI(fornecedorId, getContext());
+
+        btnAdicionarComentario = view.findViewById(R.id.btnAdicionarComentario);
+        btnAdicionarComentario.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Criar e exibir o Dialog
+                AdicionarComentarioDialog dialog = new AdicionarComentarioDialog(getContext());
+                dialog.show();
+            }
+        });
 
         return view;
     }

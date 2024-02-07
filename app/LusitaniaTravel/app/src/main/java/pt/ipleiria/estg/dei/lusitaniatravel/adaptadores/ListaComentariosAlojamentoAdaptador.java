@@ -2,11 +2,13 @@ package pt.ipleiria.estg.dei.lusitaniatravel.adaptadores;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import androidx.fragment.app.FragmentActivity;
@@ -61,27 +63,24 @@ public class ListaComentariosAlojamentoAdaptador extends BaseAdapter {
             viewHolder = new ListaComentariosAlojamentoAdaptador.ViewHolderLista(convertView);
             convertView.setTag(viewHolder);
         }
-        viewHolder.update(comentarios.get(position),fornecedores, context);
+        viewHolder.update(comentarios.get(position), context);
 
         return convertView;
     }
 
     private class ViewHolderLista {
-        private TextView tvUsername, tvTitulo, tvComentario, tvAvaliacao, tvData;
-        private String fornecedorNome;
-        private int fornecedorId;
+        private TextView tvUsername, tvTitulo, tvComentario, tvData;
+        private RatingBar ratingBarAvaliacao;
 
         public ViewHolderLista(View view) {
             tvUsername = view.findViewById(R.id.tvUsername);
             tvTitulo = view.findViewById(R.id.tvTitulo);
             tvComentario = view.findViewById(R.id.tvComentario);
-            tvAvaliacao = view.findViewById(R.id.tvAvaliacao);
+            ratingBarAvaliacao = view.findViewById(R.id.ratingBarAvaliacao);
             tvData = view.findViewById(R.id.tvData);
         }
 
-        public void update(Comentario comentario, ArrayList<Fornecedor> fornecedores, Context context) {
-            fornecedorNome = comentario.getNomeFornecedor();
-            fornecedorId = findFornecedorIdByNome(fornecedorNome, fornecedores);
+        public void update(Comentario comentario, Context context) {
             tvUsername.setText(comentario.getNomeCliente());
             tvTitulo.setText(comentario.getTitulo());
             tvComentario.setText(comentario.getDescricao());
@@ -91,36 +90,15 @@ public class ListaComentariosAlojamentoAdaptador extends BaseAdapter {
                 // Assume que estamos mostrando apenas a primeira avaliação associada ao comentário
                 Avaliacao primeiraAvaliacao = avaliacoes.get(0);
                 int classificacao = primeiraAvaliacao.getClassificacao();
-                // Define o texto da TextView para a classificação da avaliação
-                tvAvaliacao.setText(String.valueOf(classificacao));
+
+                // Define a classificação na RatingBar
+                ratingBarAvaliacao.setRating(classificacao);
             } else {
-                // Se não houver avaliações associadas ao comentário, define o texto como vazio
-                tvAvaliacao.setText("");
+                // Se não houver avaliações associadas ao comentário, define 0 estrelas na RatingBar
+                ratingBarAvaliacao.setRating(0);
             }
 
             tvData.setText(comentario.getDataComentario());
-
-            Bundle bundle = new Bundle();
-            bundle.putInt("fornecedorId", fornecedorId);
-
-            ListaComentariosAlojamentoFragment listaComentariosAlojamentoFragment = new ListaComentariosAlojamentoFragment();
-            listaComentariosAlojamentoFragment.setFornecedorId(fornecedorId);
-
-            FragmentManager fragmentManager = ((FragmentActivity) context).getSupportFragmentManager();
-            FragmentTransaction transaction = fragmentManager.beginTransaction();
-            transaction.replace(R.id.fragmentContainer, listaComentariosAlojamentoFragment);
-            transaction.addToBackStack(null);
-            transaction.commit();
         }
-    }
-
-
-    private int findFornecedorIdByNome(String nomeFornecedor, ArrayList<Fornecedor> fornecedores) {
-        for (Fornecedor fornecedor : fornecedores) {
-            if (fornecedor.getNomeAlojamento().equals(nomeFornecedor)) {
-                return fornecedor.getId();
-            }
-        }
-        return -1; // Retorna -1 se o fornecedor não for encontrado
     }
 }

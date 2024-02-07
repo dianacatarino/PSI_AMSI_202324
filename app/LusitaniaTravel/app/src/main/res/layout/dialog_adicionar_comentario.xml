@@ -43,12 +43,31 @@
             android:stepSize="1"
             android:rating="0" />
 
-        <Button
-            android:id="@+id/btnAdicionarComentario"
-            android:layout_width="wrap_content"
+        <!-- Layout horizontal para os botões -->
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/txt_detalhes_adicionar_comentario"
-            android:backgroundTint="@color/blue"/>
+            android:orientation="horizontal"
+            android:layout_marginTop="8dp">
+
+            <Button
+                android:id="@+id/btnAdicionarComentario"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/txt_detalhes_adicionar_comentario"
+                android:backgroundTint="@color/blue"/>
+
+            <Button
+                android:id="@+id/btnCancelar"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Cancelar"
+                android:backgroundTint="@color/red"/>
+
+        </LinearLayout>
+
     </LinearLayout>
 
 </RelativeLayout>

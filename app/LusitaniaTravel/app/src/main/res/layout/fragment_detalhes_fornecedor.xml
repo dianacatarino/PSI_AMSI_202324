@@ -152,11 +152,6 @@
                     android:layout_height="wrap_content" />
             </LinearLayout>
 
-            <View
-                android:id="@+id/view1"
-                android:layout_width="match_parent"
-                android:layout_height="20dp" />
-
             <TextView
                 android:id="@+id/tvTitle"
                 android:layout_width="match_parent"
@@ -171,7 +166,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:backgroundTint="@color/blue"
-                android:text="@string/txt_detalhes_adicionar_comentario" />
+                android:text="@string/txt_detalhes_adicionar_comentario"
+                android:onClick="onAdicionarComentarioClick"
+                android:clickable="true"
+                android:visibility="visible"
+                android:focusable="false"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -181,7 +180,7 @@
                 <FrameLayout
                     android:id="@+id/fragmentContainer"
                     android:layout_width="match_parent"
-                    android:layout_height="200dp"
+                    android:layout_height="260dp"
                     android:orientation="vertical" />
 
             </LinearLayout>

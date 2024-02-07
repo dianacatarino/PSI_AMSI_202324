@@ -21,7 +21,7 @@
                 android:id="@+id/textViewUsername"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/txt_username"
+                android:text="@string/txt_comentario_nome"
                 android:textStyle="bold" />
 
             <TextView
@@ -78,10 +78,19 @@
                 android:text="@string/txt_comentario_avaliacao"
                 android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/tvAvaliacao"
+            <RatingBar
+                android:id="@+id/ratingBarAvaliacao"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:isIndicator="true"
+                android:numStars="5"
+                android:rating="0"
+                android:scaleX="0.5"
+                android:scaleY="0.5"
+                android:stepSize="0"
+                android:layout_marginStart="-55dp"
+                android:layout_marginTop="-15dp"
+                android:layout_marginBottom="-20dp"/>
         </LinearLayout>
 
         <LinearLayout

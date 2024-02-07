@@ -100,6 +100,8 @@
     <string name="txt_definicoes_salvar">Salvar</string>
     <string name="txt_definicoes_cancelar">Cancelar</string>
     <string name="txt_fornecedor_detalhes">Detalhes</string>
+    <string name="txt_comentario_nome">Nome:</string>
+    <string name="txt_adicionar_comentario">Adicionar Comentário</string>
     <string-array name="tipo_quartos">
         <item>Quarto Individual</item>
         <item>Quarto Duplo</item>

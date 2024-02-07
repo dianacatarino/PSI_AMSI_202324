@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import java.text.DecimalFormat;
@@ -36,7 +37,8 @@ public class DetalhesComentarioFragment extends Fragment implements ComentarioLi
 
     public static final int ADD = 100, EDIT = 200, DELETE = 300;
     public static final String OP_CODE = "op_detalhes";
-    TextView tvComentarioId, tvFornecedor, tvTitulo, tvDescricao, tvData, tvAvaliacao, tvDataAvaliacao;
+    TextView tvComentarioId, tvFornecedor, tvTitulo, tvDescricao, tvData, tvDataAvaliacao;
+    RatingBar ratingBarAvaliacao;
     private int comentarioId;
 
     public void setComentarioId(int comentarioId) {
@@ -58,7 +60,7 @@ public class DetalhesComentarioFragment extends Fragment implements ComentarioLi
         tvTitulo = view.findViewById(R.id.tvTitulo);
         tvDescricao = view.findViewById(R.id.tvDescricao);
         tvData = view.findViewById(R.id.tvData);
-        tvAvaliacao = view.findViewById(R.id.tvAvaliacao);
+        ratingBarAvaliacao = view.findViewById(R.id.ratingBarAvaliacao);
         tvDataAvaliacao = view.findViewById(R.id.tvDataAvaliacao);
 
         SingletonGestorLusitaniaTravel.getInstance(getContext()).setComentarioListener(this);
@@ -79,21 +81,28 @@ public class DetalhesComentarioFragment extends Fragment implements ComentarioLi
             tvDescricao.setText(comentario.getDescricao());
             tvData.setText(comentario.getDataComentario());
 
-            // Criar strings para armazenar as classificações e datas das avaliações
-            StringBuilder classificacoes = new StringBuilder();
-            StringBuilder datasAvaliacoes = new StringBuilder();
+            // Setar a classificação média e a data da avaliação
+            float mediaClassificacao = calcularMediaAvaliacoes(comentario.getAvaliacoes());
+            ratingBarAvaliacao.setRating(mediaClassificacao);
 
-            // Iterar sobre a lista de avaliações
-            List<Avaliacao> avaliacoes = comentario.getAvaliacoes();
-            for (Avaliacao avaliacao : avaliacoes) {
-                // Adicionar a classificação e a data da avaliação às strings
-                classificacoes.append(avaliacao.getClassificacao()).append("");
-                datasAvaliacoes.append(avaliacao.getDataAvaliacao()).append("");
+            if (!comentario.getAvaliacoes().isEmpty()) {
+                Avaliacao primeiraAvaliacao = comentario.getAvaliacoes().get(0);
+                tvDataAvaliacao.setText(primeiraAvaliacao.getDataAvaliacao());
             }
-
-            // Exibir as classificações e datas das avaliações nos TextViews correspondentes
-            tvAvaliacao.setText(classificacoes.toString());
-            tvDataAvaliacao.setText(datasAvaliacoes.toString());
         }
+    }
+
+    // Método para calcular a média das classificações das avaliações
+    private float calcularMediaAvaliacoes(List<Avaliacao> avaliacoes) {
+        if (avaliacoes.isEmpty()) {
+            return 0; // Retornar 0 se não houver avaliações
+        }
+
+        int somaClassificacoes = 0;
+        for (Avaliacao avaliacao : avaliacoes) {
+            somaClassificacoes += avaliacao.getClassificacao();
+        }
+
+        return (float) somaClassificacoes / avaliacoes.size();
     }
 }

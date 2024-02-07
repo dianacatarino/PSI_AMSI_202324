@@ -94,6 +94,7 @@ public class SingletonGestorLusitaniaTravel {
     private static final String mUrlAPIComentarios = BASE_URL + "/fornecedor/comentarios";
     private static final String mUrlAPIComentario = BASE_URL + "/fornecedor/comentario/";
     private static final String mUrlAPIComentariosAlojamento = BASE_URL + "/fornecedor/comentariosalojamento/";
+    private static final String mUrlAPIAdicionarComentario = BASE_URL + "/fornecedor/adicionarcomentario/";
     private FornecedoresListener fornecedoresListener;
     private FornecedorListener fornecedorListener;
     private ReservasListener reservasListener;
@@ -1227,8 +1228,7 @@ public class SingletonGestorLusitaniaTravel {
                 @Override
                 public Map<String, String> getHeaders() {
                     Map<String, String> headers = new HashMap<>();
-                    String credentials = username +
-                            ":" + password;
+                    String credentials = username + ":" + password;
                     String auth = "Basic " + Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
                     headers.put("Authorization", auth);
                     return headers;
@@ -1420,6 +1420,70 @@ public class SingletonGestorLusitaniaTravel {
             volleyQueue.add(req);
         }
     }
+
+    public void adicionarComentarioAPI(String titulo, String descricao, int classificacao, Context context, int fornecedorId) {
+        if (!ComentarioJsonParser.isConnectionInternet(context)) {
+            Toast.makeText(context, "Não tem ligação à Internet", Toast.LENGTH_SHORT).show();
+        } else {
+            String username = SingletonGestorLusitaniaTravel.getInstance(context).getUsername();
+            String password = SingletonGestorLusitaniaTravel.getInstance(context).getPassword();
+
+            String urlCompleta = mUrlAPIAdicionarComentario + fornecedorId;
+
+            // Construir o corpo da solicitação POST
+            JSONObject jsonBody = new JSONObject();
+            try {
+                // Adicionar os campos ao jsonBody
+                JSONObject comentarioObject = new JSONObject();
+                comentarioObject.put("titulo", titulo);
+                comentarioObject.put("descricao", descricao);
+
+                JSONObject avaliacaoObject = new JSONObject();
+                avaliacaoObject.put("classificacao", classificacao);
+
+                jsonBody.put("Comentario", comentarioObject);
+                jsonBody.put("Avaliacao", avaliacaoObject);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            JsonObjectRequest req = new JsonObjectRequest(Request.Method.POST, urlCompleta, jsonBody,
+                    new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    try {
+                                        String successMessage = response.getString("success");
+                                        Toast.makeText(context, successMessage, Toast.LENGTH_SHORT).show();
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            });
+                        }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            Toast.makeText(context, "Erro na solicitação HTTP", Toast.LENGTH_SHORT).show();
+                        }
+                    }) {
+                @Override
+                public Map<String, String> getHeaders() {
+                    Map<String, String> headers = new HashMap<>();
+                    String credentials = username + ":" + password;
+                    String auth = "Basic " + Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
+                    headers.put("Authorization", auth);
+                    return headers;
+                }
+            };
+
+            volleyQueue.add(req);
+        }
+    }
+
 
     //endregion
 }

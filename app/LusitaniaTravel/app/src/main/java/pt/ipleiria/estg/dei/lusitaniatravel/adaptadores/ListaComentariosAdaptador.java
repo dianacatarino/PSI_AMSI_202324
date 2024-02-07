@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import androidx.fragment.app.FragmentActivity;
@@ -65,13 +66,15 @@ public class ListaComentariosAdaptador extends BaseAdapter {
     }
 
     private class ViewHolderLista {
-        private TextView tvFornecedor, tvComentario, tvAvaliacao;
+        private TextView tvFornecedor, tvComentario;
+        private RatingBar ratingBarAvaliacao;
+
         private Button btnDetalhes;
 
         public ViewHolderLista(View view, final int position) {
             tvFornecedor = view.findViewById(R.id.tvFornecedor);
             tvComentario = view.findViewById(R.id.tvComentario);
-            tvAvaliacao = view.findViewById(R.id.tvAvaliacao);
+            ratingBarAvaliacao = view.findViewById(R.id.ratingBarAvaliacao);
             btnDetalhes = view.findViewById(R.id.btnDetalhes);
 
             btnDetalhes.setOnClickListener(new View.OnClickListener() {
@@ -107,11 +110,12 @@ public class ListaComentariosAdaptador extends BaseAdapter {
                 // Assume que estamos mostrando apenas a primeira avaliação associada ao comentário
                 Avaliacao primeiraAvaliacao = avaliacoes.get(0);
                 int classificacao = primeiraAvaliacao.getClassificacao();
-                // Define o texto da TextView para a classificação da avaliação
-                tvAvaliacao.setText(String.valueOf(classificacao));
+
+                // Define a classificação na RatingBar
+                ratingBarAvaliacao.setRating(classificacao);
             } else {
-                // Se não houver avaliações associadas ao comentário, define o texto como vazio
-                tvAvaliacao.setText("");
+                // Se não houver avaliações associadas ao comentário, define 0 estrelas na RatingBar
+                ratingBarAvaliacao.setRating(0);
             }
         }
     }
