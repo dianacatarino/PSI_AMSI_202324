@@ -69,45 +69,48 @@ public class ListaCarrinhoFragment extends Fragment implements CarrinhosListener
             @Override
             public void onClick(View v) {
                 if (listaCarrinho != null && !listaCarrinho.isEmpty()) {
-                    boolean algumPendente = false; // Verifica se algum carrinho está pendente
+                    Carrinho itemValido = null;
+                    int index = 0;
 
-                    // Iterar sobre os carrinhos para verificar o estado
-                    for (Carrinho carrinho : listaCarrinho) {
-                        int reservaId = carrinho.getReservaId();
-                        String estado = carrinho.getEstado();
-
-                        Log.d("ReservaID", String.valueOf(reservaId));
-                        Log.d("Estado", String.valueOf(estado));
-
-                        if (estado.equals("pendente")) {
-                            algumPendente = true; // Define como true se houver pelo menos um carrinho pendente
-                            break; // Encerra o loop assim que encontrar um carrinho pendente
+                    // Encontrar o primeiro item não nulo na lista de carrinho
+                    while (index < listaCarrinho.size()) {
+                        Carrinho carrinho = listaCarrinho.get(index);
+                        if (carrinho != null) {
+                            itemValido = carrinho;
+                            break;
                         }
+                        index++;
                     }
 
-                    if (algumPendente) {
-                        // Se algum carrinho tiver estado pendente, exibir Toast informando que a reserva ainda não foi confirmada
-                        Toast.makeText(getContext(), "A reserva ainda não foi confirmada", Toast.LENGTH_SHORT).show();
+                    if (itemValido != null) {
+                        String estado = itemValido.getEstado();
+                        int reservaId = itemValido.getReservaId();
+                        double subtotal = itemValido.getSubtotal();
+
+                        if ("Confirmado".equals(estado)) {
+                            // Se o estado for confirmado, você pode prosseguir com a lógica para finalizar o carrinho
+                            SingletonGestorLusitaniaTravel.getInstance(getContext()).finalizarCarrinhoAPI(reservaId, getContext());
+                            Toast.makeText(getContext(), "Carrinho finalizado com sucesso", Toast.LENGTH_SHORT).show();
+
+                            // Abrir o fragmento de pagamento e passar os dados
+                            PagamentoFragment pagamentoFragment = new PagamentoFragment();
+                            Bundle args = new Bundle();
+                            args.putInt("reservaId", reservaId);
+                            args.putDouble("subtotal", subtotal);
+                            pagamentoFragment.setArguments(args);
+
+                            FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                            fragmentTransaction.replace(R.id.fragment_container, pagamentoFragment);
+                            fragmentTransaction.addToBackStack(null);
+                            fragmentTransaction.commit();
+                        } else {
+                            // Se o estado não for confirmado, exibir um Toast informando que a reserva precisa estar confirmada
+                            Toast.makeText(getContext(), "A reserva deve estar confirmada para finalizar o carrinho.", Toast.LENGTH_SHORT).show();
+                        }
                     } else {
-                        // Se todos os carrinhos tiverem o estado confirmado, finalizar o carrinho
-                        // Vamos finalizar apenas o primeiro carrinho por enquanto
-                        int reservaId = listaCarrinho.get(0).getReservaId();
-                        double subtotal = listaCarrinho.get(0).getSubtotal();
-                        SingletonGestorLusitaniaTravel.getInstance(getContext()).finalizarCarrinhoAPI(reservaId, getContext());
-                        Toast.makeText(getContext(), "Carrinho finalizado com sucesso", Toast.LENGTH_SHORT).show();
-
-                        // Abrir o fragmento de pagamento e passar os dados
-                        PagamentoFragment pagamentoFragment = new PagamentoFragment();
-                        Bundle args = new Bundle();
-                        args.putInt("reservaId", reservaId);
-                        args.putDouble("subtotal", subtotal);
-                        pagamentoFragment.setArguments(args);
-
-                        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                        fragmentTransaction.replace(R.id.fragment_container, pagamentoFragment);
-                        fragmentTransaction.addToBackStack(null);
-                        fragmentTransaction.commit();
+                        // Lidar com o caso em que não há itens válidos na lista de carrinho
+                        Toast.makeText(getContext(), "Nenhum item válido no carrinho.", Toast.LENGTH_SHORT).show();
                     }
                 } else {
                     // Se a lista de carrinhos estiver vazia, exibir Toast informando que o carrinho não está disponível
@@ -116,7 +119,6 @@ public class ListaCarrinhoFragment extends Fragment implements CarrinhosListener
             }
         });
 
-        // Habilitar o menu para o fragmento
         setHasOptionsMenu(true);
 
         return view;

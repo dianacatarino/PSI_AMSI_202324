@@ -8,11 +8,14 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -67,15 +70,6 @@ public class DefinicoesFragment extends Fragment implements UserListener {
         // Now, you can call the getUserDefinicoesAPI method
         singleton.getUserDefinicoesAPI(getContext());
 
-        ImageButton editarButton = view.findViewById(R.id.imageButtonEdit); // Aqui está a correção
-        editarButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Ao clicar no botão de edição, mostrar uma caixa de diálogo com o layout personalizado
-                showEditProfileDialog(user);
-            }
-        });
-
         return view;
     }
 
@@ -103,6 +97,16 @@ public class DefinicoesFragment extends Fragment implements UserListener {
                 textViewProfileLocale.setText("Localidade: " + profile.getLocale());
                 textViewProfilePostalCode.setText("Código Postal: " + profile.getPostalCode());
             }
+
+            // Passar o objeto User para o método showEditProfileDialog
+            ImageButton editarButton = view.findViewById(R.id.imageButtonEdit);
+            editarButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // Ao clicar no botão de edição, mostrar uma caixa de diálogo com o layout personalizado
+                    showEditProfileDialog(user);
+                }
+            });
         }
     }
 
@@ -110,7 +114,13 @@ public class DefinicoesFragment extends Fragment implements UserListener {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         LayoutInflater inflater = requireActivity().getLayoutInflater();
         View dialogView = inflater.inflate(R.layout.dialog_editar_perfil, null);
-        builder.setView(dialogView);
+
+        // Criar um ScrollView programaticamente
+        ScrollView scrollView = new ScrollView(getContext());
+        scrollView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        scrollView.addView(dialogView);
+
+        builder.setView(scrollView);
 
         // Referenciar os EditTexts do layout
         EditText editTextUsername = dialogView.findViewById(R.id.editTextFieldUsername);
@@ -146,7 +156,7 @@ public class DefinicoesFragment extends Fragment implements UserListener {
                 String novaLocalidade = editTextLocalidade.getText().toString();
                 String novoCodPostal = editTextCodPostal.getText().toString();
 
-                // Chamar a função do Singleton para alterar o usuário com os novos valores
+                // Chamar a função do Singleton para alterar o user com os novos valores
                 SingletonGestorLusitaniaTravel.getInstance(getContext()).alterarUserAPI(novoUsername, novoEmail, novoNome, novoTelemovel, novaRua, novaLocalidade, novoCodPostal,getContext());
 
                 // Fechar a caixa de diálogo
@@ -162,94 +172,44 @@ public class DefinicoesFragment extends Fragment implements UserListener {
             }
         });
 
-        // Mostrar a caixa de diálogo
+        // Definir a mensagem do diálogo como "Editar Perfil"
+        builder.setMessage("Editar Perfil");
+
+        // Configurar a mensagem para estar centralizada
         AlertDialog dialog = builder.create();
-        dialog.show();
-    }
-
-
-
-    /*private void openEditProfileFieldDialog(final User user) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
-        LayoutInflater inflater = requireActivity().getLayoutInflater();
-        View dialogView = inflater.inflate(R.layout.dialog_edit_profile_field, null);
-        builder.setView(dialogView);
-
-        // Adicione todas as EditText do layout
-        final EditText editTextFieldNome = dialogView.findViewById(R.id.editTextFieldNome);
-        final EditText editTextFieldTelemovel = dialogView.findViewById(R.id.editTextFieldTelemovel);
-        final EditText editTextFieldRua = dialogView.findViewById(R.id.editTextFieldRua);
-        final EditText editTextFieldLocalidade = dialogView.findViewById(R.id.editTextFieldLocalidade);
-        final EditText editTextFieldCodPostal = dialogView.findViewById(R.id.editTextFieldCodPostal);
-
-        // Defina os valores iniciais com base nos detalhes do usuário
-        Profile profile = user.getProfile();
-        if (profile != null) {
-            editTextFieldNome.setText(profile.getName());
-            editTextFieldTelemovel.setText(profile.getMobile());
-            editTextFieldRua.setText(profile.getStreet());
-            editTextFieldLocalidade.setText(profile.getLocale());
-            editTextFieldCodPostal.setText(profile.getPostalCode());
-        }
-
-        builder.setPositiveButton("Salvar", new DialogInterface.OnClickListener() {
+        dialog.setOnShowListener(new DialogInterface.OnShowListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
-                // Obtenha os valores inseridos pelo usuário
-                String newFieldValueNome = editTextFieldNome.getText().toString();
-                String newFieldValueTelemovel = editTextFieldTelemovel.getText().toString();
-                String newFieldValueRua = editTextFieldRua.getText().toString();
-                String newFieldValueLocalidade = editTextFieldLocalidade.getText().toString();
-                String newFieldValueCodPostal = editTextFieldCodPostal.getText().toString();
-
-                // Atualize o perfil do usuário com os novos valores
-                updateProfileField(user, "name", newFieldValueNome);
-                updateProfileField(user, "mobile", newFieldValueTelemovel);
-                updateProfileField(user, "street", newFieldValueRua);
-                updateProfileField(user, "locale", newFieldValueLocalidade);
-                updateProfileField(user, "postalCode", newFieldValueCodPostal);
-
-                // Atualize a interface do usuário
-                if (getView() != null && user != null) {
-                    updateUserDetails(user, getView());
+            public void onShow(DialogInterface dialogInterface) {
+                AlertDialog alertDialog = (AlertDialog) dialogInterface;
+                TextView messageTextView = alertDialog.findViewById(android.R.id.message);
+                if (messageTextView != null) {
+                    messageTextView.setGravity(Gravity.CENTER);
+                }
+                Button positiveButton = alertDialog.getButton(DialogInterface.BUTTON_POSITIVE);
+                Button negativeButton = alertDialog.getButton(DialogInterface.BUTTON_NEGATIVE);
+                if (positiveButton != null && negativeButton != null) {
+                    positiveButton.setTextColor(getResources().getColor(R.color.blue)); // Altere a cor conforme necessário
+                    negativeButton.setTextColor(getResources().getColor(R.color.blue)); // Altere a cor conforme necessário
                 }
             }
         });
 
-        builder.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+        dialog.setOnShowListener(new DialogInterface.OnShowListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
+            public void onShow(DialogInterface dialogInterface) {
+                AlertDialog alertDialog = (AlertDialog) dialogInterface;
+                Button positiveButton = alertDialog.getButton(DialogInterface.BUTTON_POSITIVE);
+                Button negativeButton = alertDialog.getButton(DialogInterface.BUTTON_NEGATIVE);
+                if (positiveButton != null && negativeButton != null) {
+                    positiveButton.setTextColor(getResources().getColor(R.color.blue)); // Altere a cor conforme necessário
+                    negativeButton.setTextColor(getResources().getColor(R.color.blue)); // Altere a cor conforme necessário
+                }
             }
         });
 
-        AlertDialog dialog = builder.create();
+        // Mostrar a caixa de diálogo
         dialog.show();
     }
-
-    private void updateProfileField(User user, String fieldKey, String newValue) {
-        // Atualize o perfil do usuário com o novo valor
-        Profile profile = user.getProfile();
-        if (profile != null) {
-            switch (fieldKey) {
-                case "name":
-                    profile.setName(newValue);
-                    break;
-                case "mobile":
-                    profile.setMobile(newValue);
-                    break;
-                case "street":
-                    profile.setStreet(newValue);
-                    break;
-                case "locale":
-                    profile.setLocale(newValue);
-                    break;
-                case "postalCode":
-                    profile.setPostalCode(newValue);
-                    break;
-            }
-        }
-    }*/
 
     // Implement the missing method from UserListener
     @Override
@@ -259,8 +219,16 @@ public class DefinicoesFragment extends Fragment implements UserListener {
             updateUserDetails(user, view);
         } else {
             // Additional handling, e.g., show an error message to the user
-            Toast.makeText(requireContext(), "Failed to refresh details", Toast.LENGTH_SHORT).show();
+            Toast.makeText(requireContext(), "Erro ao carregar o User", Toast.LENGTH_SHORT).show();
         }
+
+        atualizarUser();
     }
+
+    private void atualizarUser() {
+        SingletonGestorLusitaniaTravel singleton = SingletonGestorLusitaniaTravel.getInstance(getContext());
+        singleton.getUserDefinicoesAPI(getContext());
+    }
+
 
 }

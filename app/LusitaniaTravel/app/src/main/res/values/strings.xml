@@ -68,7 +68,6 @@
     <string name="txt_carrinho_preco">Preço por noite:</string>
     <string name="txt_carrinho_subtotal">Preço Total:</string>
     <string name="txt_carrinho_estado">Estado:</string>
-    <string name="txt_definicoes_editar_perfil">Editar Perfil</string>
     <string name="txt_carrinho_verificar_disponibilidade">Verificar Disponibilidade</string>
     <string name="txt_verificar_checkin_checkout">Check-In e Check-Out:</string>
     <string name="txt_verificar_n_de_clientes">Número de Clientes:</string>
@@ -97,11 +96,10 @@
     <string name="txt_comentario_descricao">Descrição:</string>
     <string name="txt_comentario_data">Data Comentário:</string>
     <string name="txt_comentario_data_avaliacao">Data Avaliação:</string>
-    <string name="txt_definicoes_salvar">Salvar</string>
-    <string name="txt_definicoes_cancelar">Cancelar</string>
     <string name="txt_fornecedor_detalhes">Detalhes</string>
     <string name="txt_comentario_nome">Nome:</string>
     <string name="txt_adicionar_comentario">Adicionar Comentário</string>
+    <string name="txt_finalizar_carrinho">Finalizar Carrinho</string>
     <string-array name="tipo_quartos">
         <item>Quarto Individual</item>
         <item>Quarto Duplo</item>

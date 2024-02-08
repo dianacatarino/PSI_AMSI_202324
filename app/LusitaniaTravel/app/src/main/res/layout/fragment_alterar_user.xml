@@ -7,14 +7,6 @@
     android:orientation="vertical"
     tools:context=".AlterarUserFragment">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/txt_definicoes_editar_perfil"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        android:gravity="center"/>
-
     <EditText
         android:id="@+id/editTextFieldUsername"
         android:layout_width="match_parent"
@@ -56,34 +48,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/txt_definicoes_codigo_postal"/>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center">
-
-        <Button
-            android:id="@+id/btnSalvar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/txt_definicoes_salvar"
-            android:clickable="true"
-            android:focusable="false"
-            android:visibility="visible"
-            android:layout_marginEnd="8dp"
-            android:backgroundTint="@color/blue"/>
-
-        <Button
-            android:id="@+id/btnCancelar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/txt_definicoes_cancelar"
-            android:clickable="true"
-            android:focusable="false"
-            android:visibility="visible"
-            android:backgroundTint="@color/red"/>
-    </LinearLayout>
 
     <FrameLayout
         android:id="@+id/fragment_container"

@@ -69,9 +69,6 @@ public class UserFragment extends Fragment implements UserListener {
                 Fragment fragment = new DefinicoesFragment();
                 FragmentManager fragmentManager = getParentFragmentManager();
                 fragmentManager.beginTransaction().replace(R.id.fragmentContainer, fragment).commit();
-
-                // Define o título da Action Bar
-                getActivity().setTitle("Definições");
             }
         });
 

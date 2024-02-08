@@ -91,9 +91,6 @@ public class ListaReservasAdaptador extends BaseAdapter {
                         DetalhesReservaFragment detalhesReservaFragment = new DetalhesReservaFragment();
                         detalhesReservaFragment.setReservaId(reservaId); // Define os argumentos do fragmento
 
-                        // Define o título da Action Bar
-                        ((AppCompatActivity) context).getSupportActionBar().setTitle("Detalhes da Reserva");
-
                         FragmentManager fragmentManager = ((FragmentActivity) context).getSupportFragmentManager();
                         FragmentTransaction transaction = fragmentManager.beginTransaction();
                         transaction.replace(R.id.fragmentContainer, detalhesReservaFragment);

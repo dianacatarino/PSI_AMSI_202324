@@ -102,6 +102,7 @@ public class ListaCarrinhoAdaptador extends BaseAdapter {
                         Carrinho carrinhoClicado = carrinhos.get(position);
                         fornecedorNome = carrinhoClicado.getNomeFornecedor();
 
+
                         SingletonGestorLusitaniaTravel singleton = SingletonGestorLusitaniaTravel.getInstance(context);
 
                         singleton.setFornecedoresListener(new FornecedoresListener() {

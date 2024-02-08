@@ -93,9 +93,6 @@ public class ListaFaturasAdaptador extends BaseAdapter {
                         DetalhesFaturaFragment detalhesFaturaFragment = new DetalhesFaturaFragment();
                         detalhesFaturaFragment.setFaturaId(faturaId); // Define os argumentos do fragmento
 
-                        // Define o título da Action Bar
-                        ((AppCompatActivity) context).getSupportActionBar().setTitle("Detalhes da Fatura");
-
                         FragmentManager fragmentManager = ((FragmentActivity) context).getSupportFragmentManager();
                         FragmentTransaction transaction = fragmentManager.beginTransaction();
                         transaction.replace(R.id.fragmentContainer, detalhesFaturaFragment);

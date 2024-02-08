@@ -56,28 +56,6 @@ public class AlterarUserFragment extends Fragment implements UserListener {
 
         singleton.getUserDefinicoesAPI(getContext());
 
-        Button btnSalvar = view.findViewById(R.id.btnSalvar);
-        btnSalvar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Coloque aqui a lógica para salvar as alterações
-                // Por exemplo, você pode obter os valores dos EditTexts
-                /*String novoNome = editTextFieldNome.getText().toString();
-                String novoTelemovel = editTextFieldTelemovel.getText().toString();*/
-                // E então, você pode atualizar o perfil do usuário com os novos valores
-                // updateProfile(user, novoNome, novoTelemovel, ...);
-            }
-        });
-
-        // Configurar o evento de clique para o botão "Cancelar"
-        Button btnCancelar = view.findViewById(R.id.btnCancelar);
-        btnCancelar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
-
         return view;
     }
 
