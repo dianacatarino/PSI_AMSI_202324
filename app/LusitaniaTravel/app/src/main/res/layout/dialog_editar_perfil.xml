@@ -1,0 +1,56 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/txt_definicoes_editar_perfil"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:gravity="center"/>
+
+    <EditText
+        android:id="@+id/editTextFieldUsername"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/txt_definicoes_username"/>
+
+    <EditText
+        android:id="@+id/editTextFieldEmail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/txt_definicoes_email"/>
+
+    <EditText
+        android:id="@+id/editTextFieldNome"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/txt_definicoes_nome"/>
+
+    <EditText
+        android:id="@+id/editTextFieldTelemovel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/txt_definicoes_telemovel"/>
+
+    <EditText
+        android:id="@+id/editTextFieldRua"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/txt_definicoes_rua"/>
+
+    <EditText
+        android:id="@+id/editTextFieldLocalidade"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/txt_definicoes_localidade"/>
+
+    <EditText
+        android:id="@+id/editTextFieldCodPostal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/txt_definicoes_codigo_postal"/>
+
+</LinearLayout>

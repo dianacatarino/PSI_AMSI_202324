@@ -33,6 +33,7 @@ public class DefinicoesFragment extends Fragment implements UserListener {
     public static final int ADD = 100, EDIT = 200, DELETE = 300;
     public static final String OP_CODE = "op_detalhes";
     FragmentManager fragmentManager;
+    private User user;
 
     FloatingActionButton fabEdit;
 
@@ -70,11 +71,8 @@ public class DefinicoesFragment extends Fragment implements UserListener {
         editarButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Ao clicar no botão de edição, direcione para o fragmento AlterarUserFragment
-                AlterarUserFragment alterarUserFragment = new AlterarUserFragment();
-
-                // Use o FragmentManager do Fragment para iniciar a transação
-                getParentFragmentManager().beginTransaction().replace(R.id.fragmentContainer, alterarUserFragment).commit();
+                // Ao clicar no botão de edição, mostrar uma caixa de diálogo com o layout personalizado
+                showEditProfileDialog(user);
             }
         });
 
@@ -107,6 +105,69 @@ public class DefinicoesFragment extends Fragment implements UserListener {
             }
         }
     }
+
+    private void showEditProfileDialog(User user) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        LayoutInflater inflater = requireActivity().getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.dialog_editar_perfil, null);
+        builder.setView(dialogView);
+
+        // Referenciar os EditTexts do layout
+        EditText editTextUsername = dialogView.findViewById(R.id.editTextFieldUsername);
+        EditText editTextEmail = dialogView.findViewById(R.id.editTextFieldEmail);
+        EditText editTextNome = dialogView.findViewById(R.id.editTextFieldNome);
+        EditText editTextTelemovel = dialogView.findViewById(R.id.editTextFieldTelemovel);
+        EditText editTextRua = dialogView.findViewById(R.id.editTextFieldRua);
+        EditText editTextLocalidade = dialogView.findViewById(R.id.editTextFieldLocalidade);
+        EditText editTextCodPostal = dialogView.findViewById(R.id.editTextFieldCodPostal);
+
+        // Preencher os EditTexts com os dados do usuário
+        editTextUsername.setText(user.getUsername());
+        editTextEmail.setText(user.getEmail());
+        if (user.getProfile() != null) {
+            Profile profile = user.getProfile();
+            editTextNome.setText(profile.getName());
+            editTextTelemovel.setText(profile.getMobile());
+            editTextRua.setText(profile.getStreet());
+            editTextLocalidade.setText(profile.getLocale());
+            editTextCodPostal.setText(profile.getPostalCode());
+        }
+
+        // Configurar os botões positivo e negativo da caixa de diálogo
+        builder.setPositiveButton("Salvar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // Obter os novos valores dos EditTexts
+                String novoUsername = editTextUsername.getText().toString();
+                String novoEmail = editTextEmail.getText().toString();
+                String novoNome = editTextNome.getText().toString();
+                String novoTelemovel = editTextTelemovel.getText().toString();
+                String novaRua = editTextRua.getText().toString();
+                String novaLocalidade = editTextLocalidade.getText().toString();
+                String novoCodPostal = editTextCodPostal.getText().toString();
+
+                // Chamar a função do Singleton para alterar o usuário com os novos valores
+                SingletonGestorLusitaniaTravel.getInstance(getContext()).alterarUserAPI(novoUsername, novoEmail, novoNome, novoTelemovel, novaRua, novaLocalidade, novoCodPostal,getContext());
+
+                // Fechar a caixa de diálogo
+                dialog.dismiss();
+            }
+        });
+
+        builder.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // Fechar a caixa de diálogo sem fazer alterações
+                dialog.dismiss();
+            }
+        });
+
+        // Mostrar a caixa de diálogo
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+
 
     /*private void openEditProfileFieldDialog(final User user) {
         AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());

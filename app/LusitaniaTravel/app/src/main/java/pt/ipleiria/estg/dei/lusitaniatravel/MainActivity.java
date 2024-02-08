@@ -12,6 +12,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
@@ -95,7 +96,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        // Configurar o OnClickListener para o botão de logout
         ImageButton logoutButton = findViewById(R.id.imageButtonSair);
         logoutButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -130,6 +130,16 @@ public class MainActivity extends AppCompatActivity {
                 // Criar e exibir a caixa de diálogo
                 AlertDialog alertDialog = builder.create();
                 alertDialog.show();
+
+                // Personalizar a cor dos botões após a caixa de diálogo ser exibida
+                Button positiveButton = alertDialog.getButton(DialogInterface.BUTTON_POSITIVE);
+                Button negativeButton = alertDialog.getButton(DialogInterface.BUTTON_NEGATIVE);
+
+                // Personalizar a cor do botão "Sim"
+                positiveButton.setTextColor(getResources().getColor(R.color.blue));
+
+                // Personalizar a cor do botão "Não"
+                negativeButton.setTextColor(getResources().getColor(R.color.blue));
             }
         });
 

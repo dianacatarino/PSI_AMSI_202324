@@ -39,6 +39,7 @@ import pt.ipleiria.estg.dei.lusitaniatravel.listeners.FaturaListener;
 import pt.ipleiria.estg.dei.lusitaniatravel.listeners.FaturasListener;
 import pt.ipleiria.estg.dei.lusitaniatravel.listeners.FavoritoListener;
 import pt.ipleiria.estg.dei.lusitaniatravel.listeners.FavoritosListener;
+import pt.ipleiria.estg.dei.lusitaniatravel.listeners.FinalizarListener;
 import pt.ipleiria.estg.dei.lusitaniatravel.listeners.FornecedorListener;
 import pt.ipleiria.estg.dei.lusitaniatravel.listeners.FornecedoresListener;
 import pt.ipleiria.estg.dei.lusitaniatravel.listeners.LoginListener;
@@ -108,6 +109,7 @@ public class SingletonGestorLusitaniaTravel {
     private FavoritoListener favoritoListener;
     private CarrinhosListener carrinhosListener;
     private CarrinhoListener carrinhoListener;
+    private FinalizarListener finalizarListener;
     private VerificarListener verificarListener;
     private ComentariosListener comentariosListener;
     private ComentarioListener comentarioListener;
@@ -197,6 +199,10 @@ public class SingletonGestorLusitaniaTravel {
 
     public void setCarrinhoListener(CarrinhoListener carrinhoListener) {
         this.carrinhoListener = carrinhoListener;
+    }
+
+    public void setFinalizarListener(FinalizarListener finalizarListener) {
+        this.finalizarListener = finalizarListener;
     }
 
     public void setVerificarListener(VerificarListener verificarListener) {
@@ -785,7 +791,8 @@ public class SingletonGestorLusitaniaTravel {
         }
     }
 
-    public void alterarUserAPI(final User user, final Context context) {
+    public void alterarUserAPI(String novoUsername, String novoEmail, String novoNome, String novoTelemovel, String novaRua,
+                               String novaLocalidade, String novoCodPostal, Context context) {
         if (!LoginJsonParser.isConnectionInternet(context)) {
             Toast.makeText(context, "Não tem ligação à Internet", Toast.LENGTH_SHORT).show();
         } else {
@@ -794,14 +801,14 @@ public class SingletonGestorLusitaniaTravel {
             JSONObject userData = new JSONObject();
             JSONObject profileData = new JSONObject();
             try {
-                userData.put("username", user.getUsername());
-                userData.put("email", user.getEmail());
+                userData.put("username", novoUsername);
+                userData.put("email", novoEmail);
 
-                profileData.put("name", user.getProfile().getName());
-                profileData.put("mobile", user.getProfile().getMobile());
-                profileData.put("street", user.getProfile().getStreet());
-                profileData.put("locale", user.getProfile().getLocale());
-                profileData.put("postalCode", user.getProfile().getPostalCode());
+                profileData.put("name", novoNome);
+                profileData.put("mobile", novoTelemovel);
+                profileData.put("street", novaRua);
+                profileData.put("locale", novaLocalidade);
+                profileData.put("postalCode", novoCodPostal);
 
                 requestBody.put("User", userData);
                 requestBody.put("Profile", profileData);
@@ -837,6 +844,7 @@ public class SingletonGestorLusitaniaTravel {
             volleyQueue.add(req);
         }
     }
+
 
 
     public void getLocalizacaoFornecedoresAPI(final Context context, String localizacao) {
@@ -1251,8 +1259,17 @@ public class SingletonGestorLusitaniaTravel {
             JsonObjectRequest req = new JsonObjectRequest(Request.Method.GET, urlCompleta, null, new Response.Listener<JSONObject>() {
                 @Override
                 public void onResponse(JSONObject response) {
-                    if (carrinhoListener != null)
-                        carrinhoListener.onRefreshDetalhes(CarrinhoFragment.ADD);
+                    try {
+                        // Extrair a mensagem da resposta JSON
+                        String mensagem = response.getString("message");
+
+                        // Atualizar os detalhes do carrinho com base na mensagem
+                        if (finalizarListener != null) {
+                            finalizarListener.onRefreshDetalhes(mensagem);
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                 }
             }, new Response.ErrorListener() {
                 @Override

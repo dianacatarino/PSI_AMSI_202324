@@ -77,13 +77,48 @@ public class VerificarDisponibilidadeFragment extends Fragment implements Verifi
                 String checkin = checkInYear + "/" + checkInMonth + "/" + checkInDay;
                 String checkout = checkOutYear + "/" + checkOutMonth + "/" + checkOutDay;
 
-                Log.d("VerificarDisponibilidade", "Checkin: " + checkin);
-                Log.d("VerificarDisponibilidade", "Checkout: " + checkout);
+                // Verificar se há campos vazios
+                if (checkin.isEmpty() || checkout.isEmpty()) {
+                    Toast.makeText(getContext(), "Por favor, preencha todas as datas.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
 
-                int numeroClientes = Integer.parseInt(spinnerNumeroClientes.getSelectedItem().toString());
-                int numeroQuartos = Integer.parseInt(spinnerNumeroQuartos.getSelectedItem().toString());
+                // Obter o número de clientes, quartos e camas
+                int numeroClientes, numeroQuartos, numeroCamas;
+                try {
+                    numeroClientes = Integer.parseInt(spinnerNumeroClientes.getSelectedItem().toString());
+                    numeroQuartos = Integer.parseInt(spinnerNumeroQuartos.getSelectedItem().toString());
+                    numeroCamas = Integer.parseInt(spinnerNumeroCamas.getSelectedItem().toString());
+                } catch (NumberFormatException e) {
+                    Toast.makeText(getContext(), "Por favor, preencha todos os campos corretamente.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                // Verificar se o número de quartos e o número de camas são maiores que zero
+                if (numeroQuartos <= 0 || numeroCamas <= 0) {
+                    Toast.makeText(getContext(), "O número de quartos e camas deve ser maior que zero.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                // Verificar se o número de quartos é maior que o número de clientes
+                if (numeroQuartos > numeroClientes) {
+                    Toast.makeText(getContext(), "O número de quartos não pode ser maior que o número de clientes.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                // Verificar se a data de checkout é menor que a data de checkin
+                if (checkOutYear < checkInYear || (checkOutYear == checkInYear && checkOutMonth < checkInMonth)
+                        || (checkOutYear == checkInYear && checkOutMonth == checkInMonth && checkOutDay <= checkInDay)) {
+                    Toast.makeText(getContext(), "A data de checkout deve ser posterior à data de checkin.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                // Verificar se o tipo de quarto está selecionado
                 String tipoQuarto = spinnerTipoQuartos.getSelectedItem().toString();
-                int numeroCamas = Integer.parseInt(spinnerNumeroCamas.getSelectedItem().toString());
+                if (tipoQuarto.isEmpty()) {
+                    Toast.makeText(getContext(), "Por favor, selecione o tipo de quarto.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
 
                 // Call the singleton to verify the reservation
                 SingletonGestorLusitaniaTravel.getInstance(getContext())
