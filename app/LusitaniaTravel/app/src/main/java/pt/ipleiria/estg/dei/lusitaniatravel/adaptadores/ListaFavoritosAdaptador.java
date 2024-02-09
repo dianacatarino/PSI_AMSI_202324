@@ -67,12 +67,12 @@ public class ListaFavoritosAdaptador extends BaseAdapter {
             convertView = inflater.inflate(R.layout.item_lista_favorito, null);
 
         // Otimização
-        ListaFavoritosAdaptador.ViewHolderLista viewHolder = (ListaFavoritosAdaptador.ViewHolderLista) convertView.getTag();
+        ViewHolderLista viewHolder = (ViewHolderLista) convertView.getTag();
         if (viewHolder == null) {
-            viewHolder = new ListaFavoritosAdaptador.ViewHolderLista(convertView,position);
+            viewHolder = new ViewHolderLista(convertView, position);
             convertView.setTag(viewHolder);
         }
-        viewHolder.update(fornecedores.get(position), context);
+        viewHolder.update(fornecedores.get(position));
 
         return convertView;
     }
@@ -107,7 +107,7 @@ public class ListaFavoritosAdaptador extends BaseAdapter {
                     }
                 }
             });
-            btnDetalhes.setOnClickListener(new View.OnClickListener(){
+            btnDetalhes.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (fornecedores != null && fornecedores.size() > position) {
@@ -135,7 +135,7 @@ public class ListaFavoritosAdaptador extends BaseAdapter {
             });
         }
 
-        public void update(Fornecedor fornecedor, Context context) {
+        public void update(Fornecedor fornecedor) {
             tvTipo.setText(fornecedor.getTipo());
             tvNomeAlojamento.setText(fornecedor.getNomeAlojamento());
             tvLocalizacao.setText(fornecedor.getLocalizacaoAlojamento());

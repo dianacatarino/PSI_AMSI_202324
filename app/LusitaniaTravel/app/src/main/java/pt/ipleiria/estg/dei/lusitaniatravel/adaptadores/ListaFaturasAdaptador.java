@@ -35,12 +35,9 @@ import pt.ipleiria.estg.dei.lusitaniatravel.modelos.Reserva;
 import pt.ipleiria.estg.dei.lusitaniatravel.modelos.SingletonGestorLusitaniaTravel;
 
 public class ListaFaturasAdaptador extends BaseAdapter {
-
     private Context context;
     private LayoutInflater inflater;
     private ArrayList<Fatura> faturas;
-
-    private Context mContext;
 
     public ListaFaturasAdaptador(Context context, ArrayList<Fatura> faturas) {
         this.context = context;
@@ -72,10 +69,10 @@ public class ListaFaturasAdaptador extends BaseAdapter {
         // Otimização
         ViewHolderLista viewHolder = (ViewHolderLista) convertView.getTag();
         if (viewHolder == null) {
-            viewHolder = new ViewHolderLista(convertView,position);
+            viewHolder = new ViewHolderLista(convertView, position);
             convertView.setTag(viewHolder);
         }
-        viewHolder.update(faturas.get(position), context);
+        viewHolder.update(faturas.get(position));
 
         return convertView;
     }
@@ -93,7 +90,7 @@ public class ListaFaturasAdaptador extends BaseAdapter {
             btnDetalhes = view.findViewById(R.id.btnDetalhes);
             btnDownload = view.findViewById(R.id.imageButtonDownload);
 
-            btnDetalhes.setOnClickListener(new View.OnClickListener(){
+            btnDetalhes.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (faturas != null && faturas.size() > position) {
@@ -112,6 +109,7 @@ public class ListaFaturasAdaptador extends BaseAdapter {
                     }
                 }
             });
+
             btnDownload.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -125,7 +123,7 @@ public class ListaFaturasAdaptador extends BaseAdapter {
             });
         }
 
-        public void update(Fatura fatura, Context context) {
+        public void update(Fatura fatura) {
             tvFaturaId.setText("" + fatura.getId());
             // Formatando os valores da fatura
             DecimalFormat decimalFormat = new DecimalFormat("#.00");
@@ -133,7 +131,7 @@ public class ListaFaturasAdaptador extends BaseAdapter {
 
             tvTotalFatura.setText("" + totalFaturaFormatado + "€");
             tvReserva.setText("" + fatura.getReservaId());
-            tvData.setText( "" + fatura.getData());
+            tvData.setText("" + fatura.getData());
         }
     }
 }

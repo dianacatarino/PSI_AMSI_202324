@@ -59,10 +59,10 @@ public class ListaReservasAdaptador extends BaseAdapter {
         // Otimização
         ViewHolderLista viewHolder = (ViewHolderLista) convertView.getTag();
         if (viewHolder == null) {
-            viewHolder = new ViewHolderLista(convertView,position);
+            viewHolder = new ViewHolderLista(convertView);
             convertView.setTag(viewHolder);
         }
-        viewHolder.update(reservas.get(position), context);
+        viewHolder.update(reservas.get(position), position);
 
         return convertView;
     }
@@ -71,7 +71,7 @@ public class ListaReservasAdaptador extends BaseAdapter {
         private TextView tvReservaId, tvCheckin, tvCheckout, tvValor, tvFornecedor, tvEstado;
         private Button btnDetalhes;
 
-        public ViewHolderLista(View view, final int position) {
+        public ViewHolderLista(View view) {
             tvReservaId = view.findViewById(R.id.tvReservaId);
             tvCheckin = view.findViewById(R.id.tvCheckin);
             tvCheckout = view.findViewById(R.id.tvCheckout);
@@ -83,6 +83,7 @@ public class ListaReservasAdaptador extends BaseAdapter {
             btnDetalhes.setOnClickListener(new View.OnClickListener(){
                 @Override
                 public void onClick(View v) {
+                    int position = (int) btnDetalhes.getTag();
                     if (reservas != null && reservas.size() > position) {
                         Reserva reservaClicada = reservas.get(position);
 
@@ -101,7 +102,7 @@ public class ListaReservasAdaptador extends BaseAdapter {
             });
         }
 
-        public void update(Reserva reserva, Context context) {
+        public void update(Reserva reserva, int position) {
             tvReservaId.setText("" + reserva.getId());
             tvCheckin.setText("" + reserva.getCheckin());
             tvCheckout.setText("" + reserva.getCheckout());
@@ -112,6 +113,9 @@ public class ListaReservasAdaptador extends BaseAdapter {
             tvValor.setText("" + valorFormatado  + "€");
             tvFornecedor.setText("" + reserva.getNomeFornecedor());
             tvEstado.setText("" + reserva.getEstado());
+
+            // Define a posição como tag do botão para uso posterior
+            btnDetalhes.setTag(position);
         }
     }
 }

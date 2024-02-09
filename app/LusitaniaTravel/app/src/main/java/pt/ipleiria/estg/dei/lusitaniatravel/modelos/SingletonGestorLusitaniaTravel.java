@@ -914,6 +914,9 @@ public class SingletonGestorLusitaniaTravel {
                         public void onResponse(JSONObject response) {
                             // Processar a resposta, se necessário
                             Toast.makeText(context, "Alterações salvas com sucesso", Toast.LENGTH_SHORT).show();
+
+                            // Atualizar o nome de usuário nos cabeçalhos da solicitação
+                            updateRequestHeaders(novoUsername);
                         }
                     },
                     new Response.ErrorListener() {
@@ -935,6 +938,11 @@ public class SingletonGestorLusitaniaTravel {
 
             volleyQueue.add(req);
         }
+    }
+
+    private void updateRequestHeaders(String novoUsername) {
+        // Armazenar o novo nome de usuário
+        username = novoUsername;
     }
 
 
