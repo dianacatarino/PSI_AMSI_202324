@@ -27,16 +27,11 @@
             android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/textViewNomeAlojamento"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/txt_item_nome"
-                android:textStyle="bold" />
-
-            <TextView
                 android:id="@+id/tvNomeAlojamento"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:textSize="18sp" />
         </LinearLayout>
 
         <LinearLayout
@@ -71,42 +66,6 @@
 
             <TextView
                 android:id="@+id/tvLocalizacao"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/textViewAcomodacoes"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/txt_item_acomodacoes"
-                android:textStyle="bold"/>
-
-            <TextView
-                android:id="@+id/tvAcomodacoes"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/textViewPrecoPorNoite"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/txt_item_preco_por_noite"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/tvPrecoPorNoite"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
         </LinearLayout>

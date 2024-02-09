@@ -62,7 +62,6 @@
     <string name="txt_pesquisa_localizacao">Localização</string>
     <string name="txt_pesquisa_pesquisar">Pesquisar</string>
     <string name="txt_detalhes_tipo_quartos">Tipo Quartos:</string>
-    <string name="txt_detalhes_n_quartos_disponiveis">Nº Quartos Disponíveis:</string>
     <string name="txt_carrinho_reserva">Reserva:</string>
     <string name="txt_carrinho_quantidade">Quantidade:</string>
     <string name="txt_carrinho_preco">Preço por noite:</string>
@@ -78,7 +77,7 @@
     <string name="txt_pagamento_entidade">Entidade</string>
     <string name="txt_pagamento_referencia">Referência</string>
     <string name="txt_pagamento_valor">Valor</string>
-    <string name="txt_detalhes_adicionar_comentario">Adicionar Comentário</string>
+    <string name="txt_detalhes_adicionar_comentario">Adicionar</string>
     <string name="txt_detalhes_comentario">Adicione um comentário</string>
     <string name="txt_detalhes_comentario_titulo">Adicione um título</string>
     <string name="txt_linhareserva_tipo_quarto">Tipo de Quartos:</string>
@@ -100,6 +99,7 @@
     <string name="txt_comentario_nome">Nome:</string>
     <string name="txt_adicionar_comentario">Adicionar Comentário</string>
     <string name="txt_finalizar_carrinho">Finalizar Carrinho</string>
+    <string name="txt_detalhes_fatura">Detalhes da Fatura</string>
     <string-array name="tipo_quartos">
         <item>Quarto Individual</item>
         <item>Quarto Duplo</item>

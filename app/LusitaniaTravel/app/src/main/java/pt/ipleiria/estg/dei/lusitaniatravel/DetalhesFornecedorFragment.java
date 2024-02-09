@@ -33,7 +33,7 @@ public class DetalhesFornecedorFragment extends Fragment implements FornecedorLi
 
     public static final int ADD = 100, EDIT = 200, DELETE = 300;
     public static final String OP_CODE = "op_detalhes";
-    TextView tvTipo, tvNomeAlojamento, tvLocalizacao, tvAcomodacoes, tvPrecoPorNoite, tvTipoQuartos, tvNumeroQuartos;
+    TextView tvTipo, tvNomeAlojamento, tvLocalizacao, tvAcomodacoes, tvPrecoPorNoite, tvTipoQuartos;
     ImageView imgFornecedor;
     private int fornecedorId;
     FragmentManager fragmentManager;
@@ -85,15 +85,12 @@ public class DetalhesFornecedorFragment extends Fragment implements FornecedorLi
 
         View view = inflater.inflate(R.layout.fragment_detalhes_fornecedor, container, false);
 
-
-
         tvTipo = view.findViewById(R.id.tvTipo);
         tvNomeAlojamento = view.findViewById(R.id.tvNomeAlojamento);
         tvLocalizacao = view.findViewById(R.id.tvLocalizacao);
         tvAcomodacoes = view.findViewById(R.id.tvAcomodacoes);
         tvPrecoPorNoite = view.findViewById(R.id.tvPrecoPorNoite);
         tvTipoQuartos = view.findViewById(R.id.tvTipoQuartos);
-        tvNumeroQuartos = view.findViewById(R.id.tvNumeroQuartos);
         imgFornecedor = view.findViewById(R.id.imgFornecedor);
 
         SingletonGestorLusitaniaTravel.getInstance(getContext()).setFornecedorListener(this);
@@ -108,8 +105,16 @@ public class DetalhesFornecedorFragment extends Fragment implements FornecedorLi
             @Override
             public void onClick(View v) {
                 // Criar e exibir o Dialog
-                AdicionarComentarioDialog dialog = new AdicionarComentarioDialog(getContext());
+                AdicionarComentarioDialog dialog = new AdicionarComentarioDialog(getContext(), fornecedorId);
                 dialog.show();
+
+                ListaComentariosAlojamentoFragment listaComentariosFragment = new ListaComentariosAlojamentoFragment();
+
+                // Definir o fornecedorId na instância do fragmento
+                listaComentariosFragment.setFornecedorId(fornecedorId);
+
+                // Iniciar uma transação para substituir o conteúdo do fragmentContainer pelo ListaComentariosAlojamentoFragment
+                fragmentManager.beginTransaction().replace(R.id.fragmentContainer, listaComentariosFragment).commit();
             }
         });
 
@@ -128,7 +133,6 @@ public class DetalhesFornecedorFragment extends Fragment implements FornecedorLi
             String precoFormatado = decimalFormat.format(fornecedor.getPrecoPorNoite());
             tvPrecoPorNoite.setText(precoFormatado + "€");
             tvTipoQuartos.setText(fornecedor.getTipoQuartos());
-            tvNumeroQuartos.setText(String.valueOf(fornecedor.getNumeroQuartos()));
 
             // Obtendo a primeira imagem do fornecedor
             Imagem primeiraImagem = fornecedor.getImagens().size() > 0 ? fornecedor.getImagens().get(0) : null;

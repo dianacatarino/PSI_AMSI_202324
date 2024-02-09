@@ -3,6 +3,7 @@ package pt.ipleiria.estg.dei.lusitaniatravel;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -28,8 +29,9 @@ public class AdicionarComentarioDialog extends Dialog implements View.OnClickLis
         return fornecedorId;
     }
 
-    public AdicionarComentarioDialog(@NonNull Context context) {
+    public AdicionarComentarioDialog(@NonNull Context context, int fornecedorId) {
         super(context);
+        this.fornecedorId = fornecedorId;
     }
 
     @Override
@@ -41,7 +43,7 @@ public class AdicionarComentarioDialog extends Dialog implements View.OnClickLis
         editTextComentario = findViewById(R.id.editTextComentario);
         ratingBarAvaliacao = findViewById(R.id.ratingBarAvaliacao);
         btnAdicionarComentario = findViewById(R.id.btnAdicionarComentario);
-        btnCancelar = findViewById(R.id.btnCancelar); // Adiciona esta linha
+        btnCancelar = findViewById(R.id.btnCancelar);
 
         btnAdicionarComentario.setOnClickListener(this);
         btnCancelar.setOnClickListener(this);
@@ -61,8 +63,10 @@ public class AdicionarComentarioDialog extends Dialog implements View.OnClickLis
         String descricao = editTextComentario.getText().toString().trim();
         int classificacao = (int) ratingBarAvaliacao.getRating();
 
-        // Verificar se o título e a descrição estão vazios
-        if (titulo.isEmpty() || descricao.isEmpty()) {
+        Log.d("AdicionarComentarioDialog", "Classificação: " + classificacao);
+
+        // Verificar se o título, a descrição e a classificação estão preenchidos
+        if (titulo.isEmpty() || descricao.isEmpty() || classificacao == 0) {
             Toast.makeText(getContext(), "Por favor, preencha todos os campos", Toast.LENGTH_SHORT).show();
             return;
         }

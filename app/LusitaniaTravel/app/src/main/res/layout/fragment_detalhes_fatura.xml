@@ -24,13 +24,16 @@
                 android:id="@+id/textViewFaturaId"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/txt_fatura_id"
-                android:textStyle="bold" />
+                android:text="@string/txt_detalhes_fatura"
+                android:textStyle="bold"
+                android:textSize="18sp" />
 
             <TextView
                 android:id="@+id/tvFaturaId"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:textSize="18sp" />
         </LinearLayout>
 
         <LinearLayout

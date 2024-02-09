@@ -79,7 +79,7 @@ public class ListaFavoritosAdaptador extends BaseAdapter {
 
     private class ViewHolderLista {
         private ImageView imgFornecedor;
-        private TextView tvTipo, tvNomeAlojamento, tvLocalizacao, tvAcomodacoes, tvPrecoPorNoite;
+        private TextView tvTipo, tvNomeAlojamento, tvLocalizacao;
         private ImageButton btnRemoverFavoritos;
         private Button btnDetalhes;
 
@@ -88,8 +88,6 @@ public class ListaFavoritosAdaptador extends BaseAdapter {
             tvTipo = view.findViewById(R.id.tvTipo);
             tvNomeAlojamento = view.findViewById(R.id.tvNomeAlojamento);
             tvLocalizacao = view.findViewById(R.id.tvLocalizacao);
-            tvAcomodacoes = view.findViewById(R.id.tvAcomodacoes);
-            tvPrecoPorNoite = view.findViewById(R.id.tvPrecoPorNoite);
             btnRemoverFavoritos = view.findViewById(R.id.btnRemoverFavoritos);
             btnDetalhes = view.findViewById(R.id.btnDetalhes);
 
@@ -141,12 +139,6 @@ public class ListaFavoritosAdaptador extends BaseAdapter {
             tvTipo.setText(fornecedor.getTipo());
             tvNomeAlojamento.setText(fornecedor.getNomeAlojamento());
             tvLocalizacao.setText(fornecedor.getLocalizacaoAlojamento());
-            tvAcomodacoes.setText(fornecedor.getAcomodacoesAlojamento());
-
-            // Formatando o preço sem casas decimais
-            DecimalFormat decimalFormat = new DecimalFormat("#");
-            String precoFormatado = decimalFormat.format(fornecedor.getPrecoPorNoite());
-            tvPrecoPorNoite.setText(precoFormatado + "€");
 
             // Obtendo a primeira imagem do fornecedor
             Imagem primeiraImagem = fornecedor.getImagens().size() > 0 ? fornecedor.getImagens().get(0) : null;

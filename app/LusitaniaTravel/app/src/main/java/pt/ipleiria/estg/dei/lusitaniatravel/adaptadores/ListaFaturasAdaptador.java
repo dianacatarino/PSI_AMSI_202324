@@ -70,14 +70,12 @@ public class ListaFaturasAdaptador extends BaseAdapter {
     }
 
     private class ViewHolderLista {
-        private TextView tvFaturaId, tvTotalFatura, tvTotalSI, tvIva, tvReserva, tvData;
+        private TextView tvFaturaId, tvTotalFatura, tvReserva, tvData;
         private Button btnDetalhes;
 
         public ViewHolderLista(View view, final int position) {
             tvFaturaId = view.findViewById(R.id.tvFaturaId);
             tvTotalFatura = view.findViewById(R.id.tvTotalFatura);
-            tvTotalSI = view.findViewById(R.id.tvTotalSI);
-            tvIva = view.findViewById(R.id.tvIva);
             tvReserva = view.findViewById(R.id.tvReserva);
             tvData = view.findViewById(R.id.tvData);
             btnDetalhes = view.findViewById(R.id.btnDetalhes);
@@ -108,14 +106,8 @@ public class ListaFaturasAdaptador extends BaseAdapter {
             // Formatando os valores da fatura
             DecimalFormat decimalFormat = new DecimalFormat("#.00");
             String totalFaturaFormatado = decimalFormat.format(fatura.getTotalF());
-            String totalSIFormatado = decimalFormat.format(fatura.getTotalSI());
-
-            DecimalFormat ivaFormat = new DecimalFormat(".00");
-            String ivaFormatado = ivaFormat.format(fatura.getIva());
 
             tvTotalFatura.setText("" + totalFaturaFormatado + "€");
-            tvTotalSI.setText("" + totalSIFormatado + "€");
-            tvIva.setText("" + ivaFormatado + "%");
             tvReserva.setText("" + fatura.getReservaId());
             tvData.setText( "" + fatura.getData());
         }

@@ -1468,17 +1468,17 @@ public class SingletonGestorLusitaniaTravel {
                     new Response.Listener<JSONObject>() {
                         @Override
                         public void onResponse(JSONObject response) {
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    try {
-                                        String successMessage = response.getString("success");
-                                        Toast.makeText(context, successMessage, Toast.LENGTH_SHORT).show();
-                                    } catch (JSONException e) {
-                                        e.printStackTrace();
-                                    }
+                            try {
+                                if (response.has("error")) {
+                                    String errorMessage = response.getString("error");
+                                    Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show();
+                                } else {
+                                    String successMessage = response.getString("success");
+                                    Toast.makeText(context, successMessage, Toast.LENGTH_SHORT).show();
                                 }
-                            });
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
                         }
                     },
                     new Response.ErrorListener() {
@@ -1500,6 +1500,7 @@ public class SingletonGestorLusitaniaTravel {
             volleyQueue.add(req);
         }
     }
+
 
 
     //endregion
