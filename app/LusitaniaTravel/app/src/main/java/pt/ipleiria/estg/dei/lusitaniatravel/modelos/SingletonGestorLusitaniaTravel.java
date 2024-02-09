@@ -1,10 +1,16 @@
 package pt.ipleiria.estg.dei.lusitaniatravel.modelos;
 
+import android.app.DownloadManager;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.database.Cursor;
+import android.net.Uri;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Base64;
-import android.util.Log;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -12,7 +18,6 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
@@ -22,19 +27,18 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
-import pt.ipleiria.estg.dei.lusitaniatravel.CarrinhoFragment;
 import pt.ipleiria.estg.dei.lusitaniatravel.MainActivity;
-import pt.ipleiria.estg.dei.lusitaniatravel.VerificarDisponibilidadeFragment;
 import pt.ipleiria.estg.dei.lusitaniatravel.listeners.CarrinhoListener;
 import pt.ipleiria.estg.dei.lusitaniatravel.listeners.CarrinhosListener;
 import pt.ipleiria.estg.dei.lusitaniatravel.listeners.ComentarioListener;
 import pt.ipleiria.estg.dei.lusitaniatravel.listeners.ComentariosListener;
+import pt.ipleiria.estg.dei.lusitaniatravel.listeners.DownloadListener;
 import pt.ipleiria.estg.dei.lusitaniatravel.listeners.FaturaListener;
 import pt.ipleiria.estg.dei.lusitaniatravel.listeners.FaturasListener;
 import pt.ipleiria.estg.dei.lusitaniatravel.listeners.FavoritoListener;
@@ -53,7 +57,6 @@ import pt.ipleiria.estg.dei.lusitaniatravel.utils.FaturaJsonParser;
 import pt.ipleiria.estg.dei.lusitaniatravel.utils.FavoritoJsonParser;
 import pt.ipleiria.estg.dei.lusitaniatravel.utils.FornecedorJsonParser;
 import pt.ipleiria.estg.dei.lusitaniatravel.utils.LoginJsonParser;
-import pt.ipleiria.estg.dei.lusitaniatravel.modelos.User;
 import pt.ipleiria.estg.dei.lusitaniatravel.utils.ReservaJsonParser;
 import pt.ipleiria.estg.dei.lusitaniatravel.utils.SignUpJsonParser;
 import pt.ipleiria.estg.dei.lusitaniatravel.utils.UserJsonParser;
@@ -96,17 +99,20 @@ public class SingletonGestorLusitaniaTravel {
     private static final String mUrlAPIComentario = BASE_URL + "/fornecedor/comentario/";
     private static final String mUrlAPIComentariosAlojamento = BASE_URL + "/fornecedor/comentariosalojamento/";
     private static final String mUrlAPIAdicionarComentario = BASE_URL + "/fornecedor/adicionarcomentario/";
+    private static final String mUrlAPIDownload = BASE_URL + "/fatura/download/";
     private FornecedoresListener fornecedoresListener;
     private FornecedorListener fornecedorListener;
     private ReservasListener reservasListener;
     private ReservaListener reservaListener;
     private FaturasListener faturasListener;
     private FaturaListener faturaListener;
+    private DownloadListener downloadListener;
     private LoginListener loginListener;
     private SignUpListener signUpListener;
     private UserListener userListener;
     private FavoritosListener favoritosListener;
     private FavoritoListener favoritoListener;
+
     private CarrinhosListener carrinhosListener;
     private CarrinhoListener carrinhoListener;
     private FinalizarListener finalizarListener;
@@ -129,11 +135,11 @@ public class SingletonGestorLusitaniaTravel {
         lusitaniaTravelBDHelper = new LusitaniaTravelBDHelper(context);
     }
 
+    //region GETS E SETTERS
+
     public LusitaniaTravelBDHelper getLusitaniaTravelBDHelper() {
         return lusitaniaTravelBDHelper;
     }
-
-    //region GETS E SETTERS
 
     public void setFornecedoresListener(FornecedoresListener fornecedoresListener) {
         this.fornecedoresListener = fornecedoresListener;
@@ -158,6 +164,10 @@ public class SingletonGestorLusitaniaTravel {
 
     public void setFaturaListener(FaturaListener faturaListener) {
         this.faturaListener = faturaListener;
+    }
+
+    public void setDownloadListener(DownloadListener downloadListener) {
+        this.downloadListener = downloadListener;
     }
 
     public void setLoginListener(LoginListener loginListener) {
@@ -732,6 +742,88 @@ public class SingletonGestorLusitaniaTravel {
         }
     }
 
+    public void getDownloadAPI(int faturaId, final Context context) {
+        if (!FaturaJsonParser.isConnectionInternet(context)) {
+            // Notifique o ouvinte de que o download falhou devido à falta de conexão com a internet
+            if (downloadListener != null) {
+                downloadListener.onDownloadFailed("Sem conexão com a internet");
+            }
+            return;
+        }
+
+        // Se houver conexão com a internet, continue com o download
+        String urlCompleta = mUrlAPIDownload + faturaId;
+
+        String username = SingletonGestorLusitaniaTravel.getInstance(context).getUsername();
+        String password = SingletonGestorLusitaniaTravel.getInstance(context).getPassword();
+
+        // Crie uma solicitação de download
+        DownloadManager.Request request = new DownloadManager.Request(Uri.parse(urlCompleta));
+        request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE);
+        request.setTitle("Fatura " + faturaId);
+        request.setDescription("Download fatura..." + faturaId);
+        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+        request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "fatura_" + faturaId + ".pdf");
+
+        // Adicione os cabeçalhos de autenticação
+        String credentials = username + ":" + password;
+        String auth = "Basic " + Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
+        request.addRequestHeader("Authorization", auth);
+
+        // Obtenha o serviço de gerenciamento de download do sistema
+        DownloadManager downloadManager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
+
+        // Inicie o download e obtenha o ID do download
+        final long downloadId = downloadManager.enqueue(request);
+
+        // Crie um BroadcastReceiver para ouvir o término do download
+        BroadcastReceiver downloadReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                long receivedDownloadId = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1);
+                if (receivedDownloadId == downloadId) {
+                    // O download com o ID recebido foi concluído
+                    DownloadManager.Query query = new DownloadManager.Query();
+                    query.setFilterById(downloadId);
+                    Cursor cursor = downloadManager.query(query);
+                    if (cursor != null && cursor.moveToFirst()) {
+                        int statusIndex = cursor.getColumnIndex(DownloadManager.COLUMN_STATUS);
+                        int status = cursor.getInt(statusIndex);
+                        if (status == DownloadManager.STATUS_SUCCESSFUL) {
+                            // O download foi bem-sucedido
+                            int localUriIndex = cursor.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI);
+                            if (localUriIndex != -1) {
+                                String filePath = cursor.getString(localUriIndex);
+                                // Notifique o ouvinte de que o download foi concluído
+                                if (downloadListener != null) {
+                                    downloadListener.onDownloadComplete(new File(Uri.parse(filePath).getPath()));
+                                }
+                            } else {
+                                // A coluna COLUMN_LOCAL_URI não foi encontrada
+                                // Notifique o ouvinte de que o download falhou
+                                if (downloadListener != null) {
+                                    downloadListener.onDownloadFailed("Falha no download: COLUNA_LOCAL_URI não encontrada");
+                                }
+                            }
+                        } else {
+                            // O download falhou
+                            // Notifique o ouvinte de que o download falhou
+                            if (downloadListener != null) {
+                                downloadListener.onDownloadFailed("Falha no download");
+                            }
+                        }
+                    }
+                    cursor.close();
+                    // Registre um broadcast receiver dinâmico para receber o término do download
+                    context.unregisterReceiver(this);
+                }
+            }
+        };
+
+        // Registre o BroadcastReceiver para receber o término do download
+        context.registerReceiver(downloadReceiver, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
+    }
+
 
     public void getUserDefinicoesAPI(final Context context) {
         if (!LoginJsonParser.isConnectionInternet(context)) {
@@ -939,6 +1031,61 @@ public class SingletonGestorLusitaniaTravel {
             volleyQueue.add(req);
         }
     }
+
+    public List<Fornecedor> getFornecedorFavorito(final Context context) {
+        final List<Fornecedor> fornecedoresFavoritos = new ArrayList<>();
+
+        if (!FavoritoJsonParser.isConnectionInternet(context)) {
+            Toast.makeText(context, "Não tem ligação à Internet", Toast.LENGTH_SHORT).show();
+        } else {
+            String username = SingletonGestorLusitaniaTravel.getInstance(context).getUsername();
+            String password = SingletonGestorLusitaniaTravel.getInstance(context).getPassword();
+            JsonObjectRequest req = new JsonObjectRequest(Request.Method.GET, mUrlAPIFavoritos, null,
+                    new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            try {
+                                if (!response.isNull("favoritos")) {
+                                    JSONArray favoritosArray = response.getJSONArray("favoritos");
+                                    for (int i = 0; i < favoritosArray.length(); i++) {
+                                        JSONObject favorito = favoritosArray.getJSONObject(i);
+                                        int id = favorito.getInt("id");
+                                        // Verifique se o fornecedor está na lista de fornecedores e marque-o como favorito
+                                        for (Fornecedor fornecedor : fornecedores) {
+                                            if (fornecedor.getId() == id) {
+                                                fornecedor.setFavorito(true);
+                                                fornecedoresFavoritos.add(fornecedor);
+                                                break;
+                                            }
+                                        }
+                                    }
+                                }
+                            } catch (JSONException e) {
+                                Toast.makeText(context, "Erro ao processar resposta do servidor", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            Toast.makeText(context, error.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    }) {
+                @Override
+                public Map<String, String> getHeaders() {
+                    Map<String, String> headers = new HashMap<>();
+                    String credentials = username + ":" + password;
+                    String auth = "Basic " + Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
+                    headers.put("Authorization", auth);
+                    return headers;
+                }
+            };
+
+            volleyQueue.add(req);
+        }
+        return fornecedoresFavoritos;
+    }
+
 
     public void adicionarFavoritoAPI(final int fornecedorId, final Context context) {
         if (!CarrinhoJsonParser.isConnectionInternet(context)) {
@@ -1421,7 +1568,7 @@ public class SingletonGestorLusitaniaTravel {
                             if (error.getMessage() != null) {
                                 Toast.makeText(context, error.getMessage(), Toast.LENGTH_SHORT).show();
                             } else {
-                                Toast.makeText(context, "Erro desconhecido", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(context, "Sem comentários e avaliações", Toast.LENGTH_SHORT).show();
                             }
                         }
                     }) {

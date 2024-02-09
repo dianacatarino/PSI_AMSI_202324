@@ -69,7 +69,7 @@ public class DetalhesFaturaFragment extends Fragment implements FaturaListener {
 
     public void onRefreshDetalhes(Fatura fatura) {
         if (isAdded() && getContext() != null && fatura != null) {
-            tvFaturaId.setText(String.valueOf(fatura.getId()));
+            tvFaturaId.setText(" " + fatura.getId());
 
             DecimalFormat decimalFormat = new DecimalFormat("#.00");
             String totalFaturaFormatado = decimalFormat.format(fatura.getTotalF());

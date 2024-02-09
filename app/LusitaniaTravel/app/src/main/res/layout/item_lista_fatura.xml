@@ -100,7 +100,7 @@
             android:onClick="onDetalhesFaturaClick" />
 
         <ImageButton
-            android:id="@+id/imageButton5"
+            android:id="@+id/imageButtonDownload"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/btnDetalhes"

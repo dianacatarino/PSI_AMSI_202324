@@ -7,8 +7,8 @@ public class Fornecedor {
     private String responsavel, tipo, nomeAlojamento, localizacaoAlojamento, acomodacoesAlojamento, tipoQuartos;
     private int numeroQuartos;
     private double precoPorNoite;
-
     private List<Imagem> imagens;
+    private boolean favorito;
 
     public Fornecedor(int id, String responsavel, String tipo, String nomeAlojamento,
                       String localizacaoAlojamento, String acomodacoesAlojamento,
@@ -100,5 +100,12 @@ public class Fornecedor {
 
     public void setImagens(List<Imagem> imagens) {
         this.imagens = imagens;
+    }
+    public boolean isFavorito() {
+        return favorito;
+    }
+
+    public void setFavorito(boolean favorito) {
+        this.favorito = favorito;
     }
 }

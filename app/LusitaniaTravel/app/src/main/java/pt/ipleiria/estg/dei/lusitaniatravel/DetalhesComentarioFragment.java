@@ -75,7 +75,7 @@ public class DetalhesComentarioFragment extends Fragment implements ComentarioLi
 
     public void onRefreshDetalhes(Comentario comentario){
         if (getView() != null && comentario != null) {
-            tvComentarioId.setText(String.valueOf(comentario.getId()));
+            tvComentarioId.setText(" " + comentario.getId());
             tvFornecedor.setText(comentario.getNomeFornecedor());
             tvTitulo.setText(comentario.getTitulo());
             tvDescricao.setText(comentario.getDescricao());

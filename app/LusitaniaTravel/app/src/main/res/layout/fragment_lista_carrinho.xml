@@ -1,45 +1,29 @@
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    tools:context=".ListaCarrinhoFragment">
 
-    <RelativeLayout
+    <ListView
+        android:id="@+id/lvcarrinho"
         android:layout_width="match_parent"
+        android:layout_height="600dp" />
+
+    <Button
+        android:id="@+id/btnFinalizarCarrinho"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        tools:context=".ListaCarrinhoFragment">
+        android:layout_below="@id/lvcarrinho"
+        android:layout_alignParentEnd="true"
+        android:backgroundTint="@color/blue"
+        android:clickable="true"
+        android:focusable="false"
+        android:onClick="onClickFinalizar"
+        android:text="@string/txt_finalizar_carrinho"
+        android:visibility="visible" />
 
-        <LinearLayout
-            android:id="@+id/layoutContent"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+</RelativeLayout>
 
-            <ListView
-                android:id="@+id/lvcarrinho"
-                android:layout_width="match_parent"
-                android:layout_height="350dp" />
 
-            <Button
-                android:id="@+id/btnFinalizarCarrinho"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/txt_finalizar_carrinho"
-                android:backgroundTint="@color/blue"
-                android:onClick="onClickFinalizar"
-                android:layout_gravity="right"
-                android:clickable="true"
-                android:visibility="visible"
-                android:focusable="false"/>
 
-        </LinearLayout>
 
-        <FrameLayout
-            android:id="@+id/fragment_container"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@id/layoutContent" />
-
-    </RelativeLayout>
-
-</ScrollView>

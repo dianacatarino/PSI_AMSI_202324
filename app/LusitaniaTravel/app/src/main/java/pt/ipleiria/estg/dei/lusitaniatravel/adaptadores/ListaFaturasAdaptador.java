@@ -1,19 +1,27 @@
 package pt.ipleiria.estg.dei.lusitaniatravel.adaptadores;
 
+import static java.security.AccessController.getContext;
+
 import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import java.io.File;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -24,12 +32,15 @@ import pt.ipleiria.estg.dei.lusitaniatravel.DetalhesReservaFragment;
 import pt.ipleiria.estg.dei.lusitaniatravel.R;
 import pt.ipleiria.estg.dei.lusitaniatravel.modelos.Fatura;
 import pt.ipleiria.estg.dei.lusitaniatravel.modelos.Reserva;
+import pt.ipleiria.estg.dei.lusitaniatravel.modelos.SingletonGestorLusitaniaTravel;
 
 public class ListaFaturasAdaptador extends BaseAdapter {
 
     private Context context;
     private LayoutInflater inflater;
     private ArrayList<Fatura> faturas;
+
+    private Context mContext;
 
     public ListaFaturasAdaptador(Context context, ArrayList<Fatura> faturas) {
         this.context = context;
@@ -72,6 +83,7 @@ public class ListaFaturasAdaptador extends BaseAdapter {
     private class ViewHolderLista {
         private TextView tvFaturaId, tvTotalFatura, tvReserva, tvData;
         private Button btnDetalhes;
+        private ImageButton btnDownload;
 
         public ViewHolderLista(View view, final int position) {
             tvFaturaId = view.findViewById(R.id.tvFaturaId);
@@ -79,6 +91,7 @@ public class ListaFaturasAdaptador extends BaseAdapter {
             tvReserva = view.findViewById(R.id.tvReserva);
             tvData = view.findViewById(R.id.tvData);
             btnDetalhes = view.findViewById(R.id.btnDetalhes);
+            btnDownload = view.findViewById(R.id.imageButtonDownload);
 
             btnDetalhes.setOnClickListener(new View.OnClickListener(){
                 @Override
@@ -96,6 +109,17 @@ public class ListaFaturasAdaptador extends BaseAdapter {
                         transaction.replace(R.id.fragmentContainer, detalhesFaturaFragment);
                         transaction.addToBackStack(null);
                         transaction.commit();
+                    }
+                }
+            });
+            btnDownload.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (faturas != null && faturas.size() > position) {
+                        Fatura faturaClicada = faturas.get(position);
+                        int faturaId = faturaClicada.getId();
+
+                        SingletonGestorLusitaniaTravel.getInstance(context).getDownloadAPI(faturaId, context);
                     }
                 }
             });

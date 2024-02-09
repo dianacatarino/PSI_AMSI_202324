@@ -77,7 +77,7 @@ public class DetalhesReservaFragment extends Fragment implements ReservaListener
         } else {
             // Se não há conexão com a internet, carregar as reservas da BD local
             Reserva reservaBD = SingletonGestorLusitaniaTravel.getInstance(getContext()).getReserva(reservaId);
-            tvReservaId.setText(String.valueOf(reservaBD.getId()));
+            tvReservaId.setText(" " + reservaBD.getId());
             tvTipoReserva.setText(reservaBD.getTipo());
             tvCheckin.setText(reservaBD.getCheckin());
             tvCheckout.setText(reservaBD.getCheckout());
@@ -98,7 +98,7 @@ public class DetalhesReservaFragment extends Fragment implements ReservaListener
 
     public void onRefreshDetalhes(Reserva reserva){
         if (getView() != null && reserva != null) {
-            tvReservaId.setText(String.valueOf(reserva.getId()));
+            tvReservaId.setText(" " + reserva.getId());
             tvTipoReserva.setText(reserva.getTipo());
             tvCheckin.setText(reserva.getCheckin());
             tvCheckout.setText(reserva.getCheckout());

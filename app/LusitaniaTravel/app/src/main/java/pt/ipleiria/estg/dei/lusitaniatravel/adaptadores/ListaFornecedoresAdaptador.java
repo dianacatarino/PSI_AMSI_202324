@@ -2,8 +2,6 @@ package pt.ipleiria.estg.dei.lusitaniatravel.adaptadores;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,18 +25,10 @@ import java.util.List;
 
 import pt.ipleiria.estg.dei.lusitaniatravel.DetalhesFornecedorFragment;
 import pt.ipleiria.estg.dei.lusitaniatravel.R;
-import pt.ipleiria.estg.dei.lusitaniatravel.VerificarDisponibilidadeFragment;
-import pt.ipleiria.estg.dei.lusitaniatravel.listeners.CarrinhoListener;
-import pt.ipleiria.estg.dei.lusitaniatravel.listeners.CarrinhosListener;
-import pt.ipleiria.estg.dei.lusitaniatravel.listeners.FavoritoListener;
-import pt.ipleiria.estg.dei.lusitaniatravel.listeners.FavoritosListener;
 import pt.ipleiria.estg.dei.lusitaniatravel.modelos.Carrinho;
 import pt.ipleiria.estg.dei.lusitaniatravel.modelos.Fornecedor;
 import pt.ipleiria.estg.dei.lusitaniatravel.modelos.Imagem;
-import pt.ipleiria.estg.dei.lusitaniatravel.modelos.Profile;
-import pt.ipleiria.estg.dei.lusitaniatravel.modelos.Reserva;
 import pt.ipleiria.estg.dei.lusitaniatravel.modelos.SingletonGestorLusitaniaTravel;
-import pt.ipleiria.estg.dei.lusitaniatravel.modelos.User;
 
 public class ListaFornecedoresAdaptador extends BaseAdapter {
 
@@ -77,10 +67,10 @@ public class ListaFornecedoresAdaptador extends BaseAdapter {
         // Otimização
         ViewHolderLista viewHolder = (ViewHolderLista) convertView.getTag();
         if (viewHolder == null) {
-            viewHolder = new ViewHolderLista(convertView, position);
+            viewHolder = new ViewHolderLista(convertView);
             convertView.setTag(viewHolder);
         }
-        viewHolder.update(fornecedores.get(position), context);
+        viewHolder.update(fornecedores.get(position), position);
 
         return convertView;
     }
@@ -91,7 +81,7 @@ public class ListaFornecedoresAdaptador extends BaseAdapter {
         private ImageButton btnAdicionarCarrinho, btnAdicionarFavorito;
         private Button btnDetalhes;
 
-        public ViewHolderLista(View view, final int position) {
+        public ViewHolderLista(View view) {
             imgFornecedor = view.findViewById(R.id.imgFornecedor);
             tvTipo = view.findViewById(R.id.tvTipo);
             tvNomeAlojamento = view.findViewById(R.id.tvNomeAlojamento);
@@ -105,6 +95,7 @@ public class ListaFornecedoresAdaptador extends BaseAdapter {
             btnAdicionarCarrinho.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    int position = (int) btnAdicionarCarrinho.getTag();
                     if (fornecedores != null && fornecedores.size() > position) {
                         Fornecedor fornecedorClicado = fornecedores.get(position);
 
@@ -121,27 +112,37 @@ public class ListaFornecedoresAdaptador extends BaseAdapter {
             btnAdicionarFavorito.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    int position = (int) btnAdicionarFavorito.getTag();
                     if (fornecedores != null && fornecedores.size() > position) {
                         Fornecedor fornecedorClicado = fornecedores.get(position);
 
-                        int fornecedorId = fornecedorClicado.getId();
-
-                        // Obtendo uma instância válida do Singleton
+                        // Obtenha uma instância válida de SingletonGestorLusitaniaTravel
                         SingletonGestorLusitaniaTravel singleton = SingletonGestorLusitaniaTravel.getInstance(context);
 
-                        singleton.adicionarFavoritoAPI(fornecedorId,context);
+                        // Verifique se o fornecedor já é um favorito
+                        if (fornecedorClicado.isFavorito()) {
+                            // Se for um favorito, remova-o da lista de favoritos
+                            singleton.removerFavoritoAPI(fornecedorClicado.getId(), context);
+                            fornecedorClicado.setFavorito(false);
+                            Toast.makeText(context, "Alojamento removido dos favoritos", Toast.LENGTH_SHORT).show();
+                            btnAdicionarFavorito.clearColorFilter();
+                        } else {
+                            // Se não for um favorito, adicione-o à lista de favoritos
+                            singleton.adicionarFavoritoAPI(fornecedorClicado.getId(), context);
+                            fornecedorClicado.setFavorito(true);
+                            Toast.makeText(context, "Alojamento adicionado aos favoritos", Toast.LENGTH_SHORT).show();
+                            btnAdicionarFavorito.setColorFilter(Color.parseColor("#E91E63"));
+                        }
 
-                        Toast.makeText(context, "Alojamento adicionado aos favoritos", Toast.LENGTH_SHORT).show();
-
-                        ImageButton btnAdicionarFavorito = view.findViewById(R.id.btnAdicionarFavoritos);
-
-                        btnAdicionarFavorito.setColorFilter(Color.parseColor("#E91E63"));
+                        // Notifique o adaptador sobre a mudança no estado do fornecedor
+                        notifyDataSetChanged();
                     }
                 }
             });
             btnDetalhes.setOnClickListener(new View.OnClickListener(){
                 @Override
                 public void onClick(View v) {
+                    int position = (int) btnDetalhes.getTag();
                     if (fornecedores != null && fornecedores.size() > position) {
                         Fornecedor fornecedorClicado = fornecedores.get(position);
 
@@ -167,7 +168,7 @@ public class ListaFornecedoresAdaptador extends BaseAdapter {
             });
         }
 
-        public void update(Fornecedor fornecedor, Context context) {
+        public void update(Fornecedor fornecedor, int position) {
             tvTipo.setText(fornecedor.getTipo());
             tvNomeAlojamento.setText(fornecedor.getNomeAlojamento());
             tvLocalizacao.setText(fornecedor.getLocalizacaoAlojamento());
@@ -177,6 +178,16 @@ public class ListaFornecedoresAdaptador extends BaseAdapter {
             DecimalFormat decimalFormat = new DecimalFormat("#");
             String precoFormatado = decimalFormat.format(fornecedor.getPrecoPorNoite());
             tvPrecoPorNoite.setText(precoFormatado + "€");
+
+            // Verificar se o fornecedor está na lista de favoritos
+            boolean isFavorito = fornecedor.isFavorito();
+
+            // Mudar a cor do botão dos favoritos conforme necessário
+            if (isFavorito) {
+                btnAdicionarFavorito.setColorFilter(Color.parseColor("#E91E63")); // Cor rosa
+            } else {
+                btnAdicionarFavorito.clearColorFilter(); // Remover a cor
+            }
 
             // Obtendo a primeira imagem do fornecedor
             Imagem primeiraImagem = fornecedor.getImagens().size() > 0 ? fornecedor.getImagens().get(0) : null;
@@ -194,6 +205,11 @@ public class ListaFornecedoresAdaptador extends BaseAdapter {
                 // Caso não haja imagem, você pode definir uma imagem de placeholder ou fazer algo adequado ao seu caso
                 imgFornecedor.setImageResource(R.drawable.logo_horizontal); // Substitua com o seu recurso de imagem de placeholder
             }
+
+            // Definir as tags dos botões com a posição do fornecedor
+            btnAdicionarCarrinho.setTag(position);
+            btnAdicionarFavorito.setTag(position);
+            btnDetalhes.setTag(position);
         }
 
         private String buildImageUrl(Imagem imagem) {
@@ -206,4 +222,3 @@ public class ListaFornecedoresAdaptador extends BaseAdapter {
         }
     }
 }
-
