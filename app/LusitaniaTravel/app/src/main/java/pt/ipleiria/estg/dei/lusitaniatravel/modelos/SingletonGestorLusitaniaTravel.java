@@ -14,9 +14,13 @@ import android.util.Base64;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.NetworkError;
+import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.ServerError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
@@ -100,6 +104,7 @@ public class SingletonGestorLusitaniaTravel {
     private static final String mUrlAPIComentariosAlojamento = BASE_URL + "/fornecedor/comentariosalojamento/";
     private static final String mUrlAPIAdicionarComentario = BASE_URL + "/fornecedor/adicionarcomentario/";
     private static final String mUrlAPIDownload = BASE_URL + "/fatura/download/";
+    private static final String mUrlAPIDownloadPagamento = BASE_URL + "/carrinho/download/";
     private FornecedoresListener fornecedoresListener;
     private FornecedorListener fornecedorListener;
     private ReservasListener reservasListener;
@@ -338,7 +343,14 @@ public class SingletonGestorLusitaniaTravel {
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    Toast.makeText(context, "Error: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+                                    String errorMessage = "Ocorreu um erro. Por favor, verifique o username e a senha.";
+
+                                    if (error instanceof AuthFailureError) {
+                                        // Se o erro for de falha de autenticação, o nome de usuário ou senha está incorreto
+                                        errorMessage = "Username ou senha incorretos.";
+                                    }
+
+                                    Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show();
                                 }
                             });
                         }
@@ -419,7 +431,29 @@ public class SingletonGestorLusitaniaTravel {
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    Toast.makeText(context, "Error: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+                                    String errorMessage = "Ocorreu um erro ao tentar registrar. Por favor, tente novamente.";
+
+                                    if (error instanceof ServerError) {
+                                        // Se o erro for do servidor, analise o corpo da resposta para determinar a mensagem de erro
+                                        NetworkResponse networkResponse = error.networkResponse;
+                                        if (networkResponse != null && networkResponse.data != null) {
+                                            String responseBody = new String(networkResponse.data);
+                                            try {
+                                                JSONObject jsonObject = new JSONObject(responseBody);
+                                                String message = jsonObject.getString("message");
+                                                errorMessage = message != null ? message : errorMessage;
+                                            } catch (JSONException e) {
+                                                e.printStackTrace();
+                                            }
+                                        }
+                                    } else if (error instanceof AuthFailureError) {
+                                        // Se o erro for de falha de autenticação, o username já existe
+                                        errorMessage = "Este username já está em uso.";
+                                    } else if (error instanceof NetworkError) {
+                                        errorMessage = "Erro de rede. Verifique sua conexão e tente novamente.";
+                                    }
+
+                                    Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show();
                                 }
                             });
                         }
@@ -761,7 +795,7 @@ public class SingletonGestorLusitaniaTravel {
         DownloadManager.Request request = new DownloadManager.Request(Uri.parse(urlCompleta));
         request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE);
         request.setTitle("Fatura " + faturaId);
-        request.setDescription("Download fatura..." + faturaId);
+        request.setDescription("Download da fatura..." + faturaId);
         request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
         request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "fatura_" + faturaId + ".pdf");
 
@@ -1444,6 +1478,89 @@ public class SingletonGestorLusitaniaTravel {
             volleyQueue.add(req);
         }
     }
+
+    public void getDownloadPagamentoAPI(int reservaId, final Context context) {
+        if (!LoginJsonParser.isConnectionInternet(context)) {
+            // Notifique o ouvinte de que o download falhou devido à falta de conexão com a internet
+            if (downloadListener != null) {
+                downloadListener.onDownloadFailed("Sem conexão com a internet");
+            }
+            return;
+        }
+
+        // Se houver conexão com a internet, continue com o download
+        String urlCompleta = mUrlAPIDownloadPagamento + reservaId;
+
+        String username = SingletonGestorLusitaniaTravel.getInstance(context).getUsername();
+        String password = SingletonGestorLusitaniaTravel.getInstance(context).getPassword();
+
+        // Crie uma solicitação de download
+        DownloadManager.Request request = new DownloadManager.Request(Uri.parse(urlCompleta));
+        request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE);
+        request.setTitle("Pagamento da Reserva " + reservaId);
+        request.setDescription("Download do pagamento da reserva..." + reservaId);
+        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+        request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "pagamento_reserva_" + reservaId + ".pdf");
+
+        // Adicione os cabeçalhos de autenticação
+        String credentials = username + ":" + password;
+        String auth = "Basic " + Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
+        request.addRequestHeader("Authorization", auth);
+
+        // Obtenha o serviço de gerenciamento de download do sistema
+        DownloadManager downloadManager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
+
+        // Inicie o download e obtenha o ID do download
+        final long downloadId = downloadManager.enqueue(request);
+
+        // Crie um BroadcastReceiver para ouvir o término do download
+        BroadcastReceiver downloadReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                long receivedDownloadId = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1);
+                if (receivedDownloadId == downloadId) {
+                    // O download com o ID recebido foi concluído
+                    DownloadManager.Query query = new DownloadManager.Query();
+                    query.setFilterById(downloadId);
+                    Cursor cursor = downloadManager.query(query);
+                    if (cursor != null && cursor.moveToFirst()) {
+                        int statusIndex = cursor.getColumnIndex(DownloadManager.COLUMN_STATUS);
+                        int status = cursor.getInt(statusIndex);
+                        if (status == DownloadManager.STATUS_SUCCESSFUL) {
+                            // O download foi bem-sucedido
+                            int localUriIndex = cursor.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI);
+                            if (localUriIndex != -1) {
+                                String filePath = cursor.getString(localUriIndex);
+                                // Notifique o ouvinte de que o download foi concluído
+                                if (downloadListener != null) {
+                                    downloadListener.onDownloadComplete(new File(Uri.parse(filePath).getPath()));
+                                }
+                            } else {
+                                // A coluna COLUMN_LOCAL_URI não foi encontrada
+                                // Notifique o ouvinte de que o download falhou
+                                if (downloadListener != null) {
+                                    downloadListener.onDownloadFailed("Falha no download: COLUNA_LOCAL_URI não encontrada");
+                                }
+                            }
+                        } else {
+                            // O download falhou
+                            // Notifique o ouvinte de que o download falhou
+                            if (downloadListener != null) {
+                                downloadListener.onDownloadFailed("Falha no download");
+                            }
+                        }
+                    }
+                    cursor.close();
+                    // Registre um broadcast receiver dinâmico para receber o término do download
+                    context.unregisterReceiver(this);
+                }
+            }
+        };
+
+        // Registre o BroadcastReceiver para receber o término do download
+        context.registerReceiver(downloadReceiver, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
+    }
+
 
     public void getAllComentariosAPI(final Context context) {
         if (!ComentarioJsonParser.isConnectionInternet(context)) {

@@ -17,6 +17,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
 import pt.ipleiria.estg.dei.lusitaniatravel.listeners.CarrinhoListener;
+import pt.ipleiria.estg.dei.lusitaniatravel.modelos.SingletonGestorLusitaniaTravel;
 
 public class PagamentoDialog extends DialogFragment implements CarrinhoListener {
 
@@ -60,7 +61,8 @@ public class PagamentoDialog extends DialogFragment implements CarrinhoListener 
         btnDownload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Lógica para o download
+                // Chamar o método getDownloadPagamentoAPI
+                SingletonGestorLusitaniaTravel.getInstance(getContext()).getDownloadPagamentoAPI(reservaId, getContext());
             }
         });
 
