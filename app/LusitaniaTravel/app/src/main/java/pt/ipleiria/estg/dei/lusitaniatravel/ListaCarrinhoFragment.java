@@ -92,18 +92,15 @@ public class ListaCarrinhoFragment extends Fragment implements CarrinhosListener
                             SingletonGestorLusitaniaTravel.getInstance(getContext()).finalizarCarrinhoAPI(reservaId, getContext());
                             Toast.makeText(getContext(), "Carrinho finalizado com sucesso", Toast.LENGTH_SHORT).show();
 
-                            // Abrir o fragmento de pagamento e passar os dados
-                            PagamentoFragment pagamentoFragment = new PagamentoFragment();
+                            atualizarListaCarrinho();
+
+                            // Criar e exibir o diálogo de pagamento
+                            PagamentoDialog pagamentoDialog = new PagamentoDialog();
                             Bundle args = new Bundle();
                             args.putInt("reservaId", reservaId);
                             args.putDouble("subtotal", subtotal);
-                            pagamentoFragment.setArguments(args);
-
-                            FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                            fragmentTransaction.replace(R.id.fragment_container, pagamentoFragment);
-                            fragmentTransaction.addToBackStack(null);
-                            fragmentTransaction.commit();
+                            pagamentoDialog.setArguments(args);
+                            pagamentoDialog.show(getParentFragmentManager(), "dialog_pagamento");
                         } else {
                             // Se o estado não for confirmado, exibir um Toast informando que a reserva precisa estar confirmada
                             Toast.makeText(getContext(), "A reserva deve estar confirmada para finalizar o carrinho.", Toast.LENGTH_SHORT).show();

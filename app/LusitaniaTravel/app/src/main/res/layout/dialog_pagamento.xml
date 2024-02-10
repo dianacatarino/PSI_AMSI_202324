@@ -26,14 +26,6 @@
             android:gravity="center">
 
             <TextView
-                android:id="@+id/tvEntidadeLabel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Entidade:"
-                android:textSize="20dp"
-                android:textStyle="bold"/>
-
-            <TextView
                 android:id="@+id/tvEntidade"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -50,14 +42,6 @@
             android:gravity="center">
 
             <TextView
-                android:id="@+id/tvReferenciaLabel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Referência:"
-                android:textSize="20dp"
-                android:textStyle="bold"/>
-
-            <TextView
                 android:id="@+id/tvReferencia"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -72,14 +56,6 @@
             android:orientation="horizontal"
             android:layout_marginTop="16dp"
             android:gravity="center">
-
-            <TextView
-                android:id="@+id/tvValorLabel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Valor:"
-                android:textSize="20dp"
-                android:textStyle="bold"/>
 
             <TextView
                 android:id="@+id/tvValor"
